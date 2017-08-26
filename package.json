@@ -1,0 +1,20 @@
+{
+  "name": "mapclass2api",
+  "version": "1.0.0",
+  "description": "the lib for mapping  javascript class to api service.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "notset"
+  },
+  "keywords": [
+    "class",
+    "api",
+    "microservice"
+  ],
+  "author": "threem0126",
+  "license": "ISC"
+}
