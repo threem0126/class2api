@@ -1,6 +1,6 @@
 {
   "name": "class2api",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "the lib for mapping  javascript class to api service.",
   "main": "lib/class2api.js",
   "scripts": {
