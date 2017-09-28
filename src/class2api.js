@@ -77,7 +77,7 @@ const _create_server = async (options)=> {
     }
     if (cros) {
         //设置跨域访问
-        let cros_headers = cros_headers.map(item => item.toLowerCase())
+        cros_headers = cros_headers.map(item => item.toLowerCase())
         let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'token'].map(item => item.toLowerCase())
         _server.use(function (req, res, next) {
             res.header("Access-Control-Allow-Origin", "*");
