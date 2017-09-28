@@ -23,6 +23,7 @@ const _create_server = async (options)=> {
     let _config = config()
     let {
         cros = true,
+        cros_headers=[],
         apiroot = '/',
         sessionKey = 'class2api',
         sessionSecret = 'class2api',
@@ -76,10 +77,12 @@ const _create_server = async (options)=> {
     }
     if (cros) {
         //设置跨域访问
+        let cros_headers = cros_headers.map(item => item.toLowerCase())
+        let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'token'].map(item => item.toLowerCase())
         _server.use(function (req, res, next) {
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Methods", "HEAD,OPTIONS,POST");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, token");
+            res.header("Access-Control-Allow-Headers", " " + [...allow_Header, ...cros_headers].join(", "));
             if ('OPTIONS' === req.method) {
                 res.sendStatus(200);
             } else {
