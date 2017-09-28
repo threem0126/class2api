@@ -55,7 +55,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             let params = queryObj;
             let paramsMerged = null;
 
-            params.___frontpageURL = url.parse(req.headers['frontpage'] || _frontpage_default);
+            params.___frontpageURL = url.parse(req.headers['frontpage'] || _frontpage_default || '');
 
             if (fn_beforeCall && typeof fn_beforeCall === 'function') {//如果有要对传入参数做验证，则在fn_beforeCall中处理
                 let modelSetting = _BusinessModel.__modelSetting ? _BusinessModel.__modelSetting() : {};
@@ -137,7 +137,7 @@ export const CreateListenRouter = async (options)=> {
     if(router_listen_created)
         return router
 
-    let {apiroot, modelClasses, beforeCall, afterCall, method404, frongpage_default} = options
+    let {apiroot, modelClasses, beforeCall, afterCall, method404, frontpage_default} = options
 
     //router.use(apiLimiter);
     for (let classObj of modelClasses) {
@@ -148,7 +148,7 @@ export const CreateListenRouter = async (options)=> {
             let {model, as} = classObj
             if (model && as) {
                 let aPath = (as || model.name).toLowerCase()
-                router.use(`/${aPath}`, await _bindRouter(model, beforeCall, afterCall, frongpage_default));
+                router.use(`/${aPath}`, await _bindRouter(model, beforeCall, afterCall, frontpage_default));
                 console.log(`将${model.name}类映射到 ${apiroot}${aPath} ... OK!`)
             } else {
                 throw `modelClasses参数中${classObj}的对象不是有效的Class类或{model,as}结构定义`

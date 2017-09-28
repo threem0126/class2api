@@ -36,9 +36,6 @@ const _create_server = async (options)=> {
     if (redis)
         setting_redisConfig(redis)
 
-    //REDIS_SESSION
-    const RedisStore = connectRedis(session);
-
     _server = express();
     // Security
     _server.disable("x-powered-by");
@@ -62,6 +59,8 @@ const _create_server = async (options)=> {
         cookie: {maxAge: 8000 * 1000}
     }
     if (sessionUseRedis) {
+        //REDIS_SESSION
+        const RedisStore = connectRedis(session);
         sessionOpt.store = new RedisStore({
             host: _config.redis.host,
             port: _config.redis.port,
