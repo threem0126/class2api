@@ -1,5 +1,6 @@
 import express from 'express';
 import {keys} from 'lodash';
+import url from 'url'
 import { Router } from 'express';
 //import RateLimit from 'express-rate-limit'
 
@@ -19,7 +20,7 @@ let router_listen_created = false
 //     }
 // });
 // {req,res,result}
-const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall )=> {
+const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage_default )=> {
     if (fn_beforeCall) {
         if (typeof fn_beforeCall !== 'function') {
             throw 'fn_beforeCall必须是function类型的参数';
@@ -35,6 +36,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall )=> {
     }
     let result;
     let _BusinessModel = BusinessModel;
+    let _frontpage_default = frontpage_default;
     let router = express.Router();
     router.get('*', async function (req, res, next) {
         res.json({err: 'get请求方式未实现, 仅限Post方式', result: null});
@@ -52,6 +54,9 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall )=> {
             let {queryObj = req.body} = req.body;
             let params = queryObj;
             let paramsMerged = null;
+
+            params.___frontpageURL = url.parse(req.headers['frontpage'] || _frontpage_default);
+
             if (fn_beforeCall && typeof fn_beforeCall === 'function') {//如果有要对传入参数做验证，则在fn_beforeCall中处理
                 let modelSetting = _BusinessModel.__modelSetting ? _BusinessModel.__modelSetting() : {};
                 let apipath = `${ _BusinessModel.name }.${ req.path }`
@@ -132,7 +137,7 @@ export const CreateListenRouter = async (options)=> {
     if(router_listen_created)
         return router
 
-    let {apiroot, modelClasses, beforeCall, afterCall, method404} = options
+    let {apiroot, modelClasses, beforeCall, afterCall, method404, frongpage_default} = options
 
     //router.use(apiLimiter);
     for (let classObj of modelClasses) {
@@ -143,7 +148,7 @@ export const CreateListenRouter = async (options)=> {
             let {model, as} = classObj
             if (model && as) {
                 let aPath = (as || model.name).toLowerCase()
-                router.use(`/${aPath}`, await _bindRouter(model, beforeCall, afterCall));
+                router.use(`/${aPath}`, await _bindRouter(model, beforeCall, afterCall, frongpage_default));
                 console.log(`将${model.name}类映射到 ${apiroot}${aPath} ... OK!`)
             } else {
                 throw `modelClasses参数中${classObj}的对象不是有效的Class类或{model,as}结构定义`

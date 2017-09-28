@@ -24,6 +24,7 @@ const _create_server = async (options)=> {
     let {
         cros = true,
         cros_headers=[],
+        frontpage_default='', //与从前端请求传过来header中的frontpage合并，优先获取客户端的，其实采用此默认值。最后封装为标准url对象并绑定到API方法回调的params对象的___frontpageURL属性上
         apiroot = '/',
         sessionKey = 'class2api',
         sessionSecret = 'class2api',
@@ -97,8 +98,9 @@ const _create_server = async (options)=> {
     }
 
     let _modelClasses = modelClasses()
+
     // API相关路由,在main内部映射到各个功能Model
-    _server.use(apiroot, await ModelProxy.CreateListenRouter({apiroot, modelClasses: _modelClasses, beforeCall, afterCall, method404}))
+    _server.use(apiroot, await ModelProxy.CreateListenRouter({apiroot, modelClasses: _modelClasses, beforeCall, afterCall, method404, frontpage_default}))
 
     // catch 404 and forward to error handler
     _server.use(function (req, res, next) {
