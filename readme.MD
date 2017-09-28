@@ -3,8 +3,10 @@
 
 # npm i
 
+# node index.js
+
 # npm run build
 
-# node index.js
+# npm publish
 
 # mocha test/test.run
