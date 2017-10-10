@@ -3,5 +3,10 @@ if(!process.env.__ISCOMPILING__){
     require('babel-register');
 }
 //
-
-require('./test-server');
+if(process.argv.MODEL === "src"){
+    console.dir("running on src ...");
+    require('./demo-prod/prod-server');
+}else {
+    console.dir("running on prod lib ...");
+    require('./demo-src/src-server');
+}

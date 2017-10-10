@@ -1,4 +1,4 @@
-import {modelSetting, cacheAble, clearCache} from './lib/Decorators'
+import {modelSetting, cacheAble, clearCache} from './../src/Decorators'
 
 @modelSetting({
     __needAuth:async ({uid})=>{

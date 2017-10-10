@@ -13,8 +13,11 @@ export const getGankaoWXAuthToken = async (gkwxauthtoken)=> {
     return await _redisClient.getAsyncOrig(gkwxauthtoken)
 }
 
-export const setting_redisConfig = async (redisConfig)=>{
-    _redisConfig = redisConfig
+export const setting_redisConfig = (redisConfig)=> {
+    (() => {
+        _redisConfig = redisConfig
+        console.log(`setting_redisConfig done!`)
+    })();
 }
 
 export const getting_redisConfig = async ()=>{
@@ -52,9 +55,37 @@ export const getRedisClient = ()=> {
         let deleted = await _redisClient.delAsync(key)
         console.log(`测试，删除了redis key:${key},${deleted}`)
     }
+    Promise.promisifyAll(_redisClient);
+
+    try{
+        _redisClient.getAsyncOrig = _redisClient.getAsync;
+        _redisClient.getAsync=async (...params)=>{
+            params[0] = redis_cache_key_prefx+params[0];
+            return await _redisClient.getAsyncOrig(...params)
+        }
+        //
+        _redisClient.setAsyncOrig = _redisClient.setAsync;
+        _redisClient.setAsync=async (...params)=> {
+            params[0] = redis_cache_key_prefx + params[0];
+            return await _redisClient.setAsyncOrig(...params)
+        }
+        //
+        _redisClient.delAsyncOrig = _redisClient.delAsync;
+        _redisClient.delAsync=async (...params)=> {
+            params[0] = redis_cache_key_prefx + params[0];
+            return await _redisClient.delAsyncOrig(...params)
+        }
+        //
+        _redisClient.expireAsyncOrig = _redisClient.expireAsync;
+        _redisClient.expireAsync=async (...params)=> {
+            params[0] = redis_cache_key_prefx + params[0];
+            return await _redisClient.expireAsyncOrig(...params)
+        }
+    }catch(err) {
+        console.error(`_redisClient异步Promise化遇到错误：${err}`)
+    }
 
     _redisClient.on("connect",async (err)=> {
-        Promise.promisifyAll(_redisClient);
 
         console.log(`链接Redis服务器 on ${_redisConfig.host}:${_redisConfig.port} ... ...connecting ...`);
         //
@@ -65,34 +96,6 @@ export const getRedisClient = ()=> {
             })
         }else {
             await onAuthDone()
-        }
-        try{
-
-            _redisClient.getAsyncOrig = _redisClient.getAsync;
-            _redisClient.getAsync=async (...params)=>{
-                params[0] = redis_cache_key_prefx+params[0];
-                return await _redisClient.getAsyncOrig(...params)
-            }
-            //
-            _redisClient.setAsyncOrig = _redisClient.setAsync;
-            _redisClient.setAsync=async (...params)=> {
-                params[0] = redis_cache_key_prefx + params[0];
-                return await _redisClient.setAsyncOrig(...params)
-            }
-            //
-            _redisClient.delAsyncOrig = _redisClient.delAsync;
-            _redisClient.delAsync=async (...params)=> {
-                params[0] = redis_cache_key_prefx + params[0];
-                return await _redisClient.delAsyncOrig(...params)
-            }
-            //
-            _redisClient.expireAsyncOrig = _redisClient.expireAsync;
-            _redisClient.expireAsync=async (...params)=> {
-                params[0] = redis_cache_key_prefx + params[0];
-                return await _redisClient.expireAsyncOrig(...params)
-            }
-        }catch(err) {
-            console.error(`_redisClient异步Promise化遇到错误：${err}`)
         }
     });
     return _redisClient

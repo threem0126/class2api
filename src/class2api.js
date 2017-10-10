@@ -1,4 +1,4 @@
-console.dir("Nice to meet U....");
+console.dir("Nice to meet U, I will help You to map Class to API interface ....");
 import express from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
@@ -20,7 +20,9 @@ let _server;
 
 const _create_server = async (options)=> {
     let {config, custom, modelClasses, beforeCall, afterCall, method404} = options
-    let _config = config()
+    if(typeof config !== "function"){
+        throw  `配置参数中未传入config[Function]属性`
+    }
     let {
         cros = true,
         cros_headers=[],
@@ -32,10 +34,7 @@ const _create_server = async (options)=> {
         sessionUseRedis = false,
         staticPath = '',
         redis
-    } = _config
-
-    if (redis)
-        setting_redisConfig(redis)
+    } = config()
 
     _server = express();
     // Security
@@ -63,9 +62,9 @@ const _create_server = async (options)=> {
         //REDIS_SESSION
         const RedisStore = connectRedis(session);
         sessionOpt.store = new RedisStore({
-            host: _config.redis.host,
-            port: _config.redis.port,
-            pass: _config.redis.password || ''
+            host: redis.host,
+            port: redis.port,
+            pass: redis.password || ''
         })
         console.log('Session存储方式：Redis ....')
     } else {
@@ -109,6 +108,11 @@ const _create_server = async (options)=> {
         res.status = 404;
         res.json({err: 'API Not Defined!', result: null})
     });
+
+    if (redis){
+        await setting_redisConfig(redis)
+        await getRedisClient()
+    }
 
     return _server
 }

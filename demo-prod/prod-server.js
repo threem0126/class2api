@@ -1,6 +1,6 @@
-import _config from "./config.js" ;
+import _config from "./../config.js" ;
 import ModelA from './ModelA'
-import {createServer,GKErrors,GKErrorWrap} from './lib/class2api'
+import {createServer,GKErrors,GKErrorWrap} from './../lib/class2api'
 
 let node_env = process.env.NODE_ENV || "development"
 let port = 3002;
