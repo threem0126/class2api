@@ -75,14 +75,14 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             }
 
             //如果是对象（非简单数据类型），则必须包含key／value结构
-            if (typeof result === "object" && keys(result).length === 0) {
+            if (typeof result !== "object" || keys(result).length === 0) {
                 throw `非简单数据类型的接口返回值必须包含key／value结构，接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，不符合规范!`;
             }
             let retData = {err: null, result: result}
+            res.json(await resWrap({req, res, result:retData}));
             if (process.env.NODE_ENV !== "production") {
                 console.log(`api call result from(${req.originalUrl}):${JSON.stringifyline(retData)}`);
             }
-            res.json(await resWrap({req, res, result:retData}));
         } catch (err) {
             if (process.env.NODE_ENV !== "production") {
                 //region 让错误直接抛出，并终止程序。不需要时可以整体注释掉
@@ -134,7 +134,7 @@ export const EndPointMap_forServerRender = async (api_endpint, methodName,  para
 
 export const CreateListenRouter = async (options)=> {
 
-    if(router_listen_created)
+    if (router_listen_created)
         return router
 
     let {apiroot, modelClasses, beforeCall, afterCall, method404, frontpage_default} = options
@@ -157,19 +157,19 @@ export const CreateListenRouter = async (options)=> {
     }
 
     //拦截未匹配到的其他方法
-    router.all('*', async (req, res, next) =>{
-        try{
-            if(typeof method404 ==='function'){
+    router.all('*', async (req, res, next) => {
+        try {
+            if (typeof method404 === 'function') {
                 await method404(req, res)
-            }else {
-                next()
+            } else {
+                res.json({err: `API方法未定义`, result: null});
             }
-        }catch(err) {
+        } catch (err) {
             res.status = 404;
-            res.json({err:`404处理错误(${JSON.stringify(err)})`, result: null});
+            res.json({err: `404处理错误(${JSON.stringify(err)})`, result: null});
         }
     });
-    router_listen_created=true
+    router_listen_created = true
 
     return router
 }

@@ -24,6 +24,7 @@ const _create_server = async (options)=> {
     let {
         cros = true,
         cros_headers=[],
+        cros_origin=[],
         frontpage_default='', //与从前端请求传过来header中的frontpage合并，优先获取客户端的，其实采用此默认值。最后封装为标准url对象并绑定到API方法回调的params对象的___frontpageURL属性上
         apiroot = '/',
         sessionKey = 'class2api',
@@ -77,10 +78,12 @@ const _create_server = async (options)=> {
     }
     if (cros) {
         //设置跨域访问
+        cros_origin = cros_origin.map(item => item.toLowerCase())
         cros_headers = cros_headers.map(item => item.toLowerCase())
         let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'token'].map(item => item.toLowerCase())
         _server.use(function (req, res, next) {
-            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Origin", (cros_origin.length===0)?"*":cros_origin.join(','));
+            res.header("Access-Control-Allow-Credentials", "true");
             res.header("Access-Control-Allow-Methods", "HEAD,OPTIONS,POST");
             res.header("Access-Control-Allow-Headers", " " + [...allow_Header, ...cros_headers].join(", "));
             if ('OPTIONS' === req.method) {
@@ -117,10 +120,11 @@ const createServer = async (options)=> {
 }
 
 const GKErrors = {
-    _SERVER_ERROR:GKErrorWrap(-2,`服务发生异常`),
+    _NO_RESULT:GKErrorWrap(-3,`无匹配结果`),
+    _SERVER_ERROR:GKErrorWrap(-2,`服务发生异常`),//最常用的
     _NOT_PARAMS:GKErrorWrap(-1,`缺少参数`),
     _PARAMS_VALUE_EXPECT:GKErrorWrap(1001,`参数不符合预期`),
-    _NOT_SERVICE:GKErrorWrap(1002,`尚未实现`),
+    _NOT_SERVICE:GKErrorWrap(1002,`功能即将实现`),
     _NOT_ACCESS_PERMISSION:GKErrorWrap(1004,`无访问权限`),
     _TOKEN_LOGIN_INVALID:GKErrorWrap(1006,`请先登录`)
 }
