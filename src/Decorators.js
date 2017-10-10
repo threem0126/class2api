@@ -213,7 +213,7 @@ export const ipwhitelist = () => {
 export const crashAfterMe = (hintMsg)=> {
     return function (target, name, descriptor) {
         if (!descriptor) {
-            throw 'crashAfterMe不支持修饰类'
+            throw 'crashAfterMe只支持修饰类方法本身，不支持修饰类'
         }
         if (process.env.NODE_ENV !== 'production') {
             let oldValue = descriptor.value;
