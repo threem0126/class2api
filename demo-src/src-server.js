@@ -10,9 +10,8 @@ setting_redisConfig(redis)
 //创建微服务对象
 createServer({
     config(){
-        let {mysql,redis} = _config
+        let {redis} = _config
         return {
-            mysql,
             redis,
             apiroot: '/',
             cros:true,

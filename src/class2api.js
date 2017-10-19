@@ -8,36 +8,59 @@ import bodyParser from "body-parser";
 import compression from "compression";
 import connectRedis from "connect-redis";
 import loggerCreator from "./logger.js";
-import {sortBy} from "lodash";
 import log4js from 'log4js';
-import * as ModelProxy  from './ModelProxy';
-import {getGankaoWXAuthToken, setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 import {GKErrorWrap}   from './GKError';
+import * as ModelProxy  from './ModelProxy';
 import {modelSetting, cacheAble, clearCache, crashAfterMe, definedStaticField}  from './Decorators';
+import {getGankaoWXAuthToken, setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 
 const logger = loggerCreator();
 let _server;
+let _router;
 
-const _create_server = async (options)=> {
+const _create_server = async (model, options)=> {
     let {config, custom, modelClasses, beforeCall, afterCall, method404} = options
-    if(typeof config !== "function"){
-        throw  `配置参数中未传入config[Function]属性`
+    if (model==='server' && typeof config !== "function") {
+        throw  `server模式下，配置参数中必需传入config[Function]属性`
     }
+
     let {
         cros = true,
-        cros_headers=[],
-        cros_origin=[],
-        frontpage_default='', //与从前端请求传过来header中的frontpage合并，优先获取客户端的，其实采用此默认值。最后封装为标准url对象并绑定到API方法回调的params对象的___frontpageURL属性上
+        cros_headers = [],
+        cros_origin = [],
+        frontpage_default = '', //与从前端请求传过来header中的frontpage合并，优先获取客户端的，其实采用此默认值。最后封装为标准url对象并绑定到API方法回调的params对象的___frontpageURL属性上
         apiroot = '/',
         sessionKey = 'class2api',
         sessionSecret = 'class2api',
         sessionUseRedis = false,
         staticPath = '',
         redis
-    } = config()
+    } = (typeof config === "function") ? config():{}
 
-    _server = express();
+    if (redis) {
+        await setting_redisConfig(redis)
+        await getRedisClient()
+    }
+
+    let _modelClasses = modelClasses()
+    _router = await _create_router({
+        apiroot,
+        modelClasses: _modelClasses,
+        beforeCall,
+        afterCall,
+        method404,
+        frontpage_default
+    })
+
+    //利用外部的express实例，只返回路由对象
+    if (model === 'router') {
+        // API相关路由,在main内部映射到各个功能Model
+        console.log(`以路由绑定模式开启class2api，cros跨域设置、session、等配置都将忽略，由外部的express实例控制！`)
+        return _router
+    }
+
     // Security
+    _server = express();
     _server.disable("x-powered-by");
     _server.use(bodyParser.urlencoded({extended: false}));
     _server.use(bodyParser.json({limit: "5000kb"}));
@@ -59,6 +82,9 @@ const _create_server = async (options)=> {
         cookie: {maxAge: 8000 * 1000}
     }
     if (sessionUseRedis) {
+        if(!redis) {
+            throw  `开启sessionUseRedis时，必需定义redis配置`
+        }
         //REDIS_SESSION
         const RedisStore = connectRedis(session);
         sessionOpt.store = new RedisStore({
@@ -81,7 +107,7 @@ const _create_server = async (options)=> {
         cros_headers = cros_headers.map(item => item.toLowerCase())
         let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'token'].map(item => item.toLowerCase())
         _server.use(function (req, res, next) {
-            res.header("Access-Control-Allow-Origin", (cros_origin.length===0)?"*":cros_origin.join(','));
+            res.header("Access-Control-Allow-Origin", (cros_origin.length === 0) ? "*" : cros_origin.join(','));
             res.header("Access-Control-Allow-Credentials", "true");
             res.header("Access-Control-Allow-Methods", "HEAD,OPTIONS,POST");
             res.header("Access-Control-Allow-Headers", " " + [...allow_Header, ...cros_headers].join(", "));
@@ -92,16 +118,14 @@ const _create_server = async (options)=> {
             }
         });
     }
+    _server.use(apiroot, _router)
 
-    let {express: cus_express_fn} = await custom()
-    if(cus_express_fn){
-        _server = await cus_express_fn(_server)
+    if(typeof custom === "function") {
+        let {express: cus_express_fn} = await custom()
+        if (cus_express_fn) {
+            _server = await cus_express_fn(_server)
+        }
     }
-
-    let _modelClasses = modelClasses()
-
-    // API相关路由,在main内部映射到各个功能Model
-    _server.use(apiroot, await ModelProxy.CreateListenRouter({apiroot, modelClasses: _modelClasses, beforeCall, afterCall, method404, frontpage_default}))
 
     // catch 404 and forward to error handler
     _server.use(function (req, res, next) {
@@ -109,18 +133,30 @@ const _create_server = async (options)=> {
         res.json({err: 'API Not Defined!', result: null})
     });
 
-    if (redis){
-        await setting_redisConfig(redis)
-        await getRedisClient()
-    }
-
     return _server
+}
+
+const _create_router = async ({apiroot, modelClasses: _modelClasses, beforeCall, afterCall, method404, frontpage_default})=> {
+    return await ModelProxy.CreateListenRouter({
+        apiroot,
+        modelClasses: _modelClasses,
+        beforeCall,
+        afterCall,
+        method404,
+        frontpage_default
+    })
 }
 
 const createServer = async (options)=> {
     if (!_server)
-        _server  = await _create_server(options)
+        _server  = await _create_server('server', options)
     return _server
+}
+
+const createServerInRouter = async (options)=> {
+    if (!_router)
+        _router = await _create_server('router', options)
+    return _router
 }
 
 const GKErrors = {
@@ -135,6 +171,7 @@ const GKErrors = {
 
 export {
     createServer,
+    createServerInRouter,
     getGankaoWXAuthToken,
     setting_redisConfig,
     getting_redisConfig,

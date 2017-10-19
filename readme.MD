@@ -3,9 +3,11 @@
 
 # npm i
 
-# npm run start:src-  --基于源码版本运行
+# npm run start:src  --基于源码版本运行
+# npm run start:srcrouter  --路由版本，基于源码版本运行
 
-# npm run start:prod- --基于编译版本运行
+# npm run start:prod --基于编译版本运行
+# npm run start:prodrouter --路由版本，基于编译版本运行
 
 # npm run build
 
@@ -13,8 +15,10 @@
 
 # mocha test/test.run
 
+
 # 导出功能函数：
-- createServer, 创建服务器
+- createServer, 创建服务器(使用内建的独立Express实例)
+- createServerInRouter, 创建服务器(使用外部的Express，只返回router供绑定路由)
 - getGankaoWXAuthToken, 从redis中读取赶考token的简单封装，方便使用方不用重新创建redis实例。将来可以剥离
 - setting_redisConfig，设置内置redis的连接参数
 - getting_redisConfig, 读取内置redis的连接参数
