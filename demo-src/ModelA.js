@@ -1,4 +1,5 @@
-import {modelSetting, cacheAble, clearCache} from './../src/Decorators'
+import {modelSetting, cacheAble, clearCache} from './../src/class2api/Decorators'
+import {GKErrors} from './../src/class2api/GKErrors'
 
 @modelSetting({
     __needAuth:async ({uid})=>{
@@ -17,7 +18,8 @@ class ModelA {
         }
     })
     static async hello({name}) {
-        return {message:`hello.${name}`}
+        console.log(GKErrors._SERVER_ERROR('错误1'))
+        return {message: `hello.${name}`}
     }
 }
 

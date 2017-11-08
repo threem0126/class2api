@@ -8,7 +8,7 @@ if(!JSON.stringifyline) {
 let errCodes = {}
 
 /*
-    错误信息生成器，高阶函数
+ 错误信息生成器，高阶函数
  */
 export const GKErrorWrap = (errCode, errMessage)=> {
     if(errCodes[errCode])
@@ -27,6 +27,3 @@ export const GKErrorWrap = (errCode, errMessage)=> {
         }
     }
 }
-
-
-

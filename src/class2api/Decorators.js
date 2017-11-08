@@ -197,7 +197,7 @@ export const ipwhitelist = () => {
                     throw `静态类方法 ${target.name}.${name} 中要求限定IP白名单，但是没有req请求参数传入，无法实施IP限制`
                 })
             }
-            if (whiteIPs_canInvokeAppentData.indexOf(getClientIp(req))===-1) {
+            if (whiteIPs.indexOf(getClientIp(req))===-1) {
                 //修饰器的报错，级别更高，直接抛出终止程序
                 setTimeout(()=>{
                     throw `IP没有访问权限`

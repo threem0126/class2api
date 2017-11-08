@@ -1,4 +1,6 @@
 import {modelSetting, cacheAble, clearCache} from './../lib/class2api'
+import {GKErrors} from './../lib/class2api/GKErrors'
+
 
 @modelSetting({
     __needAuth:async ({uid})=>{
@@ -17,6 +19,7 @@ class ModelA {
         }
     })
     static async hello({name}) {
+        console.log(GKErrors._SERVER_ERROR('错误1'))
         return {message:`hello.${name}`}
     }
 }

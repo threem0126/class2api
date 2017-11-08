@@ -9,10 +9,11 @@ import compression from "compression";
 import connectRedis from "connect-redis";
 import loggerCreator from "./logger.js";
 import log4js from 'log4js';
-import {GKErrorWrap}   from './GKError';
 import * as ModelProxy  from './ModelProxy';
 import {modelSetting, cacheAble, clearCache, crashAfterMe, definedStaticField}  from './Decorators';
 import {getGankaoWXAuthToken, setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
+import {GKErrorWrap} from './GKErrorWrap'
+import * as GKErrors from './GKErrors';
 
 const logger = loggerCreator();
 let _server;
@@ -159,14 +160,18 @@ const createServerInRouter = async (options)=> {
     return _router
 }
 
-const GKErrors = {
-    _NO_RESULT:GKErrorWrap(-3,`无匹配结果`),
-    _SERVER_ERROR:GKErrorWrap(-2,`服务发生异常`),//最常用的
-    _NOT_PARAMS:GKErrorWrap(-1,`缺少参数`),
-    _PARAMS_VALUE_EXPECT:GKErrorWrap(1001,`参数不符合预期`),
-    _NOT_SERVICE:GKErrorWrap(1002,`功能即将实现`),
-    _NOT_ACCESS_PERMISSION:GKErrorWrap(1004,`无访问权限`),
-    _TOKEN_LOGIN_INVALID:GKErrorWrap(1006,`请先登录`)
+/**
+ * 返回操作成功的结果数据，可附带msg信息对象
+ * @param ps
+ * @returns {{success: true,msg:<System.Object>}}
+ * @constructor
+ */
+const GKSUCCESS = (ps) => {
+    if (ps) {
+        return {success: true, ...( (ps instanceof Object) ? ps : {msg: ps})}
+    } else {
+        return {success: true}
+    }
 }
 
 export {
@@ -182,7 +187,8 @@ export {
     cacheAble,
     clearCache,
     crashAfterMe,
-    definedStaticField
+    definedStaticField,
+    GKSUCCESS
 }
 
 
