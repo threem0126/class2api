@@ -1,6 +1,6 @@
 import _config from "./../config.js" ;
 import ModelA from './ModelA'
-import {createServer,GKErrors,setting_redisConfig} from './../src/class2api'
+import {createServer,GKErrors,setting_redisConfig} from './../src/lib/class2api'
 
 let node_env = process.env.NODE_ENV || "development"
 let port = 3002;
@@ -14,11 +14,7 @@ createServer({
         return {
             redis,
             apiroot: '/',
-            cros:true,
-            sessionKey:`gankao_${node_env}`,
-            sessionSecret:`b1^*%124uy&4134uymn`,
-            sessionUseRedis:true,
-            //staticPath:path.join(__dirname, './public')
+            cros:true
         }
     },
 

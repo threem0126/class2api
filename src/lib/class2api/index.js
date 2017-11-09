@@ -1,29 +1,29 @@
 console.dir("Nice to meet U, I will help You to map Class to API interface ....");
 import express from "express";
-import session from "express-session";
+//import session from "express-session";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import hpp from "hpp";
 import bodyParser from "body-parser";
 import compression from "compression";
-import connectRedis from "connect-redis";
+//import connectRedis from "connect-redis";
 import loggerCreator from "./logger.js";
 import log4js from 'log4js';
 import * as ModelProxy  from './ModelProxy';
 import {modelSetting, cacheAble, clearCache, crashAfterMe, definedStaticField}  from './Decorators';
 import {getGankaoWXAuthToken, setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 import {GKErrorWrap} from './GKErrorWrap'
-import * as GKErrors from './GKErrors';
 
 const logger = loggerCreator();
 let _server;
 let _router;
 
 const _create_server = async (model, options)=> {
+
     let {config, custom, modelClasses, beforeCall, afterCall, method404} = options
-    if (model==='server' && typeof config !== "function") {
-        throw  `server模式下，配置参数中必需传入config[Function]属性`
-    }
+    // if (model==='server' && typeof config !== "function") {
+    //     throw  `server模式下，配置参数中必需传入config[Function]属性`
+    // }
 
     let {
         cros = true,
@@ -34,16 +34,17 @@ const _create_server = async (model, options)=> {
         sessionKey = 'class2api',
         sessionSecret = 'class2api',
         sessionUseRedis = false,
-        staticPath = '',
         redis
-    } = (typeof config === "function") ? config():{}
+    } = (typeof config === "function") ? config():(config||{})
 
     if (redis) {
         await setting_redisConfig(redis)
         await getRedisClient()
     }
-
-    let _modelClasses = modelClasses()
+    let _modelClasses = (typeof modelClasses === "function") ? modelClasses():(modelClasses||[])
+    if(!(_modelClasses instanceof Array)) {
+        throw `无法识别指定的类清单，因为modelClasses配置项格式有误，期望是Array列表`
+    }
     _router = await _create_router({
         apiroot,
         modelClasses: _modelClasses,
@@ -74,39 +75,41 @@ const _create_server = async (model, options)=> {
     _server.use(compression());
     _server.use(log4js.connectLogger(logger, {level: log4js.levels.INFO, format: ':method :url'}));
 
+    //session 禁用
+    //
     //启用Session，可选Redis存储。PM2集群模式时，必须用分布式存储
-    let sessionOpt = {
-        secret: sessionSecret,
-        key: sessionKey,
-        resave: false,
-        saveUninitialized: true,
-        cookie: {maxAge: 8000 * 1000}
-    }
-    if (sessionUseRedis) {
-        if(!redis) {
-            throw  `开启sessionUseRedis时，必需定义redis配置`
-        }
-        //REDIS_SESSION
-        const RedisStore = connectRedis(session);
-        sessionOpt.store = new RedisStore({
-            host: redis.host,
-            port: redis.port,
-            pass: redis.password || ''
-        })
-        console.log('Session存储方式：Redis ....')
-    } else {
-        console.log('Session存储方式：进程内存 ....')
-    }
-    _server.use(session(sessionOpt));
-    //_server.use(morgan("combined"));
-    if (staticPath) {
-        _server.use(express.static(staticPath));
-    }
+    // let sessionOpt = {
+    //     secret: sessionSecret,
+    //     key: sessionKey,
+    //     resave: false,
+    //     saveUninitialized: true,
+    //     cookie: {maxAge: 8000 * 1000}
+    // }
+    // if (sessionUseRedis) {
+    //     if(!redis) {
+    //         throw  `开启sessionUseRedis时，必需定义redis配置`
+    //     }
+    //     //REDIS_SESSION
+    //     const RedisStore = connectRedis(session);
+    //     sessionOpt.store = new RedisStore({
+    //         host: redis.host,
+    //         port: redis.port,
+    //         pass: redis.password || ''
+    //     })
+    //     console.log('Session存储方式：Redis ....')
+    // } else {
+    //     console.log('Session存储方式：进程内存 ....')
+    // }
+    // _server.use(session(sessionOpt));
+    // if (staticPath) {
+    //     _server.use(express.static(staticPath));
+    // }
+
     if (cros) {
         //设置跨域访问
         cros_origin = cros_origin.map(item => item.toLowerCase())
         cros_headers = cros_headers.map(item => item.toLowerCase())
-        let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'token'].map(item => item.toLowerCase())
+        let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
         _server.use(function (req, res, next) {
             res.header("Access-Control-Allow-Origin", (cros_origin.length === 0) ? "*" : cros_origin.join(','));
             res.header("Access-Control-Allow-Credentials", "true");
@@ -182,7 +185,6 @@ export {
     getting_redisConfig,
     getRedisClient,
     GKErrorWrap,
-    GKErrors,
     modelSetting,
     cacheAble,
     clearCache,

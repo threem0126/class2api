@@ -143,13 +143,13 @@ export const CreateListenRouter = async (options)=> {
     for (let classObj of modelClasses) {
         if (typeof classObj === "function") {
             router.use(`/${classObj.name.toLowerCase()}`, await _bindRouter(classObj, beforeCall, afterCall));
-            console.log(`将${classObj.name}类映射到 ${apiroot}${classObj.name.toLowerCase()} ... OK!`)
+            console.log(`mapped class '${classObj.name}' to '${apiroot}${classObj.name.toLowerCase()}/*' ... OK!`)
         } else {
             let {model, as} = classObj
             if (model && as) {
                 let aPath = (as || model.name).toLowerCase()
                 router.use(`/${aPath}`, await _bindRouter(model, beforeCall, afterCall, frontpage_default));
-                console.log(`将${model.name}类映射到 ${apiroot}${aPath} ... OK!`)
+                console.log(`mapped class '${model.name}' to '${apiroot}${aPath}/*' ... OK!`)
             } else {
                 throw `modelClasses参数中${classObj}的对象不是有效的Class类或{model,as}结构定义`
             }

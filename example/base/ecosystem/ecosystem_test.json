@@ -1,0 +1,19 @@
+{
+  "apps": [
+    {
+      "name": "class2api_demo",
+      "script": "./src/index.js",
+      "exec_mode": "cluster",
+      "max_memory_restart": "200M",
+      "cwd": "",
+      "instances": "2",
+      "env": {
+        "NODE_ENV": "test",
+        "PORT": "3002",
+        "SQLPORT": "3306",
+        "SQL_PRINT": "0",
+        "REDIS_SESSION": 1
+      }
+    }
+  ]
+}

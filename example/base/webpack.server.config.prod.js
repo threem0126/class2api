@@ -2,6 +2,7 @@
 var webpack = require("webpack");
 var fs =  require("fs");
 var path = require("path");
+var CopyWebpackPlugin = require("copy-webpack-plugin");
 
 function getExternals() {
   const nodeModules = fs.readdirSync(path.resolve(__dirname, "node_modules"));
@@ -14,16 +15,22 @@ function getExternals() {
 module.exports = {
     target: "node",
     entry: {
-        index: ["./lib/class2api.js"]
+        index: ["./src/server.js"]
     },
     output: {
-        path: __dirname + "/build",
-        filename: "class2api.out.js"
+        path: __dirname + "/build/server",
+        filename: "[name].js"
+    },
+    resolve: {
+        modules: [
+            path.resolve('./src'),
+            path.resolve('./node_modules')
+        ]
     },
     externals: getExternals(),
     node: {
-        __filename: false,
-        __dirname: false
+        __filename: true,
+        __dirname: true
     },
     plugins: [
         new webpack.optimize.OccurrenceOrderPlugin(),
@@ -31,13 +38,17 @@ module.exports = {
         new webpack.DefinePlugin({
             "process.env.__ISCOMPILING__": true,
             "process.env.NODE_ENV": '"production"'
-        })
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {warnings: false}
+        }),
+        new CopyWebpackPlugin([ ])
     ],
     module: {
         loaders: [{
             test: /\.js$/,
             loaders: ["babel-loader"],
-            include: path.join(__dirname, "lib")
+            include: path.join(__dirname, "src")
         },{
             test: /\.(png|jpg)$/,
             loader: "url?limit=25000!img?progressive=true"
