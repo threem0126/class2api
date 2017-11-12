@@ -7,9 +7,9 @@ npm-debug.log*
 node_modules
 /.idea
 /build
-/example/base/node_modules
+/example/baseProject/node_modules
 /example/width_apicache/node_modules
-/example/width_sequelize/node_modules
+/example/super/node_modules
 
 # Runtime data
 pids

@@ -24,12 +24,12 @@ export default function() {
                     // They will all be used once the "clustered" master appender receives a loggingEvent
                     appenders: [
                         { type: 'console' },
-                        {
-                            "type": "dateFile",
-                            "filename": "data/0-loggs/node.log",
-                            "pattern": "-yyyy-MM-dd",
-                            "alwaysIncludePattern": false
-                        }
+                        // {
+                        //     "type": "dateFile",
+                        //     "filename": "data/0-loggs/node.log",
+                        //     "pattern": "-yyyy-MM-dd",
+                        //     "alwaysIncludePattern": false
+                        // }
                     ]
                 }
             ],

@@ -1,6 +1,6 @@
 import should from 'should';
 import {filter} from 'lodash'
-import {WebInvokeHepler, setApiRoot, save2Doc} from './../src/lib/testhelper'
+import {ApiDesc, WebInvokeHepler, setApiRoot, save2Doc} from './../src/lib/testhelper'
 
 JSON.stringifyline = function (Obj) {
     return JSON.stringify(Obj, null, 2)
@@ -12,9 +12,6 @@ let _run = {
             token: 'dfdfddf'
         }
     }
-}
-let apiDesc=(desc)=>{
-    return desc
 }
 const remote_api = process.env.ONLINE==='1'? `https://comment_api_test.gankao.com`
                             :(process.env.ONLINE==='2'? `https://comment_api.gankao.com`
@@ -30,7 +27,11 @@ describe('评论系统', function () {
     //endregion
 
     it('/modela/hello', async () => {
-        let response = await WebInvokeHepler(_run.accounts.user1)('/modela/hello', {name:"haungyong"})
+        let response = await WebInvokeHepler(_run.accounts.user1)(
+            '/modela/hello',
+            {name: "haungyong"},
+            ApiDesc(`方法Hello`)
+        )
         console.log(response)
         let {err, result} = response
         let {message} = result
@@ -45,7 +46,10 @@ describe('评论系统', function () {
     })
 
     it('/a2/hello', async () => {
-        let response = await WebInvokeHepler(_run.accounts.user1)('/a2/hello', {name:Math.random()})
+        let response = await WebInvokeHepler(_run.accounts.user1)(
+            '/a2/hello',
+            {name: Math.random()},
+            ApiDesc(`以别名方式请求`))
         console.log(response)
         let {err, result} = response
         let {message} = result

@@ -10,11 +10,14 @@ JSON.stringifyline = function (Obj) {
 }
 
 let remote_api
+let docapi = []
+
 export const setApiRoot = (apiRoot)=> {
     remote_api = apiRoot
 }
-
-let docapi = []
+export const ApiDesc=(desc)=> {
+    return desc
+}
 export const WebInvokeHepler = (userToken) => {
     return async (apiPath, postParams, apiDesc) => {
         let options = {
@@ -43,9 +46,13 @@ export const save2Doc = (save2File)=> {
         lines.push(`# ${apiDesc} #`)
         lines.push(`- 接口：${uri}`)
         lines.push(`- post参数：`)
-        lines.push('`' + JSON.stringifyline(postParams) + '`')
+        lines.push('```json')
+        lines.push(JSON.stringifyline(postParams))
+        lines.push('```')
         lines.push(`- 请求结果：`)
-        lines.push('`' + JSON.stringifyline(body) + '`')
+        lines.push('```json')
+        lines.push(JSON.stringifyline(body))
+        lines.push('```')
         str.push(lines.join("\r"))
     })
     fs.writeFileSync(save2File || "api.MD", str.join("\n\r"))
