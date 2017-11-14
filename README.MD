@@ -11,7 +11,8 @@
 # npm run build
 # npm publish
 
-$ npm i --registry=https://registry.npm.taobao.org 
+$ npm i --registry=https://registry.npm.taobao.org
+$ npm i --registry https://registry.npmjs.org
 
 # 导出功能函数：
 class2api/
