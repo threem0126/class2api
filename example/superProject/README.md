@@ -14,7 +14,7 @@
  $ NODE_ENV=production REDIS_SESSION=1 pm2 start ./src/index.js --name microservice_zhuli -i 0
  `
 # 初始化或重置数据库 #
- $ DB_RESET_1=123234537569 DB_RESET_2=wrq5hfoiuy12344376 node toolscript/run-resetModel.js      
+ $ FORCE=0 DB_RESET_1=123234537569 DB_RESET_2=wrq5hfoiuy12344376 node toolscript/resetDB.run.js      
 
 #本地启动redis：
 cd /usr/local/redis && src/redis-server

@@ -59,7 +59,7 @@ const ResetDB = async () => {
         if (process.env.DB_RESET_1 === key1 && process.env.DB_RESET_2 === key2) {
             if (process.env.NODE_ENV !== 'production') {
                 console.info("DB Inited ... ...");
-                await sequelize.sync({force: true});
+                await sequelize.sync({force: (process.env.FORCE=="1")});
                 console.info("DB Inited Done! ");
                 return true
             } else {

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.crashAfterMe = exports.ipwhitelist = exports.clearCache = exports.cacheAble = exports.authAccess = exports.definedStaticField = exports.modelSetting = undefined;
+exports.crashAfterMe = exports.ipwhitelist = exports.clearCache = exports.cacheAble = exports.authAccess = exports.modelSetting = undefined;
 
 var _iterator = require('babel-runtime/core-js/symbol/iterator');
 
@@ -60,23 +60,6 @@ var modelSetting = exports.modelSetting = function modelSetting(props) {
         target.__modelSetting = function () {
             return _extends({}, props);
         };
-    };
-};
-
-var definedStaticField = exports.definedStaticField = function definedStaticField(props) {
-    (0, _keys2.default)(props).map(function (key, value) {
-        if (key.indexOf("__") !== 0) {
-            throw '动态添加的静态属性名不符合约定格式（__****）';
-        }
-    });
-    return function (target) {
-        (0, _keys2.default)(props).map(function (key, value) {
-            if (target[key]) {
-                throw '动态添加的静态属性名已被先定义，无法重复（__****）';
-            } else {
-                target[key] = value;
-            }
-        });
     };
 };
 

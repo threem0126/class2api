@@ -1,6 +1,6 @@
 {
   "name": "class2api",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "the lib for mapping your javascript class to api service.",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
@@ -30,6 +30,23 @@
   },
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.4.0",
+    "body-parser": "^1.14.2",
+    "compression": "^1.6.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "helmet": "^3.6.0",
+    "hpp": "^0.2.2",
+    "lodash": "^4.17.4",
+    "log4js": "^1.1.1",
+    "module-resolver": "^1.0.0",
+    "npm": "^5.5.1",
+    "redis": "^2.8.0",
+    "request": "^2.81.0",
+    "sequelize": "^3.30.4"
+  },
+  "devDependencies": {
+    "npm-check": "^5.5.2",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.5.1",
     "babel-eslint": "^7.2.1",
@@ -54,20 +71,6 @@
     "babel-preset-react-optimize": "^1.0.1",
     "babel-register": "^6.26.0",
     "babel-runtime": "^6.5.0",
-    "bluebird": "^3.4.0",
-    "body-parser": "^1.14.2",
-    "compression": "^1.6.2",
-    "cookie-parser": "^1.4.3",
-    "express": "^4.14.0",
-    "helmet": "^3.6.0",
-    "hpp": "^0.2.2",
-    "lodash": "^4.17.4",
-    "log4js": "^1.1.1",
-    "module-resolver": "^1.0.0",
-    "npm": "^5.5.1",
-    "redis": "^2.8.0",
-    "request": "^2.81.0",
-    "sequelize": "^3.30.4",
     "should": "^13.0.1"
   }
 }

@@ -130,7 +130,7 @@ var ResetDB = function () {
 
                         console.info("DB Inited ... ...");
                         _context2.next = 7;
-                        return sequelize.sync({ force: true });
+                        return sequelize.sync({ force: process.env.FORCE == "1" });
 
                     case 7:
                         console.info("DB Inited Done! ");

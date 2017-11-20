@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.GKSUCCESS = exports.definedStaticField = exports.crashAfterMe = exports.clearCache = exports.cacheAble = exports.modelSetting = exports.GKErrorWrap = exports.getRedisClient = exports.getting_redisConfig = exports.setting_redisConfig = exports.getGankaoWXAuthToken = exports.createServerInRouter = exports.createServer = undefined;
+exports.crashAfterMe = exports.clearCache = exports.cacheAble = exports.modelSetting = exports.GKErrorWrap = exports.getRedisClient = exports.setting_redisConfig = exports.getGankaoWXAuthToken = exports.GKSUCCESS = exports.createServerInRouter = exports.createServer = undefined;
 
 var _assign = require("babel-runtime/core-js/object/assign");
 
@@ -299,7 +299,13 @@ var _create_router = function () {
     };
 }();
 
-var createServer = function () {
+/**
+ * 以Server（内置Express）的方式运行API微服务
+ *
+ * @param options
+ * @returns {Promise.<*>}
+ */
+var createServer = exports.createServer = function () {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3(options) {
         return _regenerator2.default.wrap(function _callee3$(_context3) {
             while (1) {
@@ -332,7 +338,13 @@ var createServer = function () {
     };
 }();
 
-var createServerInRouter = function () {
+/**
+ * 以Express-Router的方式运行API微服务，通常用于在独立的Express站点中增加一个子路由来实现API服务入口
+ *
+ * @param options
+ * @returns {Promise.<*>}
+ */
+var createServerInRouter = exports.createServerInRouter = function () {
     var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(options) {
         return _regenerator2.default.wrap(function _callee4$(_context4) {
             while (1) {
@@ -366,12 +378,12 @@ var createServerInRouter = function () {
 }();
 
 /**
- * 返回操作成功的结果数据，可附带msg信息对象
+ * 快速封装一个{success: true}结构的对象，代表当前API的业务操作成功。可附带扩展属性
  * @param ps
- * @returns {{success: true,msg:<System.Object>}}
+ * @returns {{success: boolean}}
  * @constructor
  */
-var GKSUCCESS = function GKSUCCESS(ps) {
+var GKSUCCESS = exports.GKSUCCESS = function GKSUCCESS(ps) {
     if (ps) {
         return _extends({ success: true }, ps instanceof Object ? ps : { msg: ps });
     } else {
@@ -379,16 +391,11 @@ var GKSUCCESS = function GKSUCCESS(ps) {
     }
 };
 
-exports.createServer = createServer;
-exports.createServerInRouter = createServerInRouter;
 exports.getGankaoWXAuthToken = _redisClient.getGankaoWXAuthToken;
 exports.setting_redisConfig = _redisClient.setting_redisConfig;
-exports.getting_redisConfig = _redisClient.getting_redisConfig;
 exports.getRedisClient = _redisClient.getRedisClient;
 exports.GKErrorWrap = _GKErrorWrap.GKErrorWrap;
 exports.modelSetting = _Decorators.modelSetting;
 exports.cacheAble = _Decorators.cacheAble;
 exports.clearCache = _Decorators.clearCache;
 exports.crashAfterMe = _Decorators.crashAfterMe;
-exports.definedStaticField = _Decorators.definedStaticField;
-exports.GKSUCCESS = GKSUCCESS;

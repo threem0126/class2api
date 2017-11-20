@@ -1,7 +1,6 @@
 import Promise from 'bluebird'
-import {ResetDB} from '../src/dbhelper'
+import {ResetDB} from 'class2api/dbhelper'
 import {DataModel} from './../src/tableloader'
-import dynamic from 'next/dynamic'
 
 (async ()=>{
     try{

@@ -13,6 +13,3 @@ export const GKErrors = {
     _SERVER_ERROR: GKErrorWrap(-2, `服务发生异常`),
     _NOT_PARAMS: GKErrorWrap(-1, `缺少参数`),
 }
-
-
-

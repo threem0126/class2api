@@ -17,23 +17,6 @@ export const modelSetting = (props) => {
     }
 }
 
-export const definedStaticField = (props) => {
-    Object.keys(props).map((key,value)=>{
-        if(key.indexOf("__")!==0) {
-            throw '动态添加的静态属性名不符合约定格式（__****）'
-        }
-    })
-    return function (target) {
-        Object.keys(props).map((key,value)=>{
-            if(target[key]){
-                throw '动态添加的静态属性名已被先定义，无法重复（__****）'
-            }else{
-                target[key] = value;
-            }
-        })
-    }
-}
-
 export const authAccess = (accessValidateFun, userIdentifyFieldName) => {
     return function (target, name, descriptor) {
         if (!accessValidateFun) {

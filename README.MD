@@ -1,24 +1,83 @@
-# class2api
-- 将JS类转化为APi服务
+#概要#
+- class2api帮助你把Javascript Class类的静态方法自动向外映射为API接口的微型框架，借助class2api，你可以在1分钟之内直接开始着手于业务逻辑代码的编写，而将路由、方法缓存、网络通讯等事务交给我们处理
+- class2api以暴露的API接口必须以post方式请求，不支持get方式
 
-# npm i
+#上手向导#
 
-# npm run start:src  --基于源码版本运行
-# npm run start:srcrouter  --路由版本，基于源码版本运行
-
-# mocha test/test.run
-
-# npm run build
-# npm publish
-
+- 快速安装依赖组建
+```
+$ npm i 
+或
 $ npm i --registry=https://registry.npm.taobao.org
+或
 $ npm i --registry https://registry.npmjs.org
+```
+
+- 基于源码版本运行Demo应用(Server版本)
+```
+$ npm run start:src 
+```
+
+- 基于源码版本运行Demo应用(ExpressRouter路由版本)
+```
+$ npm run start:srcrouter
+```
+
+- 运行单元测试（先运行Demo应用）
+```
+$ mocha test/test.run
+```
+
+- 基础Curl测试调用（先运行Demo应用）
+```
+$ mocha test/test.run
+```
+
+#快速创建应用的代码#
+- 节选代码，来自 example/baseProject 范例项目
+```javascript
+    import {createServer,GKErrors} from 'class2api'
+
+    //创建微服务对象
+    createServer({
+        config: {
+            apiroot: '/',
+            cros: true,
+        }, 
+        //将哪些类映射到API，默认取类名称的小写字符，也可以定义路径的别名
+        modelClasses: [ClassA, {model: ClassB, as: 'b'}], 
+        beforeCall:({req, params, modelSetting})=>{ 
+            //Api处理之前，在这里进行权限身份验证、请求参数预处理等操作
+            // ....
+            //返回的params会传递给API对应的实际静态方法
+            return params 
+        },
+        afterCall:({req,res,result})=>{
+            //Api处理结束，在返回result给客户端之前，可以做附加处理，比如记录日志或输出额外的附加信息给调用方
+            // ....
+            return result
+        }
+        
+    }).then((server)=>{
+    
+        //开始监听指定的端口
+    server.listen(port, "0.0.0.0", function onStart(err){
+            if (err) {
+                console.log(err);
+            }
+            console.info("==> 🌎 Listening on port %s. Open up http://0.0.0.0:%s/ in your browser.", port, port);
+        });
+    
+    }).catch((error)=>{
+        setTimeout(function(){throw error})
+    })
+```
 
 # 导出功能函数：
 class2api/
 - createServer, 创建服务器(使用内建的独立Express实例)
 - createServerInRouter, 创建服务器(使用外部的Express，只返回router供绑定路由)
-- getGankaoWXAuthToken, 从redis中读取赶考token的简单封装，方便使用方不用重新创建redis实例。将来可以剥离
+- getGankaoWXAuthToken,*从redis中读取赶考token的简单封装，方便使用方不用重新创建redis实例。将来可以剥离
 - setting_redisConfig，设置内置redis的连接参数
 - getting_redisConfig, 读取内置redis的连接参数
 - getRedisClient,获得redis访问实例
