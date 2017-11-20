@@ -8,7 +8,7 @@ import {GKErrors} from './../src/lib/class2api/GKErrors'
         return await accessProvider('class1')({uid})
     }
 })
-class ModelA {
+class GKModelA {
     constructor() {
         throw '静态业务功能类无法实例化'
     }
@@ -30,4 +30,4 @@ class ModelA {
     }
 }
 
-export default ModelA
+export default GKModelA

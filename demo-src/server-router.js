@@ -3,7 +3,7 @@ import compression from "compression";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import _config from "./../config.js" ;
-import ModelA from './ModelA'
+import GKModelA from './GKModelA'
 import {createServerInRouter,GKErrors,setting_redisConfig} from './../src/lib/class2api'
 
 // Security
@@ -29,7 +29,7 @@ setting_redisConfig(redis);
         },
         //将哪些类映射到API，可以定义路径别名
         modelClasses(){
-            return [ModelA, {model:ModelA, as:'a2'}]
+            return [GKModelA, {model:GKModelA, as:'a2'}]
         },
         //在API方法执行前拦截
         async beforeCall({req, params, modelSetting}){

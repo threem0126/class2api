@@ -37,8 +37,8 @@ class GKModelA {
     static async hello({name}) {
         if (!name)
             throw GKErrors._NOT_PARAMS(`name参数未定义!`)
-        if (name === "huangyong")
-            throw types.ERROR_USER_NOT_EXIST('人员信息未配置！')
+        // if (name === "huangyong")
+        //     throw types.ERROR_USER_NOT_EXIST('人员信息未配置！')
         return await Base.TestInside({name})
     }
 

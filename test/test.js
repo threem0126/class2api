@@ -26,9 +26,9 @@ describe('评论系统', function () {
     });
     //endregion
 
-    it('/modela/hello', async () => {
+    it('/gkmodela/hello', async () => {
         let response = await WebInvokeHepler(_run.accounts.user1)(
-            '/modela/hello',
+            '/gkmodela/hello',
             {name: "haungyong"},
             ApiDesc(`方法Hello`)
         )
@@ -38,8 +38,8 @@ describe('评论系统', function () {
         message.lastIndexOf('hello').should.be.above(-1)
     })
 
-    it('/modela/hello', async () => {
-        let response = await WebInvokeHepler(_run.accounts.user1)('/modela/hello', {name:"haungyong"})
+    it('/gkmodela/hello', async () => {
+        let response = await WebInvokeHepler(_run.accounts.user1)('/gkmodela/hello', {name:"haungyong"})
         console.log(response)
         let {err, result: {__fromCache}} = response
         __fromCache.should.be.eql(true)

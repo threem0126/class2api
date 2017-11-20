@@ -11,6 +11,16 @@
     "doc": "jsdoc -c jsdoc.json"
   },
   "dependencies": {
+    "bluebird": "^3.4.0",
+    "class2api": "^1.4.4",
+    "lodash": "^4.17.4",
+    "react": "^15.6.1",
+    "request": "^2.81.0",
+    "should": "^13.0.1",
+    "webpack": "^2.5.1"
+  },
+  "devDependencies": {
+    "docdash": "^0.4.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.5.1",
     "babel-eslint": "^7.2.1",
@@ -36,16 +46,6 @@
     "babel-preset-react-optimize": "^1.0.1",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.26.0",
-    "babel-runtime": "^6.5.0",
-    "bluebird": "^3.4.0",
-    "class2api": "^1.4.4",
-    "lodash": "^4.17.4",
-    "react": "^15.6.1",
-    "request": "^2.81.0",
-    "should": "^13.0.1",
-    "webpack": "^2.5.1"
-  },
-  "devDependencies": {
-    "docdash": "^0.4.0"
+    "babel-runtime": "^6.5.0"
   }
 }
