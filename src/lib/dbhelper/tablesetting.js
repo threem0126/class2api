@@ -26,12 +26,16 @@ export const formatDate = (_date, _fmt) => {
     return _fmt
 }
 
-
+/**
+ * 创建sequeLize的Model定义时，指定的表构建属性
+ * @type {{paranoid: boolean, createdAt: string, updatedAt: string, deletedAt: string, collate: string}}
+ */
 export const tabelOption = {
     paranoid: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     deletedAt: 'deleted_at',
+    collate: 'utf8_general_ci',
 }
 
 /**
