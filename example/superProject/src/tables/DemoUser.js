@@ -1,4 +1,4 @@
-import {ModelSetting} from 'class2api/dbhelper';
+import {TableSetting} from 'class2api/dbhelper';
 
 export default (sequelize, DataTypes)=> {
 //region
@@ -9,9 +9,9 @@ export default (sequelize, DataTypes)=> {
         age: {
             type: DataTypes.INTEGER, allowNull: false, defaultValue: 0, comment: `年龄`
         },
-        ...ModelSetting.extendDateTimeVirtualFields(DataTypes, [])
+        ...TableSetting.extendDateTimeVirtualFields(DataTypes, [])
     }, {
-        ...ModelSetting.tabelOption,
+        ...TableSetting.tabelOption,
         indexes: [],
         hooks: {},
         classMethods: {

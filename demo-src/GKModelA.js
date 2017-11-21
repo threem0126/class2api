@@ -1,8 +1,6 @@
 import {modelSetting, cacheAble, clearCache} from './../src/lib/class2api/Decorators'
 import {GKErrors} from './../src/lib/class2api/GKErrors'
 
-
-
 @modelSetting({
     __needAuth:async ({uid})=>{
         return await accessProvider('class1')({uid})

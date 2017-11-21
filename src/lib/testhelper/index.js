@@ -19,12 +19,13 @@ export const ApiDesc=(desc)=> {
     return desc
 }
 export const WebInvokeHepler = (userToken) => {
+    let _userToken = userToken
     return async (apiPath, postParams, apiDesc) => {
         let options = {
             uri: remote_api + apiPath,
             rejectUnauthorized: false,
             headers: {
-                token: userToken
+                token: _userToken
             },
             body: postParams,
             json: true,
@@ -37,7 +38,7 @@ export const WebInvokeHepler = (userToken) => {
     }
 }
 
-export const save2Doc = (save2File)=> {
+export const save2Doc = ({save2File="api.MD"})=> {
     console.log(`生成API接口请求的快照 ... ...`)
     let str = []
     docapi.forEach((item) => {
@@ -55,6 +56,6 @@ export const save2Doc = (save2File)=> {
         lines.push('```')
         str.push(lines.join("\r"))
     })
-    fs.writeFileSync(save2File || "api.MD", str.join("\n\r"))
+    fs.writeFileSync(save2File, str.join("\n\r"))
     console.log(`API接口请求的快照 生成成功！`)
 }

@@ -1,5 +1,4 @@
 import should from 'should';
-import {filter} from 'lodash'
 import {ApiDesc, WebInvokeHepler, setApiRoot, save2Doc} from './../src/lib/testhelper'
 
 JSON.stringifyline = function (Obj) {
@@ -22,7 +21,7 @@ describe('评论系统', function () {
 
     //region after 在本区块的所有测试用例之后执行
     after(function () {
-        save2Doc('api.MD')
+        save2Doc({save2File:'api.MD'})
     });
     //endregion
 

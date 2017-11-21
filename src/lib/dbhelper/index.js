@@ -1,7 +1,6 @@
 import Sequelize from 'sequelize';
 import * as DBUtils from './dbutils';
-import Promise from 'bluebird'
-import * as ModelSetting from './modelsetting'
+import * as TableSetting from './tablesetting'
 
 //内部初始化
 let sequelize;//内部初始化的sequelize实例子，注意，禁止暴露给外部，以避免安全问题
@@ -108,7 +107,7 @@ const DBModelLoader = {
 }
 
 export {
-    ModelSetting,
+    TableSetting,
     ResetDB,
     DBModelLoader,
     DBUtils,

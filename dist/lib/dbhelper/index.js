@@ -3,7 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.excuteSQL = exports.createTransaction = exports.where = exports.literal = exports.col = exports.fn = exports.DBUtils = exports.DBModelLoader = exports.ResetDB = exports.ModelSetting = undefined;
+exports.excuteSQL = exports.createTransaction = exports.where = exports.literal = exports.col = exports.fn = exports.DBUtils = exports.DBModelLoader = exports.ResetDB = exports.TableSetting = undefined;
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -21,19 +25,15 @@ var _dbutils = require('./dbutils');
 
 var DBUtils = _interopRequireWildcard(_dbutils);
 
-var _bluebird = require('bluebird');
+var _tablesetting = require('./tablesetting');
 
-var _bluebird2 = _interopRequireDefault(_bluebird);
-
-var _modelsetting = require('./modelsetting');
-
-var ModelSetting = _interopRequireWildcard(_modelsetting);
+var TableSetting = _interopRequireWildcard(_tablesetting);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _bluebird2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _bluebird2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _promise2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _promise2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 //内部初始化
 var sequelize = void 0; //内部初始化的sequelize实例子，注意，禁止暴露给外部，以避免安全问题
@@ -275,7 +275,7 @@ var DBModelLoader = {
     }()
 };
 
-exports.ModelSetting = ModelSetting;
+exports.TableSetting = TableSetting;
 exports.ResetDB = ResetDB;
 exports.DBModelLoader = DBModelLoader;
 exports.DBUtils = DBUtils;

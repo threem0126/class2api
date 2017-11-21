@@ -57,6 +57,7 @@ var ApiDesc = exports.ApiDesc = function ApiDesc(desc) {
     return desc;
 };
 var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(userToken) {
+    var _userToken = userToken;
     return function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(apiPath, postParams, apiDesc) {
             var options, _ref2, body;
@@ -69,7 +70,7 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(userTok
                                 uri: remote_api + apiPath,
                                 rejectUnauthorized: false,
                                 headers: {
-                                    token: userToken
+                                    token: _userToken
                                 },
                                 body: postParams,
                                 json: true
@@ -100,7 +101,10 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(userTok
     }();
 };
 
-var save2Doc = exports.save2Doc = function save2Doc(save2File) {
+var save2Doc = exports.save2Doc = function save2Doc(_ref3) {
+    var _ref3$save2File = _ref3.save2File,
+        save2File = _ref3$save2File === undefined ? "api.MD" : _ref3$save2File;
+
     console.log('\u751F\u6210API\u63A5\u53E3\u8BF7\u6C42\u7684\u5FEB\u7167 ... ...');
     var str = [];
     docapi.forEach(function (item) {
@@ -124,6 +128,6 @@ var save2Doc = exports.save2Doc = function save2Doc(save2File) {
         lines.push('```');
         str.push(lines.join("\r"));
     });
-    _fs2.default.writeFileSync(save2File || "api.MD", str.join("\n\r"));
+    _fs2.default.writeFileSync(save2File, str.join("\n\r"));
     console.log('API\u63A5\u53E3\u8BF7\u6C42\u7684\u5FEB\u7167 \u751F\u6210\u6210\u529F\uFF01');
 };
