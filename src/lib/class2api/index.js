@@ -64,7 +64,8 @@ const _create_server = async (model, options)=> {
     // Security
     _server = express();
     _server.disable("x-powered-by");
-    _server.use(bodyParser.urlencoded({extended: false}));
+    _server.use(bodyParser.json()); // for parsing application/json
+    _server.use(bodyParser.urlencoded({extended: true}));// for parsing application/x-www-form-urlencoded
     _server.use(bodyParser.json({limit: "5000kb"}));
     _server.use(hpp());
     _server.use(helmet.xssFilter());
