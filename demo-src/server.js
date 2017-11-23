@@ -1,6 +1,7 @@
 import _config from "./../config.js" ;
 import GKModelA from './GKModelA'
-import {createServer,GKErrors,setting_redisConfig} from './../src/lib/class2api'
+import {createServer,setting_redisConfig} from './../src/lib/class2api'
+import {GKErrors} from './../src/lib/class2api/GKErrors'
 
 let node_env = process.env.NODE_ENV || "development"
 let port = 3002;

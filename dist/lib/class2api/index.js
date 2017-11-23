@@ -148,7 +148,8 @@ var _create_server = function () {
                         // Security
                         _server = (0, _express2.default)();
                         _server.disable("x-powered-by");
-                        _server.use(_bodyParser2.default.urlencoded({ extended: false }));
+                        _server.use(_bodyParser2.default.json()); // for parsing application/json
+                        _server.use(_bodyParser2.default.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
                         _server.use(_bodyParser2.default.json({ limit: "5000kb" }));
                         _server.use((0, _hpp2.default)());
                         _server.use(_helmet2.default.xssFilter());
@@ -216,29 +217,29 @@ var _create_server = function () {
                         _server.use(apiroot, _router);
 
                         if (!(typeof custom === "function")) {
-                            _context.next = 39;
+                            _context.next = 40;
                             break;
                         }
 
-                        _context.next = 33;
+                        _context.next = 34;
                         return custom();
 
-                    case 33:
+                    case 34:
                         _ref3 = _context.sent;
                         cus_express_fn = _ref3.express;
 
                         if (!cus_express_fn) {
-                            _context.next = 39;
+                            _context.next = 40;
                             break;
                         }
 
-                        _context.next = 38;
+                        _context.next = 39;
                         return cus_express_fn(_server);
 
-                    case 38:
+                    case 39:
                         _server = _context.sent;
 
-                    case 39:
+                    case 40:
 
                         // catch 404 and forward to error handler
                         _server.use(function (req, res, next) {
@@ -248,7 +249,7 @@ var _create_server = function () {
 
                         return _context.abrupt("return", _server);
 
-                    case 41:
+                    case 42:
                     case "end":
                         return _context.stop();
                 }
