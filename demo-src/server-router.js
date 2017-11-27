@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import _config from "./../config.js" ;
 import GKModelA from './GKModelA'
-import {createServerInRouter,GKErrors,setting_redisConfig} from './../src/lib/class2api'
+import {createServerInRouter,setting_redisConfig} from './../src/lib/class2api'
 
 // Security
 let _server = express();

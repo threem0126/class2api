@@ -1,7 +1,7 @@
 import Promise from 'bluebird'
 import mysql from 'mysql'
 import request from 'request'
-import {setting_redisConfig, getRedisClient, cacheAble, GKErrors} from 'class2api'
+import {setting_redisConfig, getRedisClient, cacheAble} from 'class2api'
 import {GKErrors} from 'class2api/gkerrors'
 import {DBUtils,GKSUCCESS,excuteSQL, createTransaction} from 'class2api/dbhelper'
 import {DataModel,ass} from './../tableloader'

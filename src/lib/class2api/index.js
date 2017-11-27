@@ -35,14 +35,14 @@ const _create_server = async (model, options)=> {
         sessionSecret = 'class2api',
         sessionUseRedis = false,
         redis
-    } = (typeof config === "function") ? config():(config||{})
+    } = (typeof config === "function") ? config() : (config || {})
 
     if (redis) {
         await setting_redisConfig(redis)
         await getRedisClient()
     }
-    let _modelClasses = (typeof modelClasses === "function") ? modelClasses():(modelClasses||[])
-    if(!(_modelClasses instanceof Array)) {
+    let _modelClasses = (typeof modelClasses === "function") ? modelClasses() : (modelClasses || [])
+    if (!(_modelClasses instanceof Array)) {
         throw `无法识别指定的类清单，因为modelClasses配置项格式有误，期望是Array列表`
     }
     _router = await _create_router({
@@ -125,7 +125,7 @@ const _create_server = async (model, options)=> {
     }
     _server.use(apiroot, _router)
 
-    if(typeof custom === "function") {
+    if (typeof custom === "function") {
         let {express: cus_express_fn} = await custom()
         if (cus_express_fn) {
             _server = await cus_express_fn(_server)

@@ -36,7 +36,8 @@ $ mocha test/test.run
 #快速创建应用的代码#
 - 节选代码，来自 example/baseProject 范例项目
 ```javascript
-    import {createServer,GKErrors} from 'class2api'
+    import {createServer} from 'class2api'
+    import {GKErrors} from 'class2api/gkerrors'
 
     //创建微服务对象
     createServer({
