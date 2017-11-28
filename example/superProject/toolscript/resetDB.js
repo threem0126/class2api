@@ -1,4 +1,3 @@
-import Promise from 'bluebird'
 import {ResetDB} from 'class2api/dbhelper'
 import {DataModel} from './../src/tableloader'
 

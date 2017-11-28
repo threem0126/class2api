@@ -8,9 +8,8 @@
 ```
 $ npm i 
 或
-$ npm i --registry=https://registry.npm.taobao.org
-或
-$ npm i --registry https://registry.npmjs.org
+$ npm i --registry=https://registry.npm.taobao.org 
+$ 
 ```
 
 - 基于源码版本运行Demo应用(Server版本)

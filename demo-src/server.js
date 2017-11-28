@@ -1,5 +1,5 @@
-import _config from "./../config.js" ;
-import GKModelA from './GKModelA'
+import _config from "./config.js" ;
+import GKModelA from './model/GKModelA'
 import {createServer,setting_redisConfig} from './../src/lib/class2api'
 import {GKErrors} from './../src/lib/class2api/GKErrors'
 
@@ -30,7 +30,7 @@ createServer({
         console.log(`beforeCall... [${ req.originalUrl }]:${( typeof __needAuth )}`)
         console.log('params:....' + JSON.stringify(params))
         //TODO: 这里可以对params进行装饰，比如根据header中的token信息来验证身份，最终注入用户uid信息
-        if (!req.headers['token']) {
+        if (!req.headers['jwtoken']) {
             throw GKErrors._SERVER_ERROR('访问者的身份无法识别')
         }
         return params

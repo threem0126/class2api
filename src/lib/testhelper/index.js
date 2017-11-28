@@ -25,7 +25,7 @@ export const WebInvokeHepler = (userToken) => {
             uri: remote_api + apiPath,
             rejectUnauthorized: false,
             headers: {
-                token: _userToken
+                jwtoken: _userToken // 这里提供身份验证的token，注意命名为：jwtoken
             },
             body: postParams,
             json: true,

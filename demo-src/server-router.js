@@ -2,8 +2,8 @@ import express from "express";
 import compression from "compression";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import _config from "./../config.js" ;
-import GKModelA from './GKModelA'
+import _config from "./config.js" ;
+import GKModelA from './model/GKModelA'
 import {createServerInRouter,setting_redisConfig} from './../src/lib/class2api'
 
 // Security

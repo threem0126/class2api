@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.crashAfterMe = exports.ipwhitelist = exports.clearCache = exports.cacheAble = exports.authAccess = exports.modelSetting = undefined;
+exports.setting_RuleValidator = exports.crashAfterMe = exports.ipwhitelist = exports.clearCache = exports.cacheAble = exports.accessRule = exports.modelSetting = undefined;
 
 var _iterator = require('babel-runtime/core-js/symbol/iterator');
 
@@ -41,10 +41,13 @@ var _redisClient = require('./redisClient');
 
 var _util = require('./util');
 
+var _GKErrors = require('./GKErrors');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _promise2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _promise2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+var _ruleValidator = void 0;
 var config = (0, _redisClient.getting_redisConfig)();
 var _config$cache_prefx = config.cache_prefx,
     redis_cache_key_prefx = _config$cache_prefx === undefined ? "redis_cache_key_prefx_" : _config$cache_prefx,
@@ -63,52 +66,93 @@ var modelSetting = exports.modelSetting = function modelSetting(props) {
     };
 };
 
-var authAccess = exports.authAccess = function authAccess(accessValidateFun, userIdentifyFieldName) {
+var accessRule = exports.accessRule = function accessRule(_ref) {
+    var ruleValidator = _ref.ruleValidator,
+        ruleName = _ref.ruleName,
+        ruleDescript = _ref.ruleDescript;
+
+    var fun = ruleValidator || _ruleValidator;
+    if (!fun) {
+        //修饰器的报错，级别更高，直接抛出终止程序
+        setTimeout(function () {
+            throw '\u6743\u9650\u6821\u9A8C\u4FEE\u9970\u5668accessRule\u7684ruleValidator\u672A\u660E\u786E\uFF0C\u8BF7\u901A\u8FC7class2api/setting_RuleValidator()\u5168\u5C40\u914D\u7F6E\uFF0C\u6216\u5728\u7C7B\u9759\u6001\u65B9\u6CD5 ' + target.name + '.' + name + ' \u7684accessRule\u4FEE\u9970\u5668\u5B9E\u4F8B\u4E0A\u5355\u72EC\u6307\u5B9A';
+        });
+    }
     return function (target, name, descriptor) {
-        if (!accessValidateFun) {
+        if (!funPointName) {
             //修饰器的报错，级别更高，直接抛出终止程序
             setTimeout(function () {
-                throw '\u5728\u7C7B\u9759\u6001\u65B9\u6CD5 ' + target.name + '.' + name + ' \u4E0A\u6743\u9650\u63A7\u5236\u5668\u7684accessValidateFun\u53C2\u6570\u672A\u5B9A\u4E49';
+                throw '\u5728\u7C7B\u9759\u6001\u65B9\u6CD5 ' + target.name + '.' + name + ' \u4E0A\u6743\u9650\u63A7\u5236\u5668\u7684funPointName\u53C2\u6570\u672A\u5B9A\u4E49';
             });
         }
         var oldValue = descriptor.value;
         descriptor.value = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-            var uid,
+            var _jwtoken,
+                result,
                 canAccess,
+                resean,
                 _args = arguments;
+
             return _regenerator2.default.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
                         case 0:
                             if (_args.length === 0 || _typeof(_args[0]) !== "object") {
-                                //修饰器的报错，级别更高，直接抛出终止程序
+                                //修饰器的报错，级别更高，直接用setTimeout抛出异常，以终止程序运行
                                 setTimeout(function () {
                                     throw '\u5728\u7C7B\u9759\u6001\u65B9\u6CD5 ' + target.name + '.' + name + ' \u4E0A\u7F3A\u5C11\u8EAB\u4EFD\u53C2\u6570\uFF0C\u65E0\u6CD5\u9A8C\u8BC1\u6743\u9650';
                                 });
                             }
-                            uid = _args[0][userIdentifyFieldName || 'uid'];
-                            canAccess = accessValidateFun(uid);
+                            _context.prev = 1;
+                            _jwtoken = _args[0]['req'].headers['jwtoken'];
 
-                            if (canAccess) {
+                            if (_jwtoken) {
                                 _context.next = 5;
                                 break;
                             }
 
-                            throw '\u60A8\u65E0\u6743\u8BBF\u95EE';
+                            throw _GKErrors.GKErrors._NOT_ACCESS_PERMISSION('\u8EAB\u4EFD\u672A\u660E\uFF0C\u60A8\u6CA1\u6709\u8BBF\u95EE' + target.name + '.' + name + '\u5BF9\u5E94API\u63A5\u53E3\u7684\u6743\u9650');
 
                         case 5:
-                            _context.next = 7;
-                            return oldValue.apply(undefined, _args);
+                            _context.next = 10;
+                            break;
 
                         case 7:
+                            _context.prev = 7;
+                            _context.t0 = _context['catch'](1);
+                            throw _GKErrors.GKErrors._NOT_ACCESS_PERMISSION('\u8EAB\u4EFD\u65E0\u6CD5\u8BC6\u522B\uFF0C\u5728API\u5BF9\u5E94\u7684\u9759\u6001\u65B9\u6CD5\u4E0A\u672A\u8BFB\u53D6\u5230req\u8BF7\u6C42\u5BF9\u8C61\u7684headers[\'jwtoken\']');
+
+                        case 10:
+                            result = fun({
+                                jwtoken: jwtoken,
+                                funPath: target.name + '.' + name,
+                                ruleName: target.name + '.' + ruleName,
+                                ruleDescript: ruleDescript
+                            });
+                            canAccess = result.canAccess, resean = result.resean;
+
+                            if (canAccess) {
+                                _context.next = 14;
+                                break;
+                            }
+
+                            throw _GKErrors.GKErrors._NOT_ACCESS_PERMISSION({
+                                resean: '\u8BBF\u95EE\u88AB\u62D2\u7EDD\uFF08\u76EE\u6807\uFF1A[' + target.name + '.' + name + '\u5BF9\u5E94API\u63A5\u53E3\u7684\u6743\u9650\uFF0C\u539F\u56E0\uFF1A' + resean + '\uFF09'
+                            });
+
+                        case 14:
+                            _context.next = 16;
+                            return oldValue.apply(undefined, _args);
+
+                        case 16:
                             return _context.abrupt('return', _context.sent);
 
-                        case 8:
+                        case 17:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, this);
+            }, _callee, this, [[1, 7]]);
         }));
         return descriptor;
     };
@@ -116,7 +160,7 @@ var authAccess = exports.authAccess = function authAccess(accessValidateFun, use
 
 var ____cache = {
     get: function () {
-        var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(akey) {
+        var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(akey) {
             var avalue;
             return _regenerator2.default.wrap(function _callee2$(_context2) {
                 while (1) {
@@ -161,11 +205,11 @@ var ____cache = {
         }));
 
         return function get(_x) {
-            return _ref2.apply(this, arguments);
+            return _ref3.apply(this, arguments);
         };
     }(),
     set: function () {
-        var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(akey, avalue, expireTimeSeconds) {
+        var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(akey, avalue, expireTimeSeconds) {
             return _regenerator2.default.wrap(function _callee4$(_context4) {
                 while (1) {
                     switch (_context4.prev = _context4.next) {
@@ -199,11 +243,11 @@ var ____cache = {
         }));
 
         return function set(_x2, _x3, _x4) {
-            return _ref3.apply(this, arguments);
+            return _ref4.apply(this, arguments);
         };
     }(),
     delete: function () {
-        var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee6(akey) {
+        var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee6(akey) {
             return _regenerator2.default.wrap(function _callee6$(_context6) {
                 while (1) {
                     switch (_context6.prev = _context6.next) {
@@ -239,7 +283,7 @@ var ____cache = {
         }));
 
         return function _delete(_x5) {
-            return _ref5.apply(this, arguments);
+            return _ref6.apply(this, arguments);
         };
     }()
 
@@ -249,8 +293,8 @@ var ____cache = {
      * @param cacheKeyGene
      * @returns {Function}
      */
-};var cacheAble = exports.cacheAble = function cacheAble(_ref7) {
-    var cacheKeyGene = _ref7.cacheKeyGene;
+};var cacheAble = exports.cacheAble = function cacheAble(_ref8) {
+    var cacheKeyGene = _ref8.cacheKeyGene;
 
     return function (target, name, descriptor) {
         //修饰器的报错，级别更高，直接抛出终止程序
@@ -355,8 +399,8 @@ var ____cache = {
     };
 };
 
-var clearCache = exports.clearCache = function clearCache(_ref9) {
-    var cacheKeyGene = _ref9.cacheKeyGene;
+var clearCache = exports.clearCache = function clearCache(_ref10) {
+    var cacheKeyGene = _ref10.cacheKeyGene;
 
     return function (target, name, descriptor) {
         var oldValue = descriptor.value;
@@ -434,7 +478,7 @@ var ipwhitelist = exports.ipwhitelist = function ipwhitelist() {
         }
         var oldValue = descriptor.value;
         descriptor.value = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee9() {
-            var _ref12,
+            var _ref13,
                 req,
                 _args9 = arguments;
 
@@ -442,7 +486,7 @@ var ipwhitelist = exports.ipwhitelist = function ipwhitelist() {
                 while (1) {
                     switch (_context9.prev = _context9.next) {
                         case 0:
-                            _ref12 = _args9.length > 0 ? _typeof(_args9[0]) === "object" ? _args9[0] : {} : {}, req = _ref12.req;
+                            _ref13 = _args9.length > 0 ? _typeof(_args9[0]) === "object" ? _args9[0] : {} : {}, req = _ref13.req;
 
                             if (!req) {
                                 //修饰器的报错，级别更高，直接抛出终止程序
@@ -508,4 +552,8 @@ var crashAfterMe = exports.crashAfterMe = function crashAfterMe(hintMsg) {
         }
         return descriptor;
     };
+};
+
+var setting_RuleValidator = exports.setting_RuleValidator = function setting_RuleValidator(ruleValidator) {
+    _ruleValidator = ruleValidator;
 };

@@ -1,6 +1,8 @@
 import {getRedisClient,getting_redisConfig} from './redisClient';
 import {delayRun, getClientIp} from './util'
+import {GKErrors} from "./GKErrors";
 
+let _ruleValidator ;
 let config = getting_redisConfig();
 let {cache_prefx:redis_cache_key_prefx="redis_cache_key_prefx_",defaultExpireSecond=10*60} = config
 
@@ -9,7 +11,8 @@ export const modelSetting = (props) => {
         if(key.indexOf("__")!==0) {
             throw '动态添加的静态属性名不符合约定格式（__****）'
         }
-    })
+    });
+    let _props = props
     return function (target) {
         target.__modelSetting = ()=>{
             return {...props}
@@ -17,26 +20,49 @@ export const modelSetting = (props) => {
     }
 }
 
-export const authAccess = (accessValidateFun, userIdentifyFieldName) => {
+export const accessRule = ({ruleValidator, ruleName, ruleDescript}) => {
+    let fun = ruleValidator || _ruleValidator;
     return function (target, name, descriptor) {
-        if (!accessValidateFun) {
+        if (!fun) {
             //修饰器的报错，级别更高，直接抛出终止程序
             setTimeout(() => {
-                throw `在类静态方法 ${target.name}.${name} 上权限控制器的accessValidateFun参数未定义`
+                throw `权限校验修饰器accessRule的ruleValidator未明确，请通过class2api/setting_RuleValidator()全局配置，或在类静态方法 ${target.name}.${name} 的accessRule修饰器实例上单独指定`
+            })
+        }
+        if (!ruleName) {
+            //修饰器的报错，级别更高，直接抛出终止程序
+            setTimeout(() => {
+                throw `在类静态方法 ${target.name}.${name} 上权限控制器的ruleName参数未定义`
             })
         }
         let oldValue = descriptor.value;
         descriptor.value = async function () {
-            if(arguments.length===0 || typeof arguments[0] !=="object") {
-                //修饰器的报错，级别更高，直接抛出终止程序
+            if (arguments.length === 0 || typeof arguments[0] !== "object") {
+                //修饰器的报错，级别更高，直接用setTimeout抛出异常，以终止程序运行
                 setTimeout(() => {
                     throw `在类静态方法 ${target.name}.${name} 上缺少身份参数，无法验证权限`
                 })
             }
-            let uid = arguments[0][userIdentifyFieldName||'uid']
-            let canAccess = accessValidateFun(uid)
+            let jwtoken
+            try{
+                jwtoken = arguments[0]['req'].headers['jwtoken']
+                if (!jwtoken) {
+                    throw  GKErrors._NOT_ACCESS_PERMISSION(`身份未明，您没有访问${target.name}.${name}对应API接口的权限`)
+                }
+            }catch(err){
+                throw  GKErrors._NOT_ACCESS_PERMISSION(`身份无法识别，在API对应的静态方法上未读取到req请求对象的headers['jwtoken']`)
+            }
+            let result = fun({
+                jwtoken: jwtoken,
+                funPath: `${target.name}.${name}`,
+                ruleName: `${target.name}.${ruleName}`,
+                ruleDescript
+            })
+            let {canAccess, resean} = result
             if (!canAccess) {
-                throw  `您无权访问`
+                throw  GKErrors._NOT_ACCESS_PERMISSION({
+                    resean: `访问被拒绝（目标：[${target.name}.${name}对应API接口的权限，原因：${resean}）`
+                })
             }
             //...验证权限认证
             return await oldValue(...arguments);
@@ -210,4 +236,9 @@ export const crashAfterMe = (hintMsg)=> {
         }
         return descriptor;
     }
+}
+
+
+export const setting_RuleValidator = (ruleValidator)=> {
+    _ruleValidator = ruleValidator
 }
