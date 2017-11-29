@@ -1,17 +1,17 @@
  
  #开发环境 #
  `
- $ NODE_ENV=development REDIS_SESSION=1 node ./src/index.js  
+ $ NODE_ENV=development REDIS_SESSION=1 node ./src/rulehelper.js  
  $ pm2 ecosystem/ecosystem_dev.json
  `
  #测试环境 #
  `
- $ NODE_ENV=test REDIS_SESSION=1 node ./src/index.js 
+ $ NODE_ENV=test REDIS_SESSION=1 node ./src/rulehelper.js 
  $ pm2 ecosystem/ecosystem_test.json
  `
  #正式环境#
  ` 
- $ NODE_ENV=production REDIS_SESSION=1 node ./src/index.js
+ $ NODE_ENV=production REDIS_SESSION=1 node ./src/rulehelper.js
  $ pm2 ecosystem/ecosystem.json
  `
 # 初始化或重置数据库 #

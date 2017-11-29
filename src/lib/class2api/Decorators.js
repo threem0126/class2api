@@ -1,8 +1,8 @@
 import {getRedisClient,getting_redisConfig} from './redisClient';
 import {delayRun, getClientIp} from './util'
 import {GKErrors} from "./GKErrors";
+import RuleHepler from "../rulehelper/rulehelper";
 
-let _ruleValidator ;
 let config = getting_redisConfig();
 let {cache_prefx:redis_cache_key_prefx="redis_cache_key_prefx_",defaultExpireSecond=10*60} = config
 
@@ -12,23 +12,23 @@ export const modelSetting = (props) => {
             throw '动态添加的静态属性名不符合约定格式（__****）'
         }
     });
-    let _props = props
+    let _props = {...props}
     return function (target) {
         target.__modelSetting = ()=>{
-            return {...props}
+            return _props
         }
     }
 }
 
-export const accessRule = ({ruleValidator, ruleName, ruleDescript}) => {
-    let fun = ruleValidator || _ruleValidator;
+/**
+ * 修饰器,提供访问权限的校验控制
+ *
+ * @param ruleName
+ * @param ruleDescript
+ * @returns {Function}
+ */
+export const accessRule = ({ruleName, ruleDescript=''}) => {
     return function (target, name, descriptor) {
-        if (!fun) {
-            //修饰器的报错，级别更高，直接抛出终止程序
-            setTimeout(() => {
-                throw `权限校验修饰器accessRule的ruleValidator未明确，请通过class2api/setting_RuleValidator()全局配置，或在类静态方法 ${target.name}.${name} 的accessRule修饰器实例上单独指定`
-            })
-        }
         if (!ruleName) {
             //修饰器的报错，级别更高，直接抛出终止程序
             setTimeout(() => {
@@ -37,6 +37,12 @@ export const accessRule = ({ruleValidator, ruleName, ruleDescript}) => {
         }
         let oldValue = descriptor.value;
         descriptor.value = async function () {
+            if(!target.__modelSetting || typeof target.__modelSetting !=="function" || !(target.__modelSetting().__ruleCategory)) {
+                //修饰器的报错，级别更高，直接抛出终止程序
+                setTimeout(() => {
+                    throw `类 ${target.name} 的modelSetting修饰器中没有指定__ruleCategory属性（权限组信息）`
+                })
+            }
             if (arguments.length === 0 || typeof arguments[0] !== "object") {
                 //修饰器的报错，级别更高，直接用setTimeout抛出异常，以终止程序运行
                 setTimeout(() => {
@@ -46,22 +52,23 @@ export const accessRule = ({ruleValidator, ruleName, ruleDescript}) => {
             let jwtoken
             try{
                 jwtoken = arguments[0]['req'].headers['jwtoken']
-                if (!jwtoken) {
+                if (!jwtoken)
                     throw  GKErrors._NOT_ACCESS_PERMISSION(`身份未明，您没有访问${target.name}.${name}对应API接口的权限`)
-                }
             }catch(err){
                 throw  GKErrors._NOT_ACCESS_PERMISSION(`身份无法识别，在API对应的静态方法上未读取到req请求对象的headers['jwtoken']`)
             }
-            let result = fun({
-                jwtoken: jwtoken,
-                funPath: `${target.name}.${name}`,
-                ruleName: `${target.name}.${ruleName}`,
-                ruleDescript
+            let _ruleCategory = target.__modelSetting ? target.__modelSetting().__ruleCategory:{Name:''}
+            let result =await RuleHepler.ruleValidator({
+                jwtoken,
+                ruleCategory:`${_ruleCategory.Name}`,
+                ruleName: `${ruleName}`,
+                ruleDescript,
+                codePath: `${target.name}.${name}`
             })
             let {canAccess, resean} = result
             if (!canAccess) {
                 throw  GKErrors._NOT_ACCESS_PERMISSION({
-                    resean: `访问被拒绝（目标：[${target.name}.${name}对应API接口的权限，原因：${resean}）`
+                    resean: `访问被拒绝（功能：[${_ruleCategory.Name}/${ruleName}]，代码:[${target.name}.${name}]，原因：${resean||'-'}）`
                 })
             }
             //...验证权限认证
@@ -108,7 +115,8 @@ let ____cache = {
 }
 
 /**
- * 默认缓存60秒
+ * 在被修饰的方法运行前后执行，首先判断是否存在相同入参的调用缓存，如果没有则在运行结束后，将要运行结果缓存。缓存的key由默认参数属性cacheKeyGene的返回值决定。
+ * 默认缓存时间60秒
  *
  * @param cacheKeyGene
  * @returns {Function}
@@ -160,6 +168,12 @@ export const cacheAble = ({cacheKeyGene}) => {
     }
 }
 
+/**
+ * 在被修饰方法运行完毕后执行，用来清除一些相关的缓存
+ *
+ * @param cacheKeyGene
+ * @returns {Function}
+ */
 export const clearCache = ({cacheKeyGene}) => {
     return function (target, name, descriptor) {
         let oldValue = descriptor.value;
@@ -218,7 +232,12 @@ export const ipwhitelist = () => {
     }
 }
 
-
+/**
+ * 修饰器,运行完类方法就认为跑出异常中断程序，调试用，生产环境下自动失效
+ *
+ * @param hintMsg
+ * @returns {Function}
+ */
 export const crashAfterMe = (hintMsg)=> {
     return function (target, name, descriptor) {
         if (!descriptor) {
@@ -236,9 +255,4 @@ export const crashAfterMe = (hintMsg)=> {
         }
         return descriptor;
     }
-}
-
-
-export const setting_RuleValidator = (ruleValidator)=> {
-    _ruleValidator = ruleValidator
 }

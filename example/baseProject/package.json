@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "bluebird": "^3.4.0",
-    "class2api": "^1.4.4",
+    "class2api": "^1.6.2",
     "lodash": "^4.17.4",
     "react": "^15.6.1",
     "request": "^2.81.0",

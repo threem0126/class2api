@@ -10,9 +10,10 @@ import compression from "compression";
 import loggerCreator from "./logger.js";
 import log4js from 'log4js';
 import * as ModelProxy  from './ModelProxy';
-import {modelSetting, cacheAble, clearCache, crashAfterMe}  from './Decorators';
+import {modelSetting, cacheAble, clearCache, crashAfterMe, accessRule, setting_RuleValidator}  from './Decorators';
 import {getGankaoWXAuthToken, setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 import {GKErrorWrap} from './GKErrorWrap'
+import {setting_CustomRuleValidator} from '../rulehelper/rulehelper'
 
 const logger = loggerCreator();
 let _server;
@@ -234,7 +235,17 @@ export {
     /**
      * 类静态方法的修饰器，用来标记在本方法执行后，立即抛出错误来终止程序运行，处于调试目的，仅在非production环境下有效。
      */
-        crashAfterMe
+        crashAfterMe,
+
+    /**
+     * 类静态修饰器，
+     */
+        accessRule,
+
+    /**
+     * 通过模块来全局配置权限验证函数
+     */
+        setting_CustomRuleValidator
 }
 
 

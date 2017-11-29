@@ -9,7 +9,6 @@
 $ npm i 
 或
 $ npm i --registry=https://registry.npm.taobao.org 
-$ 
 ```
 
 - 基于源码版本运行Demo应用(Server版本)
@@ -85,6 +84,8 @@ class2api/
 - modelSetting  修饰器，类模块的元信息配置类
 - cacheAble     修饰器,启用类方法调用缓存的修饰器
 - clearCache    修饰器,清空类方法调用缓存的修时器
+- accessRule    修饰器,提供访问权限的校验控制,可独立配置认证函数
+- setting_RuleValidator  accessRule访问权限修饰器中认证函数的全局配置入口
 - crashAfterMe  修饰器,运行完类方法就认为跑出异常中断程序，调试用，生产环境下自动失效
 
 class2api/dbhelper
@@ -105,5 +106,9 @@ class2api/testhelper
 - ApiDesc
 - WebInvokeHepler(usertoken)(apiPath, postParams, apiDesc)
 - save2Doc
+
+
+$ npm publish --registry=http://registry.npmjs.org
+
 
 

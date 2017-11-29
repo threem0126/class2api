@@ -7,9 +7,9 @@ if(!process.env.__ISCOMPILING__){
 console.dir("running on  ..."+process.env.MODEL);
 
 if(process.env.MODEL === "src"){
-    require('./demo-src/server');
+    require('./server');
 }else if(process.env.MODEL === "srcrouter"){
-    require('./demo-src/server-router.js');
+    require('./server-router.js');
 }else {
     throw '参数不匹配'
 }

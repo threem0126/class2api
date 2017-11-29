@@ -1,12 +1,12 @@
 /** Class representing a GKModelA. */
-
-import {getRedisClient, cacheAble, clearCache, modelSetting} from 'class2api'
+import {getRedisClient, cacheAble, clearCache, modelSetting, accessRule, setting_RuleValidator} from 'class2api'
 import {GKSUCCESS,excuteSQL,DBUtils} from 'class2api/dbhelper'
 import {checkPhoneFormat,delayRun} from 'class2api/'
 import {GKErrors} from 'class2api/gkerrors'
-
 import Base from './../model_private/Base'
-import * as types from './../constants';
+import {gkRuleValidator} from './../model_private/RuleValidator'
+
+setting_RuleValidator(gkRuleValidator)
 
 
 @modelSetting({
@@ -57,6 +57,16 @@ class GKModelA {
     static async hello3() {
         let user = await DataModel.DemoUser.findOne()
         return {user}
+    }
+
+    @accessRule({ruleName:'编辑文章',ruleDescript:'对文章进行编辑'})
+    static async editArticle({aID}){
+        return "result from editArticle"
+    }
+
+    @accessRule({ruleName:'删除文章',ruleDescript:'对文章进行编辑'})
+    static async editArticle({aID}){
+        return "result from editArticle"
     }
 
 }

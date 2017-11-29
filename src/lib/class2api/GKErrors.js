@@ -5,6 +5,7 @@ import {GKErrorWrap} from './GKErrorWrap'
  * @type {{_TOKEN_LOGIN_INVALID, _NOT_ACCESS_PERMISSION, _NOT_SERVICE, _PARAMS_VALUE_EXPECT, _NO_RESULT, _SERVER_ERROR, _NOT_PARAMS}}
  */
 export const GKErrors = {
+    _RULE_VALIDATE_ERROR: GKErrorWrap(-8, `权限认证过程中发生异常`),
     _TOKEN_LOGIN_INVALID: GKErrorWrap(-7, `请先登录`),
     _NOT_ACCESS_PERMISSION: GKErrorWrap(-6, `无访问权限`),
     _NOT_SERVICE: GKErrorWrap(-5, `功能即将实现`),

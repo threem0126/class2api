@@ -2,7 +2,7 @@ import _config from "./config.js" ;
 import * as types from './constants'
 import {createServer,GKErrors,setting_redisConfig, getRedisClient} from 'class2api'
 import GKModelA from './model/GKModelA';
-import Auth from './model_base/Auth';
+import Auth from './model_private/Auth';
 
 console.log(`global.config_path = ${global.config_path}`)
 let {redis} = _config

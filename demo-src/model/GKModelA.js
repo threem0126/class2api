@@ -1,14 +1,19 @@
 import {modelSetting, cacheAble, clearCache, accessRule, setting_RuleValidator} from '../../src/lib/class2api/Decorators'
 import {GKErrors} from '../../src/lib/class2api/GKErrors'
-import {gkRuleValidator} from '../model_base/RuleValidator'
+import {GKSUCCESS} from "../../src/lib/class2api/index";
+import {gkRuleValidator} from '../model_private/RuleValidator'
 
-setting_RuleValidator(gkRuleValidator)
+setting_RuleValidator(gkRuleValidator);
+
 
 @modelSetting({
     __needAuth:async ({uid})=>{
         return await accessProvider('class1')({uid})
     },
-    __ruleCategory:'文章系统'
+    __ruleCategory: {
+        Name: '文章系统',
+        Descript: '文章系统'
+    }
 })
 class GKModelA {
     constructor() {
@@ -22,7 +27,8 @@ class GKModelA {
         }
     })
     /**
-     * 测试洒苏打粉
+     * 测试hello
+     *
      * @param name
      * @returns {Promise.<{message: string}>}
      */
@@ -31,10 +37,18 @@ class GKModelA {
         return {message: `hello.${name}`}
     }
 
-    @accessRule({ruleName:'编辑文章',ruleDescript:'对文章进行编辑'})
-    static async editArticle({aID}){
-        return "result from editArticle"
+    @accessRule({ruleName: '编辑文章', ruleDescript: '对文章进行编辑'})
+    static async editArticle({aID}) {
+        //...
+        return GKSUCCESS()
     }
+
+    @accessRule({ruleName: '删除文章', ruleDescript: '对文章进行删除'})
+    static async deleteArticle({aID}) {
+        //...
+        return GKSUCCESS()
+    }
+
 }
 
 export default GKModelA

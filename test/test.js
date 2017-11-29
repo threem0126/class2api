@@ -60,10 +60,20 @@ describe('评论系统', function () {
         let response = await WebInvokeHepler(_run.accounts.user1)(
             '/a2/editArticle',
             {aID: Math.random()},
-            ApiDesc(`删除文章`))
+            ApiDesc(`编辑文章`))
         console.log(response)
         let {err, result} = response
         err.code.should.eql(GKErrors._NOT_ACCESS_PERMISSION().code)
+    })
+
+    it('/a2/deleteArticle', async () => {
+        let response = await WebInvokeHepler(_run.accounts.user1)(
+            '/a2/deleteArticle',
+            {aID: Math.random()},
+            ApiDesc(`删除文章`))
+        console.log(response)
+        let {err,result:{success}} = response
+        success.should.eql(true)
     })
 
 })
