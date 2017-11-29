@@ -1,10 +1,6 @@
-import {modelSetting, cacheAble, clearCache, accessRule, setting_RuleValidator} from '../../src/lib/class2api/Decorators'
-import {GKErrors} from '../../src/lib/class2api/GKErrors'
-import {GKSUCCESS} from "../../src/lib/class2api/index";
-import {gkRuleValidator} from '../model_private/RuleValidator'
-
-setting_RuleValidator(gkRuleValidator);
-
+import {GKSUCCESS, modelSetting, cacheAble, clearCache} from 'class2api'
+import {GKErrors} from 'class2api/gkerrors'
+import {accessRule} from "rulehelper";
 
 @modelSetting({
     __needAuth:async ({uid})=>{

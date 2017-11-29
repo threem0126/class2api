@@ -13,7 +13,7 @@ import * as ModelProxy  from './ModelProxy';
 import {modelSetting, cacheAble, clearCache, crashAfterMe, accessRule, setting_RuleValidator}  from './Decorators';
 import {getGankaoWXAuthToken, setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 import {GKErrorWrap} from './GKErrorWrap'
-import {setting_CustomRuleValidator} from '../rulehelper/rulehelper'
+import {setting_CustomRuleValidator} from '../rulehelper/index'
 
 const logger = loggerCreator();
 let _server;

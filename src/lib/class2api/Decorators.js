@@ -1,7 +1,5 @@
 import {getRedisClient,getting_redisConfig} from './redisClient';
 import {delayRun, getClientIp} from './util'
-import {GKErrors} from "./GKErrors";
-import RuleHepler from "../rulehelper/rulehelper";
 
 let config = getting_redisConfig();
 let {cache_prefx:redis_cache_key_prefx="redis_cache_key_prefx_",defaultExpireSecond=10*60} = config
@@ -17,64 +15,6 @@ export const modelSetting = (props) => {
         target.__modelSetting = ()=>{
             return _props
         }
-    }
-}
-
-/**
- * 修饰器,提供访问权限的校验控制
- *
- * @param ruleName
- * @param ruleDescript
- * @returns {Function}
- */
-export const accessRule = ({ruleName, ruleDescript=''}) => {
-    return function (target, name, descriptor) {
-        if (!ruleName) {
-            //修饰器的报错，级别更高，直接抛出终止程序
-            setTimeout(() => {
-                throw `在类静态方法 ${target.name}.${name} 上权限控制器的ruleName参数未定义`
-            })
-        }
-        let oldValue = descriptor.value;
-        descriptor.value = async function () {
-            if(!target.__modelSetting || typeof target.__modelSetting !=="function" || !(target.__modelSetting().__ruleCategory)) {
-                //修饰器的报错，级别更高，直接抛出终止程序
-                setTimeout(() => {
-                    throw `类 ${target.name} 的modelSetting修饰器中没有指定__ruleCategory属性（权限组信息）`
-                })
-            }
-            if (arguments.length === 0 || typeof arguments[0] !== "object") {
-                //修饰器的报错，级别更高，直接用setTimeout抛出异常，以终止程序运行
-                setTimeout(() => {
-                    throw `在类静态方法 ${target.name}.${name} 上缺少身份参数，无法验证权限`
-                })
-            }
-            let jwtoken
-            try{
-                jwtoken = arguments[0]['req'].headers['jwtoken']
-                if (!jwtoken)
-                    throw  GKErrors._NOT_ACCESS_PERMISSION(`身份未明，您没有访问${target.name}.${name}对应API接口的权限`)
-            }catch(err){
-                throw  GKErrors._NOT_ACCESS_PERMISSION(`身份无法识别，在API对应的静态方法上未读取到req请求对象的headers['jwtoken']`)
-            }
-            let _ruleCategory = target.__modelSetting ? target.__modelSetting().__ruleCategory:{Name:''}
-            let result =await RuleHepler.ruleValidator({
-                jwtoken,
-                ruleCategory:`${_ruleCategory.Name}`,
-                ruleName: `${ruleName}`,
-                ruleDescript,
-                codePath: `${target.name}.${name}`
-            })
-            let {canAccess, resean} = result
-            if (!canAccess) {
-                throw  GKErrors._NOT_ACCESS_PERMISSION({
-                    resean: `访问被拒绝（功能：[${_ruleCategory.Name}/${ruleName}]，代码:[${target.name}.${name}]，原因：${resean||'-'}）`
-                })
-            }
-            //...验证权限认证
-            return await oldValue(...arguments);
-        };
-        return descriptor;
     }
 }
 
@@ -256,3 +196,4 @@ export const crashAfterMe = (hintMsg)=> {
         return descriptor;
     }
 }
+

@@ -1,19 +1,14 @@
-import {getRedisClient, cacheAble, clearCache, modelSetting,accessRule,setting_RuleValidator} from 'class2api'
+import {GKSUCCESS, modelSetting, cacheAble, clearCache} from 'class2api'
 import {GKErrors} from 'class2api/gkerrors'
-import {DBUtils,GKSUCCESS,excuteSQL} from 'class2api/dbhelper'
-import {checkPhoneFormat,delayRun} from 'class2api/util'
-//项目自身
-import {DataModel,ass,SQLFunctions} from './../tableloader'
-import * as types from './../constants';
-import Base from '../model_private/Base';
-import Auth from '../model_private/Auth';
-import {gkRuleValidator} from './../model_private/RuleValidator'
-
-setting_RuleValidator(gkRuleValidator)
+import {accessRule} from "class2api/rulehelper";
 
 @modelSetting({
-    __needAuth:async ({uid})=> {
-        return await Auth.varifyPermession({uid})
+    __needAuth:async ({uid})=>{
+        return await accessProvider('class1')({uid})
+    },
+    __ruleCategory: {
+        Name: '文章系统',
+        Descript: '文章系统'
     }
 })
 class GKModelA {
@@ -21,26 +16,37 @@ class GKModelA {
         throw '静态业务功能类无法实例化'
     }
 
+    @cacheAble({
+        cacheKeyGene: (args) => {
+            let {name} = args[0]
+            return `hello-${name}`
+        }
+    })
+    /**
+     * 测试hello
+     *
+     * @param name
+     * @returns {Promise.<{message: string}>}
+     */
     static async hello({name}) {
-        if (!name)
-            throw GKErrors._NOT_PARAMS(`name参数未定义!`)
-        if (name === "huangyong")
-            throw types.ERROR_PERSONINFO_NOT_READY('人员信息未配置！')
-        return await Base.TestInside({name})
+        console.log(GKErrors._SERVER_ERROR('错误1'))
+        return {message: `hello.${name}`}
     }
 
-    static async hello2(){
-        throw GKErrors._SERVER_ERROR(`错误描述`)
+    static async getUser() {
+        //TODO:
     }
 
-    static async hello3() {
-        let user = await DataModel.DemoUser.findOne()
-        return {user}
+    @accessRule({ruleName: '编辑文章', ruleDescript: '对文章进行编辑'})
+    static async editArticle({aID}) {
+        //...
+        return GKSUCCESS()
     }
 
-    @accessRule({ruleName:'编辑文章',ruleDescript:'对文章进行编辑'})
-    static async editArticle({aID}){
-        return "result from editArticle"
+    @accessRule({ruleName: '删除文章', ruleDescript: '对文章进行删除'})
+    static async deleteArticle({aID}) {
+        //...
+        return GKSUCCESS()
     }
 
 }

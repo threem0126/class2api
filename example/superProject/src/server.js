@@ -6,6 +6,7 @@ import Auth from './model_private/Auth';
 
 console.log(`global.config_path = ${global.config_path}`)
 let {redis} = _config
+setting_redisConfig(redis)
 
 //创建微服务对象
 createServer({

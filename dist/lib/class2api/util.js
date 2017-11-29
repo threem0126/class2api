@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.delayRun = exports.crash = exports.sleep = exports.checkPhoneFormat = exports.getNonceStr = exports.getClientIp = undefined;
+exports.hashcode = exports.delayRun = exports.crash = exports.sleep = exports.checkPhoneFormat = exports.getNonceStr = exports.getClientIp = undefined;
 
 var _regenerator = require("babel-runtime/regenerator");
 
@@ -90,4 +90,18 @@ var delayRun = exports.delayRun = function delayRun(fun, ms, errerhandle) {
             }
         }, _callee, undefined, [[0, 5]]);
     })), ms || 0);
+};
+
+var hashcode = exports.hashcode = function hashcode(str) {
+    var hash = 0,
+        i,
+        chr,
+        len;
+    if (str.length === 0) return hash;
+    for (i = 0, len = str.length; i < len; i++) {
+        chr = str.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
 };

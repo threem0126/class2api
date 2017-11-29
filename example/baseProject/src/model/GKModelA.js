@@ -1,72 +1,31 @@
-/** Class representing a GKModelA. */
-import {getRedisClient, cacheAble, clearCache, modelSetting, accessRule, setting_RuleValidator} from 'class2api'
-import {GKSUCCESS,excuteSQL,DBUtils} from 'class2api/dbhelper'
-import {checkPhoneFormat,delayRun} from 'class2api/'
+import {GKSUCCESS, modelSetting, cacheAble, clearCache} from 'class2api'
 import {GKErrors} from 'class2api/gkerrors'
-import Base from './../model_private/Base'
-import {gkRuleValidator} from './../model_private/RuleValidator'
 
-setting_RuleValidator(gkRuleValidator)
-
-
-@modelSetting({
-    /**
-     * 访问权限验证器，做权限拦截
-     * @param uid
-     * @returns {Promise.<boolean>}
-     * @private
-     */
-    __needAuth:async ({uid})=> {
-        //TODO: 验证用户的权限
-        return true
-    }
-})
 class GKModelA {
-    /**
-     * 静态业务功能类无法实例化2
-     */
     constructor() {
         throw '静态业务功能类无法实例化'
     }
 
+
     /**
-     * 哈苏大概那时的
+     * 测试hello
+     *
      * @param name
-     * @returns {Promise.<*>}
+     * @returns {Promise.<{message: string}>}
      */
     static async hello({name}) {
-        if (!name)
-            throw GKErrors._NOT_PARAMS(`name参数未定义!`)
-        // if (name === "huangyong")
-        //     throw types.ERROR_USER_NOT_EXIST('人员信息未配置！')
-        return await Base.TestInside({name})
+        console.log(GKErrors._SERVER_ERROR('错误1'))
+        return {message: `hello.${name}`}
     }
 
-    /**
-     * asdfasdf
-     * @returns {Promise.<void>}
-     */
-    static async hello2(){
-        throw GKErrors._SERVER_ERROR(`错误描述`)
+    static async editArticle({aID}) {
+        //...
+        return GKSUCCESS()
     }
 
-    /**
-     * adfafd
-     * @returns {Promise.<void>}
-     */
-    static async hello3() {
-        let user = await DataModel.DemoUser.findOne()
-        return {user}
-    }
-
-    @accessRule({ruleName:'编辑文章',ruleDescript:'对文章进行编辑'})
-    static async editArticle({aID}){
-        return "result from editArticle"
-    }
-
-    @accessRule({ruleName:'删除文章',ruleDescript:'对文章进行编辑'})
-    static async editArticle({aID}){
-        return "result from editArticle"
+    static async deleteArticle({aID}) {
+        //...
+        return GKSUCCESS()
     }
 
 }

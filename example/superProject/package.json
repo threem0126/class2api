@@ -11,8 +11,9 @@
   },
   "dependencies": {
     "bluebird": "^3.4.0",
-    "class2api": "^1.4.4",
+    "class2api": "^2.0.3",
     "lodash": "^4.17.4",
+    "mysql": "^2.15.0",
     "react": "^15.6.1",
     "request": "^2.81.0",
     "sequelize": "^4.22.7",

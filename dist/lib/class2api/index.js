@@ -65,7 +65,7 @@ var _redisClient = require("./redisClient");
 
 var _GKErrorWrap = require("./GKErrorWrap");
 
-var _rulehelper = require("./../rulehelper");
+var _index = require("../rulehelper/index");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -403,4 +403,4 @@ exports.cacheAble = _Decorators.cacheAble;
 exports.clearCache = _Decorators.clearCache;
 exports.crashAfterMe = _Decorators.crashAfterMe;
 exports.accessRule = _Decorators.accessRule;
-exports.setting_CustomRuleValidator = _rulehelper.setting_CustomRuleValidator;
+exports.setting_CustomRuleValidator = _index.setting_CustomRuleValidator;

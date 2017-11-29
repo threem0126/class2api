@@ -1,7 +1,8 @@
 import _config from "./config.js" ;
+import GKRuleManager from './model/GKRuleManager'
 import GKModelA from './model/GKModelA'
 import {createServer,setting_redisConfig} from './../src/lib/class2api'
-import {GKErrors} from './../src/lib/class2api/GKErrors'
+import {GKErrors} from '../src/lib/class2api/GKErrors_Inner'
 
 let node_env = process.env.NODE_ENV || "development"
 let port = 3002;
@@ -21,7 +22,7 @@ createServer({
 
     // 将哪些类映射到API，可以定义路径别名
     modelClasses(){
-        return [GKModelA, {model:GKModelA, as:'a2'}]
+        return [GKModelA, {model:GKModelA, as:'a2'}, GKRuleManager]
     },
 
     //在API方法执行前

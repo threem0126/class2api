@@ -1,6 +1,6 @@
 {
   "name": "class2api",
-  "version": "1.6.3",
+  "version": "2.0.3",
   "description": "the lib for mapping your javascript class to api service.",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
@@ -21,6 +21,8 @@
   "author": "threem0126",
   "files": [
     "dist",
+    "testhelper.js",
+    "rulehelper.js",
     "dbhelper.js",
     "gkerrors.js",
     "util.js"
