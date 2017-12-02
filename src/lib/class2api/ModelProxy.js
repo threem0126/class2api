@@ -106,31 +106,31 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
     return router
 };
 
-/**
- * 原EndPointMap类的默认方法，移植过来了。在服务器端渲染React组件路由时调用
- * @param api_endpint
- * @param methodName
- * @param params
- * @returns {Promise.<*>}
- * @constructor
- */
-export const EndPointMap_forServerRender = async (api_endpint, methodName,  params)=> {
-    try{
-        if (_config_endpoint[api_endpint] && _config_endpoint[api_endpint][methodName] && typeof _config_endpoint[api_endpint][methodName] === "function") {
-            let result = await _config_endpoint[api_endpint][methodName](params);
-            return result;
-        } else {
-            const error = `指定的方法${methodName}或入口模块${api_endpint}未定义`;
-            throw error;
-        }
-    }catch(err){
-        if (isDeveloping) {
-            setTimeout(()=> {
-                throw err
-            });
-        }
-    }
-}
+// /**
+//  * 原EndPointMap类的默认方法，移植过来了。在服务器端渲染React组件路由时调用
+//  * @param api_endpint
+//  * @param methodName
+//  * @param params
+//  * @returns {Promise.<*>}
+//  * @constructor
+//  */
+// export const EndPointMap_forServerRender = async (api_endpint, methodName,  params)=> {
+//     try{
+//         if (_config_endpoint[api_endpint] && _config_endpoint[api_endpint][methodName] && typeof _config_endpoint[api_endpint][methodName] === "function") {
+//             let result = await _config_endpoint[api_endpint][methodName](params);
+//             return result;
+//         } else {
+//             const error = `指定的方法${methodName}或入口模块${api_endpint}未定义`;
+//             throw error;
+//         }
+//     }catch(err){
+//         if (isDeveloping) {
+//             setTimeout(()=> {
+//                 throw err
+//             });
+//         }
+//     }
+// }
 
 export const CreateListenRouter = async (options)=> {
 
@@ -162,7 +162,9 @@ export const CreateListenRouter = async (options)=> {
             if (typeof method404 === 'function') {
                 await method404(req, res)
             } else {
-                res.json({err: `API方法未定义`, result: null});
+                let retObj = {err: `API方法未定义(${ req.path }, 请确认类是否存在或类的名称是否有变更！)`, result: null}
+                console.error(JSON.stringify(retObj))
+                res.json(retObj);
             }
         } catch (err) {
             res.status = 404;

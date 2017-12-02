@@ -1,6 +1,7 @@
 import {GKSUCCESS, modelSetting, cacheAble, clearCache} from 'class2api'
 import {GKErrors} from 'class2api/gkerrors'
 import {accessRule} from "class2api/rulehelper";
+import {DataModel} from "./../tableloader";
 
 @modelSetting({
     __needAuth:async ({uid})=>{
@@ -30,7 +31,12 @@ class GKModelA {
      */
     static async hello({name}) {
         console.log(GKErrors._SERVER_ERROR('错误1'))
-        return {message: `hello.${name}`}
+        let user = await DataModel.DemoUser.findOne()
+        if (user) {
+            return {message: `hello.${name}: there are nobody!`}
+        } else {
+            return {message: `hello.${name}:there has one girl,name:${user.name} ${user.age} years old!`}
+        }
     }
 
     static async getUser() {

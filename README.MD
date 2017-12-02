@@ -80,7 +80,7 @@ class2api/
 - getGankaoWXAuthToken,*从redis中读取赶考token的简单封装，方便使用方不用重新创建redis实例。将来可以剥离
 - setting_redisConfig，设置内置redis的连接参数
 - getRedisClient,获得redis访问实例
-- GKErrorWrap   错误包装器，当预设错误类型不够用时，可自定义
+- GKErrorWrap   错误包装器，当预设错误类型不够用时，可自定义。code定义需为正数（负数是内置常设错误的保留code段）
 - modelSetting  修饰器，类模块的元信息配置类
 - cacheAble     修饰器,启用类方法调用缓存的修饰器
 - clearCache    修饰器,清空类方法调用缓存的修时器
@@ -88,8 +88,10 @@ class2api/
 - setting_RuleValidator  accessRule访问权限修饰器中认证函数的全局配置入口
 - crashAfterMe  修饰器,运行完类方法就认为跑出异常中断程序，调试用，生产环境下自动失效
 
+class2api/gkerrors
+- GKErrors  常用预设的错误（code为负数）
+
 class2api/dbhelper
-- GKErrors  常用预设的错误  
 - TableSetting  sequelizeModel定义model时的扩展配置
 - ResetDB   重置数据库
 - DBModelLoader 加载Model定义文件
@@ -102,13 +104,13 @@ class2api/dbhelper
 - excuteSQL 执行指定的SQL语句，一般适用于无法用sequelize表达式的复杂查询
 
 class2api/testhelper
-- setApiRoot,常用预设的错误  
-- ApiDesc
-- WebInvokeHepler(usertoken)(apiPath, postParams, apiDesc)
-- save2Doc
+- setApiRoot    微服务API的domain
+- WebInvokeHepler(usertoken)(apiPath, postParams, apiDesc)      向api发起一个post-API请求， postParams是post的JSON内容，apiDesc是API方法描述的函数封装（只是提高可读性，没有实际功能意义）
+- ApiDesc       API方法描述的函数封装，只是提高在真实入参列表中的可读性，没有实际功能意义
+- save2Doc      保存本次mocha用例中所有提供了ApiDesc参数的API请求的入参与返回结果
 
 
-$ npm publish --registry=http://registry.npmjs.org
+$ npm publish --registry=http://registry.npmjs.org  --  
 
 
 

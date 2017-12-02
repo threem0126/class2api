@@ -1,8 +1,6 @@
 /**
  * 这个类是权限中心的实现，供客户方class2api中的权限认证函数来请求，通常会暴露出API地址，并配置到客户方的class2api.config.js中
  */
-
-
 import {GKSUCCESS} from "class2api";
 
 class GKRuleManager {
