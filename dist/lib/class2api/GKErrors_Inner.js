@@ -12,6 +12,7 @@ var _GKErrorWrap = require('./GKErrorWrap');
  * @type {{_TOKEN_LOGIN_INVALID, _NOT_ACCESS_PERMISSION, _NOT_SERVICE, _PARAMS_VALUE_EXPECT, _NO_RESULT, _SERVER_ERROR, _NOT_PARAMS}}
  */
 var GKErrors = exports.GKErrors = {
+    _TOKEN_PARSE_FAIL: (0, _GKErrorWrap.GKErrorWrap)(-9, 'token\u89E3\u6790\u5931\u8D25'),
     _RULE_VALIDATE_ERROR: (0, _GKErrorWrap.GKErrorWrap)(-8, '\u6743\u9650\u8BA4\u8BC1\u8FC7\u7A0B\u4E2D\u53D1\u751F\u5F02\u5E38'),
     _TOKEN_LOGIN_INVALID: (0, _GKErrorWrap.GKErrorWrap)(-7, '\u8BF7\u5148\u767B\u5F55'),
     _NOT_ACCESS_PERMISSION: (0, _GKErrorWrap.GKErrorWrap)(-6, '\u65E0\u8BBF\u95EE\u6743\u9650'),

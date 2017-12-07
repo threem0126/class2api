@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.CreateListenRouter = exports.EndPointMap_forServerRender = undefined;
+exports.CreateListenRouter = undefined;
 
 var _iterator2 = require('babel-runtime/core-js/symbol/iterator');
 
@@ -324,80 +324,46 @@ var _bindRouter = function () {
     };
 }();
 
-/**
- * 原EndPointMap类的默认方法，移植过来了。在服务器端渲染React组件路由时调用
- * @param api_endpint
- * @param methodName
- * @param params
- * @returns {Promise.<*>}
- * @constructor
- */
-var EndPointMap_forServerRender = exports.EndPointMap_forServerRender = function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee5(api_endpint, methodName, params) {
-        var result, error;
-        return _regenerator2.default.wrap(function _callee5$(_context5) {
-            while (1) {
-                switch (_context5.prev = _context5.next) {
-                    case 0:
-                        _context5.prev = 0;
-
-                        if (!(_config_endpoint[api_endpint] && _config_endpoint[api_endpint][methodName] && typeof _config_endpoint[api_endpint][methodName] === "function")) {
-                            _context5.next = 8;
-                            break;
-                        }
-
-                        _context5.next = 4;
-                        return _config_endpoint[api_endpint][methodName](params);
-
-                    case 4:
-                        result = _context5.sent;
-                        return _context5.abrupt('return', result);
-
-                    case 8:
-                        error = '\u6307\u5B9A\u7684\u65B9\u6CD5' + methodName + '\u6216\u5165\u53E3\u6A21\u5757' + api_endpint + '\u672A\u5B9A\u4E49';
-                        throw error;
-
-                    case 10:
-                        _context5.next = 15;
-                        break;
-
-                    case 12:
-                        _context5.prev = 12;
-                        _context5.t0 = _context5['catch'](0);
-
-                        if (isDeveloping) {
-                            setTimeout(function () {
-                                throw _context5.t0;
-                            });
-                        }
-
-                    case 15:
-                    case 'end':
-                        return _context5.stop();
-                }
-            }
-        }, _callee5, undefined, [[0, 12]]);
-    }));
-
-    return function EndPointMap_forServerRender(_x12, _x13, _x14) {
-        return _ref6.apply(this, arguments);
-    };
-}();
+// /**
+//  * 原EndPointMap类的默认方法，移植过来了。在服务器端渲染React组件路由时调用
+//  * @param api_endpint
+//  * @param methodName
+//  * @param params
+//  * @returns {Promise.<*>}
+//  * @constructor
+//  */
+// export const EndPointMap_forServerRender = async (api_endpint, methodName,  params)=> {
+//     try{
+//         if (_config_endpoint[api_endpint] && _config_endpoint[api_endpint][methodName] && typeof _config_endpoint[api_endpint][methodName] === "function") {
+//             let result = await _config_endpoint[api_endpint][methodName](params);
+//             return result;
+//         } else {
+//             const error = `指定的方法${methodName}或入口模块${api_endpint}未定义`;
+//             throw error;
+//         }
+//     }catch(err){
+//         if (isDeveloping) {
+//             setTimeout(()=> {
+//                 throw err
+//             });
+//         }
+//     }
+// }
 
 var CreateListenRouter = exports.CreateListenRouter = function () {
-    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee7(options) {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee6(options) {
         var apiroot, modelClasses, beforeCall, afterCall, method404, frontpage_default, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, classObj, model, as, aPath;
 
-        return _regenerator2.default.wrap(function _callee7$(_context7) {
+        return _regenerator2.default.wrap(function _callee6$(_context6) {
             while (1) {
-                switch (_context7.prev = _context7.next) {
+                switch (_context6.prev = _context6.next) {
                     case 0:
                         if (!router_listen_created) {
-                            _context7.next = 2;
+                            _context6.next = 2;
                             break;
                         }
 
-                        return _context7.abrupt('return', router);
+                        return _context6.abrupt('return', router);
 
                     case 2:
                         apiroot = options.apiroot, modelClasses = options.modelClasses, beforeCall = options.beforeCall, afterCall = options.afterCall, method404 = options.method404, frontpage_default = options.frontpage_default;
@@ -407,57 +373,57 @@ var CreateListenRouter = exports.CreateListenRouter = function () {
                         _iteratorNormalCompletion = true;
                         _didIteratorError = false;
                         _iteratorError = undefined;
-                        _context7.prev = 6;
+                        _context6.prev = 6;
                         _iterator = (0, _getIterator3.default)(modelClasses);
 
                     case 8:
                         if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                            _context7.next = 36;
+                            _context6.next = 36;
                             break;
                         }
 
                         classObj = _step.value;
 
                         if (!(typeof classObj === "function")) {
-                            _context7.next = 20;
+                            _context6.next = 20;
                             break;
                         }
 
-                        _context7.t0 = router;
-                        _context7.t1 = '/' + classObj.name.toLowerCase();
-                        _context7.next = 15;
+                        _context6.t0 = router;
+                        _context6.t1 = '/' + classObj.name.toLowerCase();
+                        _context6.next = 15;
                         return _bindRouter(classObj, beforeCall, afterCall);
 
                     case 15:
-                        _context7.t2 = _context7.sent;
+                        _context6.t2 = _context6.sent;
 
-                        _context7.t0.use.call(_context7.t0, _context7.t1, _context7.t2);
+                        _context6.t0.use.call(_context6.t0, _context6.t1, _context6.t2);
 
                         console.log('mapped class \'' + classObj.name + '\' to \'' + apiroot + classObj.name.toLowerCase() + '/*\' ... OK!');
-                        _context7.next = 33;
+                        _context6.next = 33;
                         break;
 
                     case 20:
                         model = classObj.model, as = classObj.as;
 
                         if (!(model && as)) {
-                            _context7.next = 32;
+                            _context6.next = 32;
                             break;
                         }
 
                         aPath = (as || model.name).toLowerCase();
-                        _context7.t3 = router;
-                        _context7.t4 = '/' + aPath;
-                        _context7.next = 27;
+                        _context6.t3 = router;
+                        _context6.t4 = '/' + aPath;
+                        _context6.next = 27;
                         return _bindRouter(model, beforeCall, afterCall, frontpage_default);
 
                     case 27:
-                        _context7.t5 = _context7.sent;
+                        _context6.t5 = _context6.sent;
 
-                        _context7.t3.use.call(_context7.t3, _context7.t4, _context7.t5);
+                        _context6.t3.use.call(_context6.t3, _context6.t4, _context6.t5);
 
                         console.log('mapped class \'' + model.name + '\' to \'' + apiroot + aPath + '/*\' ... OK!');
-                        _context7.next = 33;
+                        _context6.next = 33;
                         break;
 
                     case 32:
@@ -465,105 +431,109 @@ var CreateListenRouter = exports.CreateListenRouter = function () {
 
                     case 33:
                         _iteratorNormalCompletion = true;
-                        _context7.next = 8;
+                        _context6.next = 8;
                         break;
 
                     case 36:
-                        _context7.next = 42;
+                        _context6.next = 42;
                         break;
 
                     case 38:
-                        _context7.prev = 38;
-                        _context7.t6 = _context7['catch'](6);
+                        _context6.prev = 38;
+                        _context6.t6 = _context6['catch'](6);
                         _didIteratorError = true;
-                        _iteratorError = _context7.t6;
+                        _iteratorError = _context6.t6;
 
                     case 42:
-                        _context7.prev = 42;
-                        _context7.prev = 43;
+                        _context6.prev = 42;
+                        _context6.prev = 43;
 
                         if (!_iteratorNormalCompletion && _iterator.return) {
                             _iterator.return();
                         }
 
                     case 45:
-                        _context7.prev = 45;
+                        _context6.prev = 45;
 
                         if (!_didIteratorError) {
-                            _context7.next = 48;
+                            _context6.next = 48;
                             break;
                         }
 
                         throw _iteratorError;
 
                     case 48:
-                        return _context7.finish(45);
+                        return _context6.finish(45);
 
                     case 49:
-                        return _context7.finish(42);
+                        return _context6.finish(42);
 
                     case 50:
 
                         //拦截未匹配到的其他方法
                         router.all('*', function () {
-                            var _ref8 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee6(req, res, next) {
-                                return _regenerator2.default.wrap(function _callee6$(_context6) {
+                            var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee5(req, res, next) {
+                                var retObj;
+                                return _regenerator2.default.wrap(function _callee5$(_context5) {
                                     while (1) {
-                                        switch (_context6.prev = _context6.next) {
+                                        switch (_context5.prev = _context5.next) {
                                             case 0:
-                                                _context6.prev = 0;
+                                                _context5.prev = 0;
 
                                                 if (!(typeof method404 === 'function')) {
-                                                    _context6.next = 6;
+                                                    _context5.next = 6;
                                                     break;
                                                 }
 
-                                                _context6.next = 4;
+                                                _context5.next = 4;
                                                 return method404(req, res);
 
                                             case 4:
-                                                _context6.next = 7;
+                                                _context5.next = 9;
                                                 break;
 
                                             case 6:
-                                                res.json({ err: 'API\u65B9\u6CD5\u672A\u5B9A\u4E49', result: null });
+                                                retObj = { err: 'API\u65B9\u6CD5\u672A\u5B9A\u4E49(' + req.path + ', \u8BF7\u786E\u8BA4\u7C7B\u662F\u5426\u5B58\u5728\u6216\u7C7B\u7684\u540D\u79F0\u662F\u5426\u6709\u53D8\u66F4\uFF01)', result: null };
 
-                                            case 7:
-                                                _context6.next = 13;
-                                                break;
+                                                console.error((0, _stringify2.default)(retObj));
+                                                res.json(retObj);
 
                                             case 9:
-                                                _context6.prev = 9;
-                                                _context6.t0 = _context6['catch'](0);
+                                                _context5.next = 15;
+                                                break;
+
+                                            case 11:
+                                                _context5.prev = 11;
+                                                _context5.t0 = _context5['catch'](0);
 
                                                 res.status = 404;
-                                                res.json({ err: '404\u5904\u7406\u9519\u8BEF(' + (0, _stringify2.default)(_context6.t0) + ')', result: null });
+                                                res.json({ err: '404\u5904\u7406\u9519\u8BEF(' + (0, _stringify2.default)(_context5.t0) + ')', result: null });
 
-                                            case 13:
+                                            case 15:
                                             case 'end':
-                                                return _context6.stop();
+                                                return _context5.stop();
                                         }
                                     }
-                                }, _callee6, undefined, [[0, 9]]);
+                                }, _callee5, undefined, [[0, 11]]);
                             }));
 
-                            return function (_x16, _x17, _x18) {
-                                return _ref8.apply(this, arguments);
+                            return function (_x13, _x14, _x15) {
+                                return _ref7.apply(this, arguments);
                             };
                         }());
                         router_listen_created = true;
 
-                        return _context7.abrupt('return', router);
+                        return _context6.abrupt('return', router);
 
                     case 53:
                     case 'end':
-                        return _context7.stop();
+                        return _context6.stop();
                 }
             }
-        }, _callee7, undefined, [[6, 38, 42, 50], [43,, 45, 49]]);
+        }, _callee6, undefined, [[6, 38, 42, 50], [43,, 45, 49]]);
     }));
 
-    return function CreateListenRouter(_x15) {
-        return _ref7.apply(this, arguments);
+    return function CreateListenRouter(_x12) {
+        return _ref6.apply(this, arguments);
     };
 }();
