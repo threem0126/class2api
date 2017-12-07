@@ -45,13 +45,18 @@ $ mocha test/test.run
         }, 
         //将哪些类映射到API，默认取类名称的小写字符，也可以定义路径的别名
         modelClasses: [ClassA, {model: ClassB, as: 'b'}], 
-        beforeCall:({req, params, modelSetting})=>{ 
+        beforeCall:async ({req, params, modelSetting})=>{ 
+            let {__Auth} = modelSetting
             //Api处理之前，在这里进行权限身份验证、请求参数预处理等操作
-            // ....
+            //根据类的__Auth配置来进行身份验证,具体的验证逻辑由类的修饰器配置决定，这里不进行类静态方法的权限认证
+            if (__Auth) {
+                let userInfo = await __Auth({req})
+                params.uID = userInfo.uID
+            }
             //返回的params会传递给API对应的实际静态方法
             return params 
         },
-        afterCall:({req,res,result})=>{
+        afterCall:async({req,res,result})=>{
             //Api处理结束，在返回result给客户端之前，可以做附加处理，比如记录日志或输出额外的附加信息给调用方
             // ....
             return result
