@@ -200,7 +200,7 @@ var _create_server = function () {
                             cros_headers = cros_headers.map(function (item) {
                                 return item.toLowerCase();
                             });
-                            allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'token', 'frontpage', 'withCredentials', 'credentials'].map(function (item) {
+                            allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'token', 'frontpage', 'withCredentials', 'credentials'].map(function (item) {
                                 return item.toLowerCase();
                             });
 

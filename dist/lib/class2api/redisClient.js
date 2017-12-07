@@ -64,6 +64,8 @@ var getGankaoWXAuthToken = exports.getGankaoWXAuthToken = function () {
 }();
 
 var setting_redisConfig = exports.setting_redisConfig = function setting_redisConfig(redisConfig) {
+    console.log("__dirname:");
+    console.log(__dirname);
     (function () {
         if (!_redisConfig) {
             _redisConfig = redisConfig;
@@ -370,12 +372,13 @@ var _init_redisClient = function _init_redisClient() {
 };
 
 var getRedisClient = exports.getRedisClient = function getRedisClient() {
+    if (_redisClient) return _redisClient;
+
     if (!_redisConfig) {
         throw 'redis\u914D\u7F6E\u4FE1\u606F\u5C1A\u672A\u8BBE\u7F6E\uFF08\u8BF7\u8C03\u7528setting_redisConfig\uFF09';
     }
-    if (_redisClient) return _redisClient;
 
-    return _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee11() {
+    _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee11() {
         return _regenerator2.default.wrap(function _callee11$(_context11) {
             while (1) {
                 switch (_context11.prev = _context11.next) {
@@ -384,15 +387,14 @@ var getRedisClient = exports.getRedisClient = function getRedisClient() {
                         return _init_redisClient();
 
                     case 2:
-                        return _context11.abrupt('return', _context11.sent);
-
-                    case 3:
                     case 'end':
                         return _context11.stop();
                 }
             }
         }, _callee11, undefined);
     }))();
+
+    return _redisClient;
 };
 
 /***

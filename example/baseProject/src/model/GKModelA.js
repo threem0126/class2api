@@ -1,21 +1,21 @@
-import {GKSUCCESS, modelSetting, cacheAble, clearCache} from 'class2api'
+import {GKSUCCESS} from 'class2api'
 import {GKErrors} from 'class2api/gkerrors'
+import Base from './../model_private/Base'
 
 class GKModelA {
     constructor() {
         throw '静态业务功能类无法实例化'
     }
 
-
     /**
-     * 测试hello
+     * getArticle
      *
      * @param name
      * @returns {Promise.<{message: string}>}
      */
-    static async hello({name}) {
+    static async getArticle({uID, name}) {
         console.log(GKErrors._SERVER_ERROR('错误1'))
-        return {message: `hello.${name}`}
+        return {message: `getArticle.${name}, user.uID = ${uID}, ${Base.TestInside({name})}`}
     }
 
     static async editArticle({aID}) {

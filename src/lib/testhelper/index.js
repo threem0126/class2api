@@ -1,6 +1,5 @@
 import request from 'request'
 import Promise from 'bluebird'
-import {filter} from 'lodash'
 import fs from 'fs'
 
 Promise.promisifyAll(request)
@@ -18,14 +17,16 @@ export const setApiRoot = (apiRoot)=> {
 export const ApiDesc=(desc)=> {
     return desc
 }
-export const WebInvokeHepler = (userToken) => {
-    let _userToken = userToken
+export const WebInvokeHepler = (user) => {
+    if(!user)
+        throw `WebInvokeHepler方法缺少参数user`
+    let {token='', jwtoken=''} = user
     return async (apiPath, postParams, apiDesc) => {
         let options = {
             uri: remote_api + apiPath,
             rejectUnauthorized: false,
             headers: {
-                jwtoken: _userToken // 这里提供身份验证的token，注意命名为：jwtoken
+                token, jwtoken // 这里提供身份验证的token，注意命名为：jwtoken
             },
             body: postParams,
             json: true,

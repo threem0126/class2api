@@ -10,7 +10,7 @@ import compression from "compression";
 import loggerCreator from "./logger.js";
 import log4js from 'log4js';
 import * as ModelProxy  from './ModelProxy';
-import {modelSetting, cacheAble, clearCache, crashAfterMe, accessRule, setting_RuleValidator}  from './Decorators';
+import {modelSetting, cacheAble, clearCache, crashAfterMe, accessRule}  from './Decorators';
 import {getGankaoWXAuthToken, setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 import {GKErrorWrap} from './GKErrorWrap'
 import {setting_CustomRuleValidator} from '../rulehelper/index'
@@ -111,7 +111,7 @@ const _create_server = async (model, options)=> {
         //设置跨域访问
         cros_origin = cros_origin.map(item => item.toLowerCase())
         cros_headers = cros_headers.map(item => item.toLowerCase())
-        let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
+        let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
         _server.use(function (req, res, next) {
             res.header("Access-Control-Allow-Origin", (cros_origin.length === 0) ? "*" : cros_origin.join(','));
             res.header("Access-Control-Allow-Credentials", "true");

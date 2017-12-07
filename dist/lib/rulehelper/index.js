@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.accessRule = exports.setting_CustomRuleValidator = undefined;
+exports.parseAdminAccountFromJWToken = exports.accessRule = exports.setting_CustomRuleValidator = undefined;
 
 var _iterator = require('babel-runtime/core-js/symbol/iterator');
 
@@ -35,9 +35,9 @@ var _path2 = _interopRequireDefault(_path);
 
 var _GKErrors_Inner = require('../class2api/GKErrors_Inner');
 
-var _ruleValidator = require('./ruleValidator');
+var _adminRuleValidator = require('./adminRuleValidator');
 
-var _ruleValidator2 = _interopRequireDefault(_ruleValidator);
+var _adminRuleValidator2 = _interopRequireDefault(_adminRuleValidator);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -52,9 +52,11 @@ try {
 } catch (err) {
     //..
 };
-console.log(class2api_config);
-var _class2api_config = class2api_config,
-    sysName = _class2api_config.name;
+
+var _ref = class2api_config || {},
+    _ref$name = _ref.name,
+    sysName = _ref$name === undefined ? '-' : _ref$name,
+    admin_rule_center = _ref.admin_rule_center;
 
 var _ruleValidator_custom = void 0;
 
@@ -68,18 +70,19 @@ var _ruleValidator_custom = void 0;
  * @returns {Promise.<*>}
  */
 var ruleValidator = function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref2) {
-        var jwtoken = _ref2.jwtoken,
-            ruleCategory = _ref2.ruleCategory,
-            ruleName = _ref2.ruleName,
-            ruleDescript = _ref2.ruleDescript,
-            codePath = _ref2.codePath;
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref3) {
+        var jwtoken = _ref3.jwtoken,
+            categoryName = _ref3.categoryName,
+            categoryDesc = _ref3.categoryDesc,
+            ruleName = _ref3.ruleName,
+            ruleDescript = _ref3.ruleDescript,
+            codePath = _ref3.codePath;
         var params;
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        params = { jwtoken: jwtoken, ruleCategory: ruleCategory, ruleName: ruleName, ruleDescript: ruleDescript, codePath: codePath };
+                        params = { jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDescript: ruleDescript, codePath: codePath };
 
                         if (!_ruleValidator_custom) {
                             _context.next = 7;
@@ -87,14 +90,14 @@ var ruleValidator = function () {
                         }
 
                         _context.next = 4;
-                        return _ruleValidator_custom({ jwtoken: jwtoken, ruleCategory: ruleCategory, ruleName: ruleName, ruleDescript: ruleDescript, codePath: codePath });
+                        return _ruleValidator_custom({ jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDescript: ruleDescript, codePath: codePath });
 
                     case 4:
                         return _context.abrupt('return', _context.sent);
 
                     case 7:
                         _context.next = 9;
-                        return _ruleValidator2.default._ruleValidator_inner(_extends({}, params, { sysName: sysName }));
+                        return _adminRuleValidator2.default._ruleValidator_inner(_extends({}, params, { sysName: sysName }));
 
                     case 9:
                         return _context.abrupt('return', _context.sent);
@@ -108,7 +111,7 @@ var ruleValidator = function () {
     }));
 
     return function ruleValidator(_x) {
-        return _ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
     };
 }();
 
@@ -118,7 +121,7 @@ var ruleValidator = function () {
  * @param ruleValidator
  */
 var setting_CustomRuleValidator = exports.setting_CustomRuleValidator = function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(ruleValidator) {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(ruleValidator) {
         return _regenerator2.default.wrap(function _callee2$(_context2) {
             while (1) {
                 switch (_context2.prev = _context2.next) {
@@ -142,7 +145,7 @@ var setting_CustomRuleValidator = exports.setting_CustomRuleValidator = function
     }));
 
     return function setting_CustomRuleValidator(_x2) {
-        return _ref3.apply(this, arguments);
+        return _ref4.apply(this, arguments);
     };
 }();
 
@@ -153,10 +156,10 @@ var setting_CustomRuleValidator = exports.setting_CustomRuleValidator = function
  * @param ruleDescript
  * @returns {Function}
  */
-var accessRule = exports.accessRule = function accessRule(_ref4) {
-    var ruleName = _ref4.ruleName,
-        _ref4$ruleDescript = _ref4.ruleDescript,
-        ruleDescript = _ref4$ruleDescript === undefined ? '' : _ref4$ruleDescript;
+var accessRule = exports.accessRule = function accessRule(_ref5) {
+    var ruleName = _ref5.ruleName,
+        _ref5$ruleDescript = _ref5.ruleDescript,
+        ruleDescript = _ref5$ruleDescript === undefined ? '' : _ref5$ruleDescript;
 
     return function (target, name, descriptor) {
         if (!ruleName) {
@@ -168,8 +171,10 @@ var accessRule = exports.accessRule = function accessRule(_ref4) {
         var oldValue = descriptor.value;
         descriptor.value = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
             var jwtoken,
-                _ruleCategory,
-                _ref6,
+                _ref7,
+                categoryName,
+                categoryDesc,
+                _ref8,
                 err,
                 result,
                 canAccess,
@@ -214,20 +219,21 @@ var accessRule = exports.accessRule = function accessRule(_ref4) {
                             throw _GKErrors_Inner.GKErrors._NOT_ACCESS_PERMISSION('\u8EAB\u4EFD\u65E0\u6CD5\u8BC6\u522B\uFF0C\u5728API\u5BF9\u5E94\u7684\u9759\u6001\u65B9\u6CD5\u4E0A\u672A\u8BFB\u53D6\u5230req\u8BF7\u6C42\u5BF9\u8C61\u7684headers[\'jwtoken\']');
 
                         case 12:
-                            _ruleCategory = target.__modelSetting ? target.__modelSetting().__ruleCategory : { Name: '' };
+                            _ref7 = target.__modelSetting ? target.__modelSetting().__ruleCategory : { name: '无名', desc: '-' }, categoryName = _ref7.name, categoryDesc = _ref7.desc;
                             _context3.next = 15;
                             return ruleValidator({
                                 jwtoken: jwtoken,
-                                ruleCategory: '' + _ruleCategory.Name,
+                                categoryName: categoryName,
+                                categoryDesc: categoryDesc,
                                 ruleName: '' + ruleName,
                                 ruleDescript: ruleDescript,
                                 codePath: target.name + '.' + name
                             });
 
                         case 15:
-                            _ref6 = _context3.sent;
-                            err = _ref6.err;
-                            result = _ref6.result;
+                            _ref8 = _context3.sent;
+                            err = _ref8.err;
+                            result = _ref8.result;
                             canAccess = result.canAccess, resean = result.resean;
 
                             if (canAccess) {
@@ -236,7 +242,7 @@ var accessRule = exports.accessRule = function accessRule(_ref4) {
                             }
 
                             throw _GKErrors_Inner.GKErrors._NOT_ACCESS_PERMISSION({
-                                resean: '\u8BBF\u95EE\u88AB\u62D2\u7EDD\uFF08\u529F\u80FD\uFF1A[' + _ruleCategory.Name + '/' + ruleName + ']\uFF0C\u4EE3\u7801:[' + target.name + '.' + name + ']\uFF0C\u539F\u56E0\uFF1A' + (resean || '-') + '\uFF09'
+                                resean: '\u8BBF\u95EE\u88AB\u62D2\u7EDD\uFF08\u529F\u80FD\uFF1A[' + categoryName + '/' + ruleName + ']\uFF0C\u4EE3\u7801:[' + target.name + '.' + name + ']\uFF0C\u539F\u56E0\uFF1A' + (resean || '-') + '\uFF09'
                             });
 
                         case 21:
@@ -256,3 +262,35 @@ var accessRule = exports.accessRule = function accessRule(_ref4) {
         return descriptor;
     };
 };
+
+/**
+ * 从jstoken值解析后台管理用户的账号
+ *
+ * @param jstoken
+ * @returns {Promise.<*>}
+ */
+var parseAdminAccountFromJWToken = exports.parseAdminAccountFromJWToken = function () {
+    var _ref9 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(_ref10) {
+        var jwtoken = _ref10.jwtoken;
+        return _regenerator2.default.wrap(function _callee4$(_context4) {
+            while (1) {
+                switch (_context4.prev = _context4.next) {
+                    case 0:
+                        _context4.next = 2;
+                        return _adminRuleValidator2.default.parseAdminAccountFromJWToken({ jwtoken: jwtoken });
+
+                    case 2:
+                        return _context4.abrupt('return', _context4.sent);
+
+                    case 3:
+                    case 'end':
+                        return _context4.stop();
+                }
+            }
+        }, _callee4, undefined);
+    }));
+
+    return function parseAdminAccountFromJWToken(_x3) {
+        return _ref9.apply(this, arguments);
+    };
+}();

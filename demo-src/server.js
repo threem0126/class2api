@@ -1,8 +1,9 @@
 import _config from "./config.js" ;
-import GKRuleManager from './model/GKRuleManager'
+import {createServer,setting_redisConfig} from 'class2api'
+import {GKErrors} from 'class2api/gkerrors'
 import GKModelA from './model/GKModelA'
-import {createServer,setting_redisConfig} from './../src/lib/class2api'
-import {GKErrors} from '../src/lib/class2api/GKErrors_Inner'
+import GKRuleManager from './model/GKRuleManager'
+import GKAdmin_ModelA from './model_admin/GKAdmin_ModelA'
 
 let node_env = process.env.NODE_ENV || "development"
 let port = 3002;
@@ -11,28 +12,30 @@ setting_redisConfig(redis)
 
 //创建微服务对象
 createServer({
-    config(){
-        let {redis} = _config
-        return {
-            redis,
-            apiroot: '/',
-            cros:true
-        }
+    config:{
+        redis,
+        apiroot: '/',
+        cros:true
     },
 
     // 将哪些类映射到API，可以定义路径别名
-    modelClasses(){
-        return [GKModelA, {model:GKModelA, as:'a2'}, GKRuleManager]
-    },
+    modelClasses:[GKModelA, {model:GKModelA, as:'a2'}, GKRuleManager, {model:GKAdmin_ModelA,as:"admin"}],
 
     //在API方法执行前
     async beforeCall({req, params, modelSetting}){
-        let {__needAuth} = modelSetting
-        console.log(`beforeCall... [${ req.originalUrl }]:${( typeof __needAuth )}`)
-        console.log('params:....' + JSON.stringify(params))
-        //TODO: 这里可以对params进行装饰，比如根据header中的token信息来验证身份，最终注入用户uid信息
-        if (!req.headers['jwtoken']) {
-            throw GKErrors._SERVER_ERROR('访问者的身份无法识别')
+        let {__Auth} = modelSetting
+        if(process.env.NODE_ENV === "development") {
+            console.log(`beforeCall [${ req.originalUrl }]:....${( typeof __Auth )}`)
+            console.log('params:....' + JSON.stringify(params))
+            console.log('req.header:token....' + JSON.stringify(req.header('token')))
+            console.log('req.header:jwtoken....' + JSON.stringify(req.header('jwtoken')))
+            console.log('req.cookies:....' + JSON.stringify(req.cookies))
+        }
+
+        //根据类的__Auth配置来进行身份验证,具体的验证逻辑由类的修饰器配置决定，这里不进行类静态方法的权限认证
+        if (__Auth) {
+            let userInfo = await __Auth({req})
+            params.uID = userInfo.uID
         }
         return params
     },

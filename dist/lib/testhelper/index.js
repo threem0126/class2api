@@ -31,8 +31,6 @@ var _bluebird = require('bluebird');
 
 var _bluebird2 = _interopRequireDefault(_bluebird);
 
-var _lodash = require('lodash');
-
 var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
@@ -56,8 +54,13 @@ var setApiRoot = exports.setApiRoot = function setApiRoot(apiRoot) {
 var ApiDesc = exports.ApiDesc = function ApiDesc(desc) {
     return desc;
 };
-var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(userToken) {
-    var _userToken = userToken;
+var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user) {
+    if (!user) throw 'WebInvokeHepler\u65B9\u6CD5\u7F3A\u5C11\u53C2\u6570user';
+    var _user$token = user.token,
+        token = _user$token === undefined ? '' : _user$token,
+        _user$jwtoken = user.jwtoken,
+        jwtoken = _user$jwtoken === undefined ? '' : _user$jwtoken;
+
     return function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(apiPath, postParams, apiDesc) {
             var options, _ref2, body;
@@ -70,7 +73,7 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(userTok
                                 uri: remote_api + apiPath,
                                 rejectUnauthorized: false,
                                 headers: {
-                                    jwtoken: _userToken // 这里提供身份验证的token，注意命名为：jwtoken
+                                    token: token, jwtoken: jwtoken // 这里提供身份验证的token，注意命名为：jwtoken
                                 },
                                 body: postParams,
                                 json: true

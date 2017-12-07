@@ -1,12 +1,8 @@
 import Promise from 'bluebird'
 import mysql from 'mysql'
 import request from 'request'
-import {setting_redisConfig, getRedisClient, cacheAble} from 'class2api'
-import {GKErrors} from 'class2api/gkerrors'
-import {DBUtils,GKSUCCESS,excuteSQL, createTransaction} from 'class2api/dbhelper'
-import {DataModel,ass} from './../tableloader'
+import {setting_redisConfig, cacheAble} from 'class2api'
 import _config from "./../config.js" ;
-import * as types from './../constants'
 
 let {mysql_gankao_mainDB, redis} = _config
 setting_redisConfig(redis)
@@ -38,7 +34,7 @@ const queryGankaoUserInfoByApi = async ({studentInfo}) => {
     }
 }
 
-const getUserFromDebugToken = async ({cookieToken})=> {
+const getUserFromDebugToken = async ({token})=> {
     if (token === 'asdqwerzxcsdfg123445765687') {
         console.log(require("./../fixture/user.json"))
         return require("./../fixture/user.json")
@@ -52,37 +48,26 @@ export default class {
         throw '静态业务功能类无法实例化'
     }
 
-    /**
-     * 验证权限，后续将加入类、方法的入参
-     * @param uid
-     * @returns {Promise.<{canAccess: boolean, resean: null}>}
-     */
-    static async varifyPermession({uid}) {
-        /*
-         TODO: 判断权限，默认可以都放行
-         */
-        return {canAccess: true, resean: null}
-    }
-
     @cacheAble({
         cacheKeyGene: (args) => {
-            let {cookieToken} = args[0]
-            return cookieToken
+            let {req} = args[0]
+            return req.header('token') || ''
         }
     })
-    static async parseUserInfoFromCookieToken({cookieToken}) {
-        if (cookieToken.split(",").length === 3) {
+    static async parseUserInfoFromRequest({req}) {
+        let token = req.header('token') || req.cookies.student || ''
+        if (token.split(",").length === 3) {
             //从赶考主站接口中查询用户信息
-            let gankaouserInfo = await queryGankaoUserInfoByApi({studentInfo: cookieToken})
+            let gankaouserInfo = await queryGankaoUserInfoByApi({studentInfo: token})
             //如果主站中信息不存在，则取模拟信息
             if (!gankaouserInfo) {
-                gankaouserInfo = await getUserFromDebugToken({cookieToken})
+                gankaouserInfo = await getUserFromDebugToken({token})
             }
             if (!gankaouserInfo) {
                 return {user_id: 0, userInfo: null}
-            }else{
+            } else {
                 let {error} = gankaouserInfo
-                if(error) {
+                if (error) {
                     throw new Error(JSON.stringify(error))
                 }
             }
@@ -123,11 +108,10 @@ export default class {
             let {user, loginMode, grades} = gankaouserInfo
             return {user_id: user.id, userInfo: gankaouserInfo};
         } else {
-            console.error(`解析cookie中token时，值的格式不符(${cookieToken})，期待的是2个逗号间隔的字符串`)
+            console.error(`解析cookie中token时，值的格式不符(${token})，期待的是2个逗号间隔的字符串`)
             return {user_id: 0, userInfo: null};
         }
     }
-
 }
 
 

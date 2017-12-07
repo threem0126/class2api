@@ -1,21 +1,22 @@
-# 方法Hello #- 接口：http://127.0.0.1:3002/gkmodela/hello- post参数：```json{
+# 方法getArticle #- 接口：http://127.0.0.1:3002/gkmodela/getArticle- post参数：```json{
   "name": "haungyong"
 }```- 请求结果：```json{
   "err": null,
   "result": {
-    "message": "hello.haungyong"
+    "message": "getArticle.haungyong，from user. 12345678",
+    "__fromCache": true
   }
 }```
-# 以别名方式请求 #- 接口：http://127.0.0.1:3002/a2/hello- post参数：```json{
-  "name": 0.7777399228789235
+# 以别名方式请求 #- 接口：http://127.0.0.1:3002/a2/getArticle- post参数：```json{
+  "name": 0.7249323695581256
 }```- 请求结果：```json{
   "err": null,
   "result": {
-    "message": "hello.0.7777399228789235"
+    "message": "getArticle.0.7249323695581256，from user. 12345678"
   }
 }```
-# 编辑文章 #- 接口：http://127.0.0.1:3002/a2/editArticle- post参数：```json{
-  "aID": 0.4360719959692998
+# 编辑文章 #- 接口：http://127.0.0.1:3002/admin/editArticle- post参数：```json{
+  "aID": 0.9006420730994
 }```- 请求结果：```json{
   "err": {
     "_gankao": 1,
@@ -25,8 +26,8 @@
   },
   "result": null
 }```
-# 删除文章 #- 接口：http://127.0.0.1:3002/a2/deleteArticle- post参数：```json{
-  "aID": 0.5712048935152423
+# 删除文章 #- 接口：http://127.0.0.1:3002/admin/deleteArticle- post参数：```json{
+  "aID": 0.05972002505870999
 }```- 请求结果：```json{
   "err": null,
   "result": {

@@ -1,15 +1,13 @@
 import {GKSUCCESS, modelSetting, cacheAble, clearCache} from 'class2api'
 import {GKErrors} from 'class2api/gkerrors'
-import {accessRule} from "class2api/rulehelper";
 import {DataModel} from "./../tableloader";
+import Auth from "./../model_private/Auth";
+
 
 @modelSetting({
-    __needAuth:async ({uid})=>{
-        return await accessProvider('class1')({uid})
-    },
-    __ruleCategory: {
-        Name: '文章系统',
-        Descript: '文章系统'
+    __Auth:async ({req})=>{
+        //非后台的用户验证，解析header中的token信息
+        return await Auth.parseUserInfoFromRequest({req})
     }
 })
 class GKModelA {
@@ -29,7 +27,7 @@ class GKModelA {
      * @param name
      * @returns {Promise.<{message: string}>}
      */
-    static async hello({name}) {
+    static async getArticle({uID, name}) {
         console.log(GKErrors._SERVER_ERROR('错误1'))
         let user = await DataModel.DemoUser.findOne()
         if (user) {
@@ -37,22 +35,6 @@ class GKModelA {
         } else {
             return {message: `hello.${name}:there has one girl,name:${user.name} ${user.age} years old!`}
         }
-    }
-
-    static async getUser() {
-        //TODO:
-    }
-
-    @accessRule({ruleName: '编辑文章', ruleDescript: '对文章进行编辑'})
-    static async editArticle({aID}) {
-        //...
-        return GKSUCCESS()
-    }
-
-    @accessRule({ruleName: '删除文章', ruleDescript: '对文章进行删除'})
-    static async deleteArticle({aID}) {
-        //...
-        return GKSUCCESS()
     }
 
 }

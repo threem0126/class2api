@@ -19,6 +19,8 @@ export const getGankaoWXAuthToken = async (gkwxauthtoken)=> {
 }
 
 export const setting_redisConfig = (redisConfig)=> {
+    console.log("__dirname:");
+    console.log(__dirname);
     (() => {
         if(!_redisConfig){
             _redisConfig = redisConfig
@@ -105,15 +107,18 @@ const _init_redisClient = ()=> {
 }
 
 export const getRedisClient = ()=> {
+    if (_redisClient)
+        return _redisClient;
+
     if (!_redisConfig) {
         throw  `redis配置信息尚未设置（请调用setting_redisConfig）`
     }
-    if (_redisClient)
-        return _redisClient
 
-    return (async () => {
-        return await _init_redisClient()
+    (async () => {
+        await _init_redisClient()
     })();
+
+    return _redisClient
 
 }
 
