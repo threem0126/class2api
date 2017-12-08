@@ -275,7 +275,7 @@ return {
     GKErrors._NOT_PARAMS        //缺少参数
 ```
 
-##class2api/dbhelper
+## class2api/dbhelper
 sequelize模型创建与管理的助手函数空间，可参考项目中的tableloader.js示例文件
 
 - TableSetting  
