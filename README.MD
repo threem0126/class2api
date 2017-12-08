@@ -13,12 +13,12 @@ $ npm i
 $ npm i --registry=https://registry.npm.taobao.org 
 ```
 
-- 基于源码版本运行Demo应用(Server版本)
+- 基于源码版本运行Demo应用(独立Server版本)
 ```
 $ npm run start:src 
 ```
 
-- 基于源码版本运行Demo应用(ExpressRouter路由版本)
+- 基于源码版本运行Demo应用(ExpressRouter路由挂载版本)
 ```
 $ npm run start:srcrouter
 ```
@@ -53,13 +53,9 @@ $ mocha test/test.run
         beforeCall:async ({req, params, modelSetting})=>{
             return params
         }
-    }).then((server)=>{
-        //开始监听指定的端口
-        let port = 3002;
-        server.listen(port, "0.0.0.0", function onStart(err){
-            if (err) {
-                console.log(err);
-            }
+    }).then((server)=>{  
+        server.listen(3002, "0.0.0.0", function onStart(err){
+            if (err)console.log(err)
             console.info("==> 🌎 Listening on port %s. Open up http://0.0.0.0:%s/ in your browser.", port, port);
         });
     }).catch((error)=>{
@@ -67,10 +63,15 @@ $ mocha test/test.run
     })
 ``` 
 
-# 业务类的约定与最佳实践：
+现在，就可以访问服务接口：
+```
+$ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
+```
+
+# 业务静态类的编写约定与最佳实践：
 - 类名需为命名类，不能匿名
-- 业务静态类，不能拥有实例方法（也没有需求场景），所以请参考官方代码，在构造器中throw异常，以确保业务静态类不会被实例化
-- 类静态方法实现各业务逻辑
+- 业务静态类，不能拥有实例方法（通常其实也没有需求和场景），所以请参考官方代码，在构造器中throw异常，以确保业务静态类不会被实例化
+- 类静态方法实现各业务逻辑，一个方法对应一个业务逻辑
 - 类静态方法只有一个形参，并以ES6对象解构的方式书写，调用代码可以获得命名参数形式的可读性益处
 - 类静态方法的参数（首个参数）中，框架还注入了几个属性，req：当前的请求信息对象，express的标准request，供方法内部读取；uID：用户的唯一编码，当modelSetting修饰器中指定的身份验证函数（__Auth）运行通过时出现；__nocache：调用方传入的特殊指令，当__nocache有值时，cacheAble修饰器内部会在本次请求中忽略cacheAble缓存策略，继续运行方法。
 - 为了增加API返回数据值的可扩展能力，类静态方法的返回值必须用对象形式，不能使用字符串、整数、浮点、布尔等简单值类型。
