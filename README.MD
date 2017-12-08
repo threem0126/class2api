@@ -129,21 +129,20 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
 ```javascript
     createServer({
         config:{
-           apiroot:'/',//挂载微服务的根路径，如：apiroot设置为'apiv1"，则业务类ClassA的method1方法对应的访问入口为: http://yourdomain/apiv1/classa/method1
-           redis,//内置API方法缓存所使用的redis实例配置参数，使用clearCache、cacheAble修饰器时必须
-           cros:true,//是否允许跨域访问
-           cros_headers:[],//允许跨域访问时的headers白名单
-           cros_origin:[],//允许跨域访问时的授权源配置，默认为*。当传入有效的cros_origin参数时，以cros_origin中指定的为准
-           frontpage_default: '' //放在API方法内部获取前端的域名，与从前端请求传过来header中的frontpage合并，优先获取客户端的，其实采用此默认值。最后封装为标准url对象并绑定到API方法回调的params对象的___frontpageURL属性上
+           apiroot:'/', //[可选]，挂载微服务的根路径，如：apiroot设置为'apiv1"，则业务类ClassA的method1方法对应的访问入口为: http://yourdomain/apiv1/classa/method1
+           redis,       //[可选]，内置API方法缓存所使用的redis实例配置参数，使用clearCache、cacheAble修饰器时必须
+           cros:true,   //[可选]，是否允许跨域访问
+           cros_headers:[], //[可选]，允许跨域访问时的headers白名单
+           cros_origin:[],  //[可选]，允许跨域访问时的授权源配置，默认为*。当传入有效的cros_origin参数时，以cros_origin中指定的为准
+           frontpage_default: ''    //[可选]，放在API方法内部获取前端的域名，与从前端请求传过来header中的frontpage合并，优先获取客户端的，其实采用此默认值。最后封装为标准url对象并绑定到API方法回调的params对象的___frontpageURL属性上
         }, 
-        modelClasses, //映射的业务类列表，如:[ClassA, {model:XXX,as:'abc'}]，建议以mode-as的方式修改业务类暴露的访问路径，以隐藏实际的类命名（建议）
-        beforeCall, //API接口请求之前的拦截事件，可以修改、监听post信息，以及身份的验证判断
-        afterCall, //API接口请求完成后的拦截事件，可以修改、监听返回结果，典型场景就是记录请求的日志
-        custom:(expressInstence)=>{
-            //TODO:对expressInstence实例进行自定义扩展，注：微服务通常是无状态的，所以不建议增加session机制
+        modelClasses,   //必需，映射的业务类列表，如:[ClassA, {model:XXX,as:'abc'}]，建议以mode-as的方式修改业务类暴露的访问路径，以隐藏实际的类命名（建议）
+        beforeCall,     //[可选]，API接口请求之前的拦截事件，可以修改、监听post信息，以及身份的验证判断
+        afterCall,  //[可选]，API接口请求完成后的拦截事件，可以修改、监听返回结果，典型场景就是记录请求的日志
+        custom:(expressInstence)=>{ 
             return expressInstence
-        },
-        method404//自定义的express的路由中间件，在404场景时，可输出自己定制的返回值
+        },          //[可选]，对expressInstence实例进行自定义扩展，注：微服务通常是无状态的，所以不建议增加session机制
+        method404       //[可选]，自定义的express的路由中间件，在404场景时，可输出自己定制的返回值
     })
 ```
 
@@ -282,7 +281,7 @@ sequelize模型创建与管理的助手函数空间，可参考项目中的table
 - TableSetting  
 sequelizeModel定义model时的几个扩展设置，包括：
 1、TableSetting.tabelOption设置，含model的几个默认设置，paranoid默认为true，时间相关字段名定义为created_at、updated_at、deleted_at，字符集collate为utf8_general_ci
-2、TableSetting.extendDateTimeVirtualFields设置，为时间字段扩展可读性的时间格式化虚字段
+2、TableSetting.extendDateTimeVirtualFields(DataTypes, [customfields])设置，为时间字段扩展出可读性强的时间格式化后的虚字段，名称约定为'*****_display'，设置内默认为created_at、updated_at扩展，第二个[customfields]参数追加需要扩展格式化的自定义时间字段
 ```javascript
     //DemoUser.js
     import {TableSetting} from 'class2api/dbhelper';
@@ -396,11 +395,11 @@ class2api内置的身份校验函数，函数内将jwtoken参数会以header的�
 测试辅助函数库，为了接近真实环境，以及确保接口调用的全流程，class2api的单元测试原则上都以http调用的方式执行，而避免用类调用。
 注：当需要测试业务功能类本身时，还是可以在业务类层面直接调用，以避开微服务框架以及http通讯的干扰
 
-- setApiRoot    微服务API的domain
-- WebInvokeHepler(usertoken)(apiPath, postParams, apiDesc)      
-向api发起一个post-API请求， postParams是post的JSON内容，apiDesc是API方法描述的函数封装（只是提高可读性，没有实际功能意义）
+- setApiRoot    设定微服务API的domain，在WebInvokeHepler内部需要使用
+- WebInvokeHepler(usertoken)(apiPath, postParams, [apiDesc])      
+向api发起一个post-API请求， postParams是post的JSON内容，apiDesc是API方法描述的函数封装（只是提高可读性，没有实际功能意义），声明了apiDesc的调用的请求的post与res结果数据，将被内部缓存，供save2Doc使用保存输出
 - ApiDesc       API方法描述的函数封装，只是提高在真实入参列表中的可读性，没有实际功能意义
-- save2Doc      保存本次mocha用例中所有提供了ApiDesc参数的API请求的入参与返回结果
+- save2Doc      保存本次mocha用例中所有提供了ApiDesc参数的API请求的post入参与res返回结果
 ```javascript
     //testhelper的最小化案例 
     import {ApiDesc, WebInvokeHepler, setApiRoot, save2Doc} from 'class2api/testhelper'
