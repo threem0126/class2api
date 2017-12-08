@@ -120,8 +120,17 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
 ```
 
 - createServerInRouter(opts)
-创建服务器(使用外部的Express，只返回router供绑定路由)，opts参数与createServer函数基本相同，除了自动忽略custom参数
+创建服务器(使用外部的Express，只返回router供绑定路由)，opts参数与createServer函数基本相同，除了自动忽略custom参数。可参考项目中的server-router.js源码
 
+//开始监听指定的端口
+_server.listen(port, "0.0.0.0", function onStart(err) {
+    if (err) {
+        console.log(err);
+    }
+    console.info("==> 🌎 Listening on port %s." +
+        "Open up http://0.0.0.0:%s/ in your browser.", port, port);
+});
+```
 - setting_redisConfig
 设置内置redis的连接参数，因为考虑到import声明自动提前的问题，为确保其他自定义业务类内部初始化时依赖redis实例的场景。建议的，最佳方法是定义个独立的init.js，并在server.js顶部第一行引用
 ```javascript
@@ -136,7 +145,7 @@ setting_redisConfig({
 ```
 
 - getRedisClient
-获得redis访问实例，以进行直接读取操作
+获得redis访问实例，以进行直接读取操作。注：读写时，在redis中实际存取的key会携带redis配置中cache_prefx属性定义的前缀
 ```javascript
     let cache = getRedisClient()
     cache.set('keyABC','this is message!', (err,data)=>{})
