@@ -93,9 +93,16 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
     export default ClassA
 ```
 
-# 组件提供的功能函数列表
+# 组件提供的功能函数
 
-## class2api空间
+## 空间列表
+- class2api             主空间，提供微服务创建、缓存修饰器、redis配置/访问等基础套件
+- class2api/dbhelper    sequelize模型创建与管理的助手函数空间，可简化model的声明与引用
+- class2api/rulehelper  管理后台级的身份、权限校验
+- class2api/testhelper  测试相关的辅助套件，快速执行基于http接口调用的单元测试，以及收集单元测试的请求与结果json快照，并在mocha的after拦截中保存到指定文件，以作为文档参考
+- class2api/gkerrors    常用的预设错误类型
+
+## class2api    主空间
 - createServer(opts)
 创建服务器(使用内建的独立Express实例) ,opts为参数项，具体如下：
 ```javascript
@@ -233,11 +240,10 @@ return {
 
 - crashAfterMe(hintMsg)  修饰器,运行完类方法就认为跑出异常中断程序，调试用，生产环境下自动失效
 
-## class2api/gkerrors
-- GKErrors  常用预设的错误（code值为负数）
+## class2api/gkerrors   常用预设的错误（code值为负数）
+- GKErrors  预设错误有：
 ```javascript
-    import {GKErrors} from 'class2api/gkerrors'
-    //内置的错误信息有：
+    import {GKErrors} from 'class2api/gkerrors' 
     GKErrors._TOKEN_PARSE_FAIL      //token解析失败 
     GKErrors._RULE_VALIDATE_ERROR   //权限认证过程中发生异常
     GKErrors._TOKEN_LOGIN_INVALID   //请先登录
