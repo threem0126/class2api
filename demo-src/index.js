@@ -10,6 +10,8 @@ if(process.env.MODEL === "src"){
     require('./server');
 }else if(process.env.MODEL === "srcrouter"){
     require('./server-router.js');
+}else if(process.env.MODEL === "srclite"){
+    require('./server-lite.js');
 }else {
     throw '参数不匹配'
 }

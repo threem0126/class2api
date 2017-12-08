@@ -5,6 +5,7 @@
   "main": "dist/lib/class2api/index.js",
   "scripts": {
     "start:src": "MODEL=src node demo-src/index.js",
+    "start:srclite": "MODEL=srclite node demo-src/index.js",
     "start:srcrouter": "MODEL=srcrouter node demo-src/index.js",
     "test": "npm test",
     "build": "babel src -d dist "

@@ -24,8 +24,7 @@ setting_redisConfig(redis);
 (async ()=>{
     _server.use(await createServerInRouter({
         config: {
-            redis,
-            apiroot: '/',
+            redis
         },
         //将哪些类映射到API，可以定义路径别名
         modelClasses:[GKModelA, {model:GKModelA, as:'a2'}, GKRuleManager, {model:GKAdmin_ModelA,as:"admin"}],

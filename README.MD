@@ -1,6 +1,8 @@
 #概要#
 - class2api帮助你把Javascript Class类的静态方法自动向外映射为API接口的微型框架，借助class2api，你可以在1分钟之内直接开始着手于业务逻辑代码的编写，而将路由、方法缓存、网络通讯等事务交给我们处理
-- class2api以暴露的API接口必须以post方式请求，不支持get方式
+- class2api暴露的API接口仅以post方式提供请求服务（注意：不支持get等其他方式！）
+- 作为微服务，使用内置Express时，class2api不开启sessin。注：当使用createServerInRouter挂载到现有的Express应用下时，可以使用宿主Express应用的session机制
+
 
 #上手向导#
 
@@ -26,70 +28,122 @@ $ npm run start:srcrouter
 $ mocha test/test.run
 ```
 
-- 基础Curl测试调用（先运行Demo应用）
-```
-$ mocha test/test.run
+#快速创建应用的代码#
+
+## 创建一个业务类ClassA.js
+```javascript
+    class ClassA {
+        static async hello({name}) {
+            return {message: `this is a message from Api: got name [${name}]`}
+        }
+    } 
+    export default ClassA
 ```
 
-#快速创建应用的代码#
-- 节选代码，来自 example/baseProject 范例项目
+## 创建微微服务
 ```javascript
     import {createServer} from 'class2api'
-    import {GKErrors} from 'class2api/gkerrors'
-
+    import ClassA from './ClassA'
+    
     //创建微服务对象
     createServer({
-        config: {
-            apiroot: '/',
-            cros: true,
-        }, 
-        //将哪些类映射到API，默认取类名称的小写字符，也可以定义路径的别名
-        modelClasses: [ClassA, {model: ClassB, as: 'b'}], 
-        beforeCall:async ({req, params, modelSetting})=>{ 
-            let {__Auth} = modelSetting
-            //Api处理之前，在这里进行权限身份验证、请求参数预处理等操作
-            //根据类的__Auth配置来进行身份验证,具体的验证逻辑由类的修饰器配置决定，这里不进行类静态方法的权限认证
-            if (__Auth) {
-                let userInfo = await __Auth({req})
-                params.uID = userInfo.uID
-            }
-            //返回的params会传递给API对应的实际静态方法
-            return params 
-        },
-        afterCall:async({req,res,result})=>{
-            //Api处理结束，在返回result给客户端之前，可以做附加处理，比如记录日志或输出额外的附加信息给调用方
-            // ....
-            return result
+        modelClasses: [{model: ClassA, as: 'a'}],
+        beforeCall:async ({req, params, modelSetting})=>{
+            return params
         }
-        
     }).then((server)=>{
-    
         //开始监听指定的端口
-    server.listen(port, "0.0.0.0", function onStart(err){
+        let port = 3002;
+        server.listen(port, "0.0.0.0", function onStart(err){
             if (err) {
                 console.log(err);
             }
             console.info("==> 🌎 Listening on port %s. Open up http://0.0.0.0:%s/ in your browser.", port, port);
         });
-    
     }).catch((error)=>{
         setTimeout(function(){throw error})
     })
 ```
 
+
 # 导出功能函数：
 
-class2api/
-- createServer, 创建服务器(使用内建的独立Express实例)
-- createServerInRouter, 创建服务器(使用外部的Express，只返回router供绑定路由)
-- getGankaoWXAuthToken,*从redis中读取赶考token的简单封装，方便使用方不用重新创建redis实例。将来可以剥离
-- setting_redisConfig，设置内置redis的连接参数
-- getRedisClient,获得redis访问实例
-- GKErrorWrap   错误包装器，当预设错误类型不够用时，可自定义。code定义需为正数（负数是内置常设错误的保留code段）
-- modelSetting  修饰器，类模块的元信息配置类
-- cacheAble     修饰器,启用类方法调用缓存的修饰器
-- clearCache    修饰器,清空类方法调用缓存的修时器
-- accessRule    修饰器,提供访问权限的校验控制,可独立配置认证函数
+## class2api空间
+- createServer(opts)
+创建服务器(使用内建的独立Express实例) ,opts为参数项，具体如下：
+```javascript
+    createServer({
+        config:{
+           apiroot:'/',//挂载微服务的根路径，如：apiroot设置为'apiv1"，则业务类ClassA的method1方法对应的访问入口为: http://yourdomain/apiv1/classa/method1
+           redis,//内置API方法缓存所使用的redis实例配置参数，使用clearCache、cacheAble修饰器时必须
+           cros:true,//是否允许跨域访问
+           cros_headers:[],//允许跨域访问时的headers白名单
+           cros_origin:[],//允许跨域访问时的授权源配置，默认为*。当传入有效的cros_origin参数时，以cros_origin中指定的为准
+           frontpage_default: '' //放在API方法内部获取前端的域名，与从前端请求传过来header中的frontpage合并，优先获取客户端的，其实采用此默认值。最后封装为标准url对象并绑定到API方法回调的params对象的___frontpageURL属性上
+        }, 
+        custom:(expressInstence)=>{
+            //TODO:对expressInstence实例进行自定义扩展，注：不建议增加session机制
+            return expressInstence
+        },
+        modelClasses, //映射的业务类列表，如:[ClassA, {model:XXX,as:'abc'}]，建议以mode-as的方式修改业务类暴露的访问路径，以隐藏实际的类命名（建议）
+        beforeCall, //API接口请求之前的拦截事件，可以修改、监听post信息，以及身份的验证判断
+        afterCall, //API接口请求完成后的拦截事件，可以修改、监听返回结果，典型场景就是记录请求的日志
+        method404//自定义的express的路由中间件，在404场景时，可输出自己定制的返回值
+    })
+```
+
+- createServerInRouter(opts)
+创建服务器(使用外部的Express，只返回router供绑定路由)，opts参数与createServer函数基本相同，除了自动忽略custom参数
+
+- setting_redisConfig
+设置内置redis的连接参数，因为考虑到import声明自动提前的问题，为确保其他自定义业务类内部初始化时依赖redis实例的场景。建议的，最佳方法是定义个独立的init.js，并在server.js顶部第一行引用
+```javascript
+//init.js
+import {setting_redisConfig} from 'class2api'
+setting_redisConfig({
+                        host: "127.0.0.1",
+                        port: 6379,
+                        cache_prefx:'dev_class2api_',//必须的参数，且针对每个应用不同配置，以避免各应用之间发生key碰撞与覆盖
+                        defaultExpireSecond:10*60   //可缺省，class2api内部的默认混存时长为1分钟，可自定义
+                    })
+```
+
+- getRedisClient
+获得redis访问实例
+
+- GKErrorWrap 
+错误包装器，当预设错误类型不够用时，可自定义。注：class2api内置的常设错误的code为负数领域，外部自定义的错误，请务必使用正数
+
+- modelSetting 
+修饰器，类模块的元信息配置类
+```javascript
+    @modelSetting({
+        __Auth:async ({req})=>{
+            //后台的用户验证，解析header中的jwtoken信息，调用class2api/rulehelper的解析，注意与非后台常规用户验证的区别
+            let jwtoken = req.header('jwtoken') || ''
+            return await parseAdminAccountFromJWToken({jwtoken})
+        },
+        //后台权限认证的组信息
+        __ruleCategory: {
+            name: '文章系统',
+            desc: '文章系统'
+        }
+    })
+    class GKModelA {
+        constructor() {
+            throw '静态业务功能类无法实例化'
+        }
+    }
+```
+
+- cacheAble    
+修饰器,启用类方法调用缓存的修饰器
+
+- clearCache   
+修饰器,清空类方法调用缓存的修时器
+
+- accessRule   
+修饰器,提供访问权限的校验控制,可独立配置认证函数
 - setting_RuleValidator  accessRule访问权限修饰器中认证函数的全局配置入口
 - crashAfterMe  修饰器,运行完类方法就认为跑出异常中断程序，调试用，生产环境下自动失效
 

@@ -32,9 +32,6 @@ const _create_server = async (model, options)=> {
         cros_origin = [],
         frontpage_default = '', //与从前端请求传过来header中的frontpage合并，优先获取客户端的，其实采用此默认值。最后封装为标准url对象并绑定到API方法回调的params对象的___frontpageURL属性上
         apiroot = '/',
-        sessionKey = 'class2api',
-        sessionSecret = 'class2api',
-        sessionUseRedis = false,
         redis
     } = (typeof config === "function") ? config() : (config || {})
 
@@ -127,10 +124,7 @@ const _create_server = async (model, options)=> {
     _server.use(apiroot, _router)
 
     if (typeof custom === "function") {
-        let {express: cus_express_fn} = await custom()
-        if (cus_express_fn) {
-            _server = await cus_express_fn(_server)
-        }
+        _server = await custom(_server)
     }
 
     // catch 404 and forward to error handler

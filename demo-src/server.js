@@ -1,6 +1,7 @@
 import _config from "./config.js" ;
 import {createServer,setting_redisConfig} from 'class2api'
 import {GKErrors} from 'class2api/gkerrors'
+import ClassA from './ClassA'
 import GKModelA from './model/GKModelA'
 import GKRuleManager from './model/GKRuleManager'
 import GKAdmin_ModelA from './model_admin/GKAdmin_ModelA'
@@ -19,7 +20,7 @@ createServer({
     },
 
     // 将哪些类映射到API，可以定义路径别名
-    modelClasses:[GKModelA, {model:GKModelA, as:'a2'}, GKRuleManager, {model:GKAdmin_ModelA,as:"admin"}],
+    modelClasses:[{model:ClassA,as:"a"}, GKModelA, {model:GKModelA, as:'a2'}, GKRuleManager, {model:GKAdmin_ModelA,as:"admin"}],
 
     //在API方法执行前
     async beforeCall({req, params, modelSetting}){
@@ -46,12 +47,8 @@ createServer({
         return result
     },
 
-    custom(){
-        return {
-            express(expressInstence){
-                return expressInstence
-            }
-        }
+    custom:(expressInstence)=> {
+        return expressInstence
     }
 }).then((server)=>{
     //开始监听指定的端口
