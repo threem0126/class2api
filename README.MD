@@ -1,7 +1,7 @@
 # 概要
 - class2api帮助你把Javascript Class类的静态方法自动向外映射为API接口的微型框架，借助class2api，你可以在1分钟之内直接开始着手于业务逻辑代码的编写，而将路由、方法缓存、网络通讯等事务交给我们处理
 - class2api暴露的API接口仅以post方式提供请求服务（注意：不支持get等其他方式！）
-- 作为微服务，使用内置Express时，class2api不开启sessin。注：当使用createServerInRouter挂载到现有的Express应用下时，可以使用宿主Express应用的session机制
+- 作为微服务，使用内置Express时，class2api不开启sessin。（注：当使用createServerInRouter挂载到现有的Express应用下时，可以使用宿主Express实例的session机制）
 
 
 # 快速运行Demo向导
@@ -27,6 +27,27 @@ $ npm run start:srcrouter
 ```
 $ mocha test/test.run
 ```
+
+# 运行较复杂的示例项目：
+按以下步骤运行源码中较复杂的示例项目，它带有sequelize-ORM、API自动缓存、管理身份与权限校验等高阶场景
+- 在本地创建名为gankao_demo123的mysql数据库
+- 执行数据库初始化脚本
+```
+$ FORCE=0 DB_RESET_1=123234537569 DB_RESET_2=wrq5hfoiuy12344376 node toolscript/resetDB.run.js
+```
+- 在源码根目录下，进入node示例项目并执行
+```
+$ cd example/superProject_redis_cache_sequelize/ 
+$ npm i 
+$ npm run start
+```
+- 执行对应示例项目的单元测试
+```
+$ cd example/superProject_redis_cache_sequelize/ 
+$ npm i mocha -g
+$ mocha test/test.run -t 5000
+```
+另外，源码中还有一个初级的示例项目，位于/example/baseProject
 
 # 快速创建应用的代码
 
