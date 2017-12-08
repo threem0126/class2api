@@ -4,7 +4,7 @@
 - 作为微服务，使用内置Express时，class2api不开启sessin。（注：当使用createServerInRouter挂载到现有的Express应用下时，可以使用宿主Express实例的session机制）
 
 
-# 快速运行Demo向导
+# 快速运行源码Demo：
 
 - 快速安装依赖组建
 ```
