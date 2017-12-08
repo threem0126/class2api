@@ -171,7 +171,7 @@ setting_redisConfig({
 ```
 
 - GKErrorWrap
-错误包装器，以快速以下约定结构的错误信息：
+错误包装器，以快速创建以下约定结构的错误信息：
 ```javascript
 return {
            _gankao: 1,//固定标志位，以区别普通的error对象
