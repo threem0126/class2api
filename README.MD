@@ -1,10 +1,10 @@
-#概要#
+# 概要
 - class2api帮助你把Javascript Class类的静态方法自动向外映射为API接口的微型框架，借助class2api，你可以在1分钟之内直接开始着手于业务逻辑代码的编写，而将路由、方法缓存、网络通讯等事务交给我们处理
 - class2api暴露的API接口仅以post方式提供请求服务（注意：不支持get等其他方式！）
 - 作为微服务，使用内置Express时，class2api不开启sessin。注：当使用createServerInRouter挂载到现有的Express应用下时，可以使用宿主Express应用的session机制
 
 
-#快速运行Demo向导#
+# 快速运行Demo向导
 
 - 快速安装依赖组建
 ```
@@ -28,7 +28,7 @@ $ npm run start:srcrouter
 $ mocha test/test.run
 ```
 
-#快速创建应用的代码#
+# 快速创建应用的代码
 
 ## 创建一个业务类ClassA.js
 ```javascript
@@ -67,7 +67,7 @@ $ mocha test/test.run
     })
 ``` 
 
-#业务类的约定与最佳实践：
+# 业务类的约定与最佳实践：
 - 类名需为命名类，不能匿名
 - 业务静态类，不能拥有实例方法（也没有需求场景），所以请参考官方代码，在构造器中throw异常，以确保业务静态类不会被实例化
 - 类静态方法实现各业务逻辑
