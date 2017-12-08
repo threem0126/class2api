@@ -17,15 +17,15 @@ let _ruleValidator_custom;
  * @param jwtoken
  * @param ruleCategory
  * @param ruleName
- * @param ruleDescript
+ * @param ruleDesc
  * @param codePath
  * @returns {Promise.<*>}
  */
-const ruleValidator = async ({jwtoken, categoryName, categoryDesc, ruleName, ruleDescript, codePath})=> {
-    let params = {jwtoken, categoryName, categoryDesc, ruleName, ruleDescript, codePath}
+const ruleValidator = async ({jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath})=> {
+    let params = {jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath}
     if (_ruleValidator_custom) {
         //调用外部的自定义验证函数
-        return await _ruleValidator_custom({jwtoken, categoryName, categoryDesc, ruleName, ruleDescript, codePath})
+        return await _ruleValidator_custom({jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath})
     } else {
         //使用内置的权限验证函数，向class2api.config中配置的权限中心发起请求
         return await RuleValidator._ruleValidator_inner({...params, sysName})
@@ -48,10 +48,10 @@ export const setting_CustomRuleValidator = async (ruleValidator)=>{
  * 修饰器,提供访问权限的校验控制
  *
  * @param ruleName
- * @param ruleDescript
+ * @param ruleDesc
  * @returns {Function}
  */
-export const accessRule = ({ruleName, ruleDescript=''}) => {
+export const accessRule = ({ruleName, ruleDesc=''}) => {
     return function (target, name, descriptor) {
         if (!ruleName) {
             //修饰器的报错，级别更高，直接抛出终止程序
@@ -88,7 +88,7 @@ export const accessRule = ({ruleName, ruleDescript=''}) => {
                 categoryName,
                 categoryDesc,
                 ruleName: `${ruleName}`,
-                ruleDescript,
+                ruleDesc,
                 codePath: `${target.name}.${name}`
             });
             let {canAccess, resean} = result

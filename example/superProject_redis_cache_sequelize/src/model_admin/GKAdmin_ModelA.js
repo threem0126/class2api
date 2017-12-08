@@ -28,7 +28,7 @@ class GKModelA {
             return `article-${aID}`
         }
     })
-    @accessRule({ruleName: '编辑文章', ruleDescript: '对文章进行编辑'})
+    @accessRule({ruleName: '编辑文章', ruleDesc: '对文章进行编辑'})
     static async editArticle({aID}) {
         //...
         return GKSUCCESS()
@@ -40,7 +40,7 @@ class GKModelA {
             return `article-${aID}`
         }
     })
-    @accessRule({ruleName: '删除文章', ruleDescript: '对文章进行删除'})
+    @accessRule({ruleName: '删除文章', ruleDesc: '对文章进行删除'})
     static async deleteArticle({aID}) {
         //...
         return GKSUCCESS()

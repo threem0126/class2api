@@ -69,7 +69,7 @@ class RuleValidator {
             return jwtoken ? `_ruleValidator_inner-${hashcode(jwtoken)}-${hashcode(categoryName)}-${hashcode(ruleName)}` : '';
         }
     })
-    static async _ruleValidator_inner({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDescript, codePath}) {
+    static async _ruleValidator_inner({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath}) {
         try {
             let res = await fetch(admin_rule_center.validator, {
                 method: 'post',
@@ -81,7 +81,7 @@ class RuleValidator {
                 },
                 withCredentials: 'true',
                 json: true,
-                body: JSON.stringify({sysName, categoryName, categoryDesc, ruleName, ruleDescript, codePath})
+                body: JSON.stringify({sysName, categoryName, categoryDesc, ruleName, ruleDesc, codePath})
             });
             let jsonResult = await res.json();
             return jsonResult

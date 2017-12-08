@@ -73,9 +73,9 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
 - 业务静态类，不能拥有实例方法（通常其实也没有需求和场景），所以请参考官方代码，在构造器中throw异常，以确保业务静态类不会被实例化
 - 类静态方法实现各业务逻辑，一个方法对应一个业务逻辑
 - 类静态方法只有一个形参，并以ES6对象解构的方式书写，调用代码可以获得命名参数形式的可读性益处
-- 类静态方法的参数（首个参数）中，框架还注入了几个属性，req：当前的请求信息对象，express的标准request，供方法内部读取；uID：用户的唯一编码，当modelSetting修饰器中指定的身份验证函数（__Auth）运行通过时出现；__nocache：调用方传入的特殊指令，当__nocache有值时，cacheAble修饰器内部会在本次请求中忽略cacheAble缓存策略，继续运行方法。
+- 类静态方法的参数（首个参数）中，框架还注入了几个属性：**req**：当前的请求信息对象，express的标准request，供方法内部读取；**uID**：用户的唯一编码，当modelSetting修饰器中指定的身份验证函数（__Auth）运行通过时出现；**__nocache**：调用方传入的特殊指令，当__nocache有值时，cacheAble修饰器内部会在本次请求中忽略cacheAble缓存策略，继续运行方法。
 - 为了增加API返回数据值的可扩展能力，类静态方法的返回值必须用对象形式，不能使用字符串、整数、浮点、布尔等简单值类型。
-- 某些场景，只需要API返回操作是否成功的信息，可以使用内置的GKSUCCESS(props)函数，它封装一个简单结构{success: true,...props}，其中props参数是附加信息，当props是对象是，自动扩展到结构里，当props是非对象时，以msg属性扩展到结构里
+- 某些场景，只需要API返回操作是否成功的信息，可以使用内置的GKSUCCESS([props])函数，它封装一个简单结构{success: true,...props}，其中props参数是附加信息，当props是对象时，自动扩展到结构里，当props是非对象时，以msg属性扩展到结构里
 ```javascript
     import {GKSUCCESS} from 'class2api'
     class ClassA {
@@ -86,13 +86,14 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
             return {message: `this is a message from Api: got name [${name}]`}
         }
         static async deleteArticle({name}) {
+            //TODO:...删除文章的操作
             return GKSUCCESS()
         }
     }
     export default ClassA
 ```
 
-# 导出功能函数
+# 组件提供的功能函数列表
 
 ## class2api空间
 - createServer(opts)
@@ -107,13 +108,13 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
            cros_origin:[],//允许跨域访问时的授权源配置，默认为*。当传入有效的cros_origin参数时，以cros_origin中指定的为准
            frontpage_default: '' //放在API方法内部获取前端的域名，与从前端请求传过来header中的frontpage合并，优先获取客户端的，其实采用此默认值。最后封装为标准url对象并绑定到API方法回调的params对象的___frontpageURL属性上
         }, 
-        custom:(expressInstence)=>{
-            //TODO:对expressInstence实例进行自定义扩展，注：不建议增加session机制
-            return expressInstence
-        },
         modelClasses, //映射的业务类列表，如:[ClassA, {model:XXX,as:'abc'}]，建议以mode-as的方式修改业务类暴露的访问路径，以隐藏实际的类命名（建议）
         beforeCall, //API接口请求之前的拦截事件，可以修改、监听post信息，以及身份的验证判断
         afterCall, //API接口请求完成后的拦截事件，可以修改、监听返回结果，典型场景就是记录请求的日志
+        custom:(expressInstence)=>{
+            //TODO:对expressInstence实例进行自定义扩展，注：微服务通常是无状态的，所以不建议增加session机制
+            return expressInstence
+        },
         method404//自定义的express的路由中间件，在404场景时，可输出自己定制的返回值
     })
 ```
@@ -127,11 +128,11 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
 //init.js
 import {setting_redisConfig} from 'class2api'
 setting_redisConfig({
-                        host: "127.0.0.1",
-                        port: 6379,
-                        cache_prefx:'dev_class2api_',//必须的参数，且针对每个应用不同配置，以避免各应用之间发生key碰撞与覆盖
-                        defaultExpireSecond:10*60   //可缺省，class2api内部的默认混存时长为1分钟，可自定义
-                    })
+    host: "127.0.0.1",
+    port: 6379,
+    cache_prefx:'dev_class2api_',//必须的参数，且针对每个应用不同配置，以避免各应用之间发生key碰撞与覆盖
+    defaultExpireSecond:10*60   //可缺省，class2api内部的默认混存时长为1分钟，可自定义
+})
 ```
 
 - getRedisClient
@@ -143,7 +144,7 @@ setting_redisConfig({
 ```
 
 - GKErrorWrap
-错误包装器，以快速以下结构的错误信息：
+错误包装器，以快速以下约定结构的错误信息：
 ```javascript
 return {
            _gankao: 1,//固定标志位，以区别普通的error对象
@@ -155,17 +156,22 @@ return {
 
 - modelSetting(props)
 类修饰器，将传入的props对象赋值到 Class.__modelSetting 上，目前class2api内部约定的porps属性有：
-__Auth:Function，与业务类相关的身份验证函数，内部进行身份判断，并返回带有uID的用户信息对象
-__ruleCategory:{name,desc}，
+**__Auth**:Function，与业务类相关的身份验证函数，内部进行身份判断，并返回带有uID的用户信息对象
+**__ruleCategory**:{name//权限组名称,desc//权限组的备注描述}，
 ```javascript
+    import {parseAdminAccountFromJWToken} from "class2api/rulehelper";
     @modelSetting({
         __Auth:async ({req})=>{
             //后台的用户验证，解析header中的jwtoken信息，调用class2api/rulehelper的解析，注意与非后台常规用户验证的区别
             let jwtoken = req.header('jwtoken') || ''
             return await parseAdminAccountFromJWToken({jwtoken})
+        },
+        __ruleCategory:{
+            name:"文章管理",
+            desc:"对文章进行新建、编辑、删除等操作"
         }
     })
-    class GKModelA {
+    class ArticleManager {
         constructor() {
             throw '静态业务功能类无法实例化'
         }
@@ -192,7 +198,6 @@ __ruleCategory:{name,desc}，
 - clearCache({cacheKeyGene:()=>{}}) 
 类静态方法修饰器, 实现在API请求完成之后清空指定key的缓存，删除的key由cacheKeyGene函数运行时动态返回指定；如果需要清除多个key，可以用反转控制的方式，交给类静态方法内部来处理，当cacheKeyGene函数返回''空字符串，会开启反转控制模式，修饰器内部会在类静态方法的第一个调用参数（按约定，类静态方法使用第一个复合对象获取所有的参数）中增加__cacheManage属性，__cacheManage是一个轻量cache访问器，提供get(akey)、set(akey, avalue, expireTimeSeconds)、delete(akey)三个方法。
 ```javascript
-
     //常规的控制方式
     class GKModelA {
         @clearCache({
@@ -226,24 +231,7 @@ __ruleCategory:{name,desc}，
     
 ```
 
-- accessRule   
-修饰器,提供访问权限的校验
-运行原理：修饰器内部会拦截惊雷
-```javascript
-    class GKModelA {
-        constructor() {
-            throw '静态业务功能类无法实例化'
-        }
-     
-        @accessRule({ruleName: '删除文章', ruleDescript: '对文章进行删除'})
-        static async deleteArticle({aID}) {
-            //...
-            return GKSUCCESS()
-        }
-    }
-```
 - crashAfterMe(hintMsg)  修饰器,运行完类方法就认为跑出异常中断程序，调试用，生产环境下自动失效
-
 
 ## class2api/gkerrors
 - GKErrors  常用预设的错误（code值为负数）
@@ -266,9 +254,29 @@ sequelize模型创建与管理的助手函数空间，可参考项目中的table
 
 - TableSetting  
 sequelizeModel定义model时的几个扩展设置，包括：
-1、TableSetting.tabelOption，model的几个默认设置，paranoid默认为true，时间相关字段名定义为created_at、updated_at、deleted_at，字符集collate为utf8_general_ci
+1、TableSetting.tabelOption设置，含model的几个默认设置，paranoid默认为true，时间相关字段名定义为created_at、updated_at、deleted_at，字符集collate为utf8_general_ci
 2、TableSetting.extendDateTimeVirtualFields设置，为时间字段扩展可读性的时间格式化虚字段
-
+```javascript
+    //DemoUser.js
+    import {TableSetting} from 'class2api/dbhelper';
+    
+    export default (sequelize, DataTypes)=> {
+        const User = sequelize.define('demouser', {
+            name: {type: DataTypes.STRING, allowNull: false, defaultValue: '', comment: `用户的姓名`},
+            birthday: {type: DataTypes.DATE},
+            ...TableSetting.extendDateTimeVirtualFields(DataTypes, ['birthday'])
+        }, {
+            ...TableSetting.tabelOption,
+            classMethods: {
+                associate: function (DataModel, ass) {
+                    //User.belongsTo(DataModel.Student)
+                }
+            },
+            comment: '学生信息'
+        });
+        return User;
+    }
+```
 - ResetDB   
 重置数据库，即执行sequelize.sync({force: (process.env.FORCE=="1")})，内部有启动环境变量的校验，只有当传入的启动环境变量与config中mysql.reset_key的{key1,key2}相符时才执行。默认为软重置，可以通过传入FORCE=1的启动环境变量来强制重置
 
@@ -313,18 +321,61 @@ sequezeli的where函数的引用
 创建一个sequezeli事务
 
 - excuteSQL(sql,[replaceparam1,replaceparam2,...]) 
-执行指定的SQL语句，一般适用于无法用sequelize表达式的复杂查询
+执行指定的SQL语句，一般适用于无法用sequelize表达式的复杂查询或更新操作
+
+## class2api/rulehelper
+权限校验的辅助函数库
+
+- accessRule({ruleName, ruleDesc})
+类静态方法修饰器,提供权限校验，同时为当前修饰的类静态方法标记了权限名称、描述信息
+运行原理：修饰器内部会拦截类静态方法的调用，并先向权限中心进行身份验证，以判断是否有权限继续运行对应的方法。
+权限中心为远程服务，在class2api.config.js配置中定义相关信息：
+```javascript
+exports.config = { 
+    name: 'courseService', 
+    admin_rule_center: { 
+        auth:"http://127.0.0.1:3002/gkrulemanager/auth", //身份验证接口
+        validator: "http://127.0.0.1:3002/gkrulemanager/validate",  //权限验证接口
+        register: "http://127.0.0.1:3002/gkrulemanager/register" //权限配置表的上传注册接口，在IDE环境下使用
+    }
+}
+```
+修饰器向权限中心的权限校验接口(config.admin_rule_center.validator)提交以下参数信息：
+1、jwtoken：jsonwebtoken版的管理员身份签名，从req参数中提取，并在header中发送，权限中心会识别解密jwtoken，从而分辨身份并校验权限
+2、categoryName：权限组名称，从modelSetting修饰器的配置信息中获得
+3、categoryDesc：权限组的描述信息，从modelSetting修饰器的配置信息中获得
+4、ruleName：权限名称，从accessRule修饰器函数的参数中获得
+5、ruleDesc：权限的描述信息，从accessRule修饰器函数的参数中获得
+6、codePath：代码路径，格式如:ClassA.methodA，在框架内部获得
+7、sysName：调用方系统名称，在class2api.config.js中配置
+```javascript
+    class GKModelA {
+        constructor() {
+            throw '静态业务功能类无法实例化'
+        }
+     
+        @accessRule({ruleName: '删除文章', ruleDesc: '对文章进行删除'})
+        static async deleteArticle({aID}) {
+            //...
+            return GKSUCCESS()
+        }
+    }
+```
+
+- parseAdminAccountFromJWToken({jwtoken})
+class2api内置的身份校验函数，函数内将jwtoken参数会以header的方式发送给class2api.config.js中指定的config.admin_rule_center.auth接口，auth接口端返回详细的用户信息（按约定，用户信息中含有唯一的uID属性）
 
 ## class2api/testhelper
 测试辅助函数库，为了接近真实环境，以及确保接口调用的全流程，class2api的单元测试原则上都以http调用的方式执行，而避免用类调用。
 注：当需要测试业务功能类本身时，还是可以在业务类层面直接调用，以避开微服务框架以及http通讯的干扰
 
 - setApiRoot    微服务API的domain
-- WebInvokeHepler(usertoken)(apiPath, postParams, apiDesc)      向api发起一个post-API请求， postParams是post的JSON内容，apiDesc是API方法描述的函数封装（只是提高可读性，没有实际功能意义）
+- WebInvokeHepler(usertoken)(apiPath, postParams, apiDesc)      
+向api发起一个post-API请求， postParams是post的JSON内容，apiDesc是API方法描述的函数封装（只是提高可读性，没有实际功能意义）
 - ApiDesc       API方法描述的函数封装，只是提高在真实入参列表中的可读性，没有实际功能意义
 - save2Doc      保存本次mocha用例中所有提供了ApiDesc参数的API请求的入参与返回结果
 ```javascript
-    //最小化案例 
+    //testhelper的最小化案例 
     import {ApiDesc, WebInvokeHepler, setApiRoot, save2Doc} from 'class2api/testhelper'
     
     let _run = {

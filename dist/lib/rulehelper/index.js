@@ -65,7 +65,7 @@ var _ruleValidator_custom = void 0;
  * @param jwtoken
  * @param ruleCategory
  * @param ruleName
- * @param ruleDescript
+ * @param ruleDesc
  * @param codePath
  * @returns {Promise.<*>}
  */
@@ -75,14 +75,14 @@ var ruleValidator = function () {
             categoryName = _ref3.categoryName,
             categoryDesc = _ref3.categoryDesc,
             ruleName = _ref3.ruleName,
-            ruleDescript = _ref3.ruleDescript,
+            ruleDesc = _ref3.ruleDesc,
             codePath = _ref3.codePath;
         var params;
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        params = { jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDescript: ruleDescript, codePath: codePath };
+                        params = { jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath };
 
                         if (!_ruleValidator_custom) {
                             _context.next = 7;
@@ -90,7 +90,7 @@ var ruleValidator = function () {
                         }
 
                         _context.next = 4;
-                        return _ruleValidator_custom({ jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDescript: ruleDescript, codePath: codePath });
+                        return _ruleValidator_custom({ jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath });
 
                     case 4:
                         return _context.abrupt('return', _context.sent);
@@ -153,13 +153,13 @@ var setting_CustomRuleValidator = exports.setting_CustomRuleValidator = function
  * 修饰器,提供访问权限的校验控制
  *
  * @param ruleName
- * @param ruleDescript
+ * @param ruleDesc
  * @returns {Function}
  */
 var accessRule = exports.accessRule = function accessRule(_ref5) {
     var ruleName = _ref5.ruleName,
-        _ref5$ruleDescript = _ref5.ruleDescript,
-        ruleDescript = _ref5$ruleDescript === undefined ? '' : _ref5$ruleDescript;
+        _ref5$ruleDescript = _ref5.ruleDesc,
+        ruleDesc = _ref5$ruleDescript === undefined ? '' : _ref5$ruleDescript;
 
     return function (target, name, descriptor) {
         if (!ruleName) {
@@ -226,7 +226,7 @@ var accessRule = exports.accessRule = function accessRule(_ref5) {
                                 categoryName: categoryName,
                                 categoryDesc: categoryDesc,
                                 ruleName: '' + ruleName,
-                                ruleDescript: ruleDescript,
+                                ruleDesc: ruleDesc,
                                 codePath: target.name + '.' + name
                             });
 

@@ -18,10 +18,10 @@ class GKRuleManager {
         return {uID: 123, name: "huangyong", age: 23, roles: []}
     }
 
-    static async validate({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDescript, codePath}) {
+    static async validate({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath}) {
         //...
         console.log(`validate: ...`)
-        console.log({sysName, jwtoken, categoryName,categoryDesc, ruleName, ruleDescript, codePath})
+        console.log({sysName, jwtoken, categoryName,categoryDesc, ruleName, ruleDesc, codePath})
 
         //TODO:这里替换为具体的权限表判断逻辑
 
