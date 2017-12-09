@@ -47,7 +47,7 @@ $ cd example/superProject_redis_cache_sequelize/
 $ npm i mocha -g
 $ mocha test/test.run -t 5000
 ```
-另外，源码中还有一个初级的示例项目，位于/example/baseProject
+另外，源码中还有一个初级的示例项目可供参考，位于/example/baseProject
 
 # 快速创建应用的代码
 
@@ -119,7 +119,7 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
 ## 空间列表
 - class2api             主空间，提供微服务创建、缓存修饰器、redis配置/访问等基础套件
 - class2api/dbhelper    sequelize模型创建与管理的助手函数空间，可简化model的声明与引用
-- class2api/rulehelper  管理后台级的身份、权限校验
+- class2api/rulehelper  管理后台专用的身份检验、权限校验
 - class2api/testhelper  测试相关的辅助套件，快速执行基于http接口调用的单元测试，以及收集单元测试的请求与结果json快照，并在mocha的after拦截中保存到指定文件，以作为文档参考
 - class2api/gkerrors    常用的预设错误类型
 
@@ -171,7 +171,7 @@ setting_redisConfig({
 ```
 
 - GKErrorWrap
-错误包装器，以快速以下约定结构的错误信息：
+错误包装器，以快速创建以下约定结构的错误信息：
 ```javascript
 return {
            _gankao: 1,//固定标志位，以区别普通的error对象
@@ -258,7 +258,7 @@ return {
     
 ```
 
-- crashAfterMe(hintMsg)  修饰器,运行完类方法就认为跑出异常中断程序，调试用，生产环境下自动失效
+- crashAfterMe(hintMsg)  修饰器,运行完类方法就人为抛出异常中断程序，调试用，生产环境下自动失效
 
 ## class2api/gkerrors   常用预设的错误（code值为负数）
 - GKErrors  预设错误有：
@@ -329,13 +329,13 @@ sequelizeModel定义model时的几个扩展设置，包括：
   
 - DBUtils   
 数据库的辅助工具方法：
-DBUtils.dumpModelFuns(sequelizeModelClass)  打印指定模型类上的sequelize扩展的，操作自身数据实例的、以及操作关联对象的各类函数方法
+DBUtils.dumpModelFuns(sequelizeModelClass)  打印指定模型类上的sequelize扩展的操作自身数据实例的、以及操作关联对象的各类函数方法
 
 - fn:Function        
 sequezeli的聚合函数引用
 
 - col:Function       
-sequezeli的列函数的引用
+sequezeli的列函数引用
 
 - literal:Function   
 sql语句字面量包装函数，确保sequelize不解析此SQL字符串
@@ -350,18 +350,18 @@ sequezeli的where函数的引用
 执行指定的SQL语句，一般适用于无法用sequelize表达式的复杂查询或更新操作
 
 ## class2api/rulehelper
-权限校验的辅助函数库
+适用于后台管理系统的身份检验、权限校验的辅助函数库
 
 - accessRule({ruleName, ruleDesc})
-类静态方法修饰器,提供权限校验，同时为当前修饰的类静态方法标记了权限名称、描述信息
+类静态方法修饰器,提供后台级的权限校验，同时为当前修饰的类静态方法标记了权限名称、描述信息。
 运行原理：修饰器内部会拦截类静态方法的调用，并先向权限中心进行身份验证，以判断是否有权限继续运行对应的方法。
 权限中心为远程服务，在class2api.config.js配置中定义相关信息：
 ```javascript
 exports.config = { 
     name: 'courseService', 
     admin_rule_center: { 
-        auth:"http://127.0.0.1:3002/gkrulemanager/auth", //身份验证接口
-        validator: "http://127.0.0.1:3002/gkrulemanager/validate",  //权限验证接口
+        auth:"http://127.0.0.1:3002/gkrulemanager/auth", //管理用户的身份验证接口
+        validator: "http://127.0.0.1:3002/gkrulemanager/validate",  //管理用户对指定权限的验证接口
         register: "http://127.0.0.1:3002/gkrulemanager/register" //权限配置表的上传注册接口，在IDE环境下使用
     }
 }
@@ -389,7 +389,7 @@ exports.config = {
 ```
 
 - parseAdminAccountFromJWToken({jwtoken})
-class2api内置的身份校验函数，函数内将jwtoken参数会以header的方式发送给class2api.config.js中指定的config.admin_rule_center.auth接口，auth接口端返回详细的用户信息（按约定，用户信息中含有唯一的uID属性）
+class2api内置的管理员身份校验函数，函数内将jwtoken参数会以header的方式发送给class2api.config.js中指定的config.admin_rule_center.auth接口，auth接口端返回详细的用户信息（按约定，用户信息中含有标识唯一的uID属性）
 
 ## class2api/testhelper
 测试辅助函数库，为了接近真实环境，以及确保接口调用的全流程，class2api的单元测试原则上都以http调用的方式执行，而避免用类调用。
