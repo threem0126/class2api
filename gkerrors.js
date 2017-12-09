@@ -1,1 +1,1 @@
-module.exports = require('./dist/lib/class2api/GKErrors')
+module.exports = require('./dist/lib/class2api/gkerrors.js')

@@ -8,8 +8,7 @@ node_modules
 /.idea
 /build
 /example/baseProject/node_modules
-/example/width_apicache/node_modules
-/example/super/node_modules
+/example/superProject_redis_cache_sequelize/node_modules
 
 # Runtime data
 pids

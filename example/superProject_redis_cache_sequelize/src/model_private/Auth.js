@@ -2,7 +2,10 @@ import Promise from 'bluebird'
 import mysql from 'mysql'
 import request from 'request'
 import {setting_redisConfig, cacheAble} from 'class2api'
+import {GKErrors} from 'class2api/gkerrors'
 import _config from "./../config.js" ;
+
+console.log(GKErrors._TOKEN_LOGIN_INVALID())
 
 let {mysql_gankao_mainDB, redis} = _config
 setting_redisConfig(redis)

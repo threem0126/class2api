@@ -158,8 +158,8 @@ var setting_CustomRuleValidator = exports.setting_CustomRuleValidator = function
  */
 var accessRule = exports.accessRule = function accessRule(_ref5) {
     var ruleName = _ref5.ruleName,
-        _ref5$ruleDescript = _ref5.ruleDesc,
-        ruleDesc = _ref5$ruleDescript === undefined ? '' : _ref5$ruleDescript;
+        _ref5$ruleDesc = _ref5.ruleDesc,
+        ruleDesc = _ref5$ruleDesc === undefined ? '' : _ref5$ruleDesc;
 
     return function (target, name, descriptor) {
         if (!ruleName) {

@@ -87,7 +87,7 @@ var _router = void 0;
 
 var _create_server = function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(model, options) {
-        var config, custom, modelClasses, beforeCall, afterCall, method404, _ref2, _ref2$cros, cros, _ref2$cros_headers, cros_headers, _ref2$cros_origin, cros_origin, _ref2$frontpage_defau, frontpage_default, _ref2$apiroot, apiroot, _ref2$sessionKey, sessionKey, _ref2$sessionSecret, sessionSecret, _ref2$sessionUseRedis, sessionUseRedis, redis, _modelClasses, allow_Header, _ref3, cus_express_fn;
+        var config, custom, modelClasses, beforeCall, afterCall, method404, _ref2, _ref2$cros, cros, _ref2$cros_headers, cros_headers, _ref2$cros_origin, cros_origin, _ref2$frontpage_defau, frontpage_default, _ref2$apiroot, apiroot, redis, _modelClasses, allow_Header;
 
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
@@ -98,7 +98,7 @@ var _create_server = function () {
                         //     throw  `server模式下，配置参数中必需传入config[Function]属性`
                         // }
 
-                        _ref2 = typeof config === "function" ? config() : config || {}, _ref2$cros = _ref2.cros, cros = _ref2$cros === undefined ? true : _ref2$cros, _ref2$cros_headers = _ref2.cros_headers, cros_headers = _ref2$cros_headers === undefined ? [] : _ref2$cros_headers, _ref2$cros_origin = _ref2.cros_origin, cros_origin = _ref2$cros_origin === undefined ? [] : _ref2$cros_origin, _ref2$frontpage_defau = _ref2.frontpage_default, frontpage_default = _ref2$frontpage_defau === undefined ? '' : _ref2$frontpage_defau, _ref2$apiroot = _ref2.apiroot, apiroot = _ref2$apiroot === undefined ? '/' : _ref2$apiroot, _ref2$sessionKey = _ref2.sessionKey, sessionKey = _ref2$sessionKey === undefined ? 'class2api' : _ref2$sessionKey, _ref2$sessionSecret = _ref2.sessionSecret, sessionSecret = _ref2$sessionSecret === undefined ? 'class2api' : _ref2$sessionSecret, _ref2$sessionUseRedis = _ref2.sessionUseRedis, sessionUseRedis = _ref2$sessionUseRedis === undefined ? false : _ref2$sessionUseRedis, redis = _ref2.redis;
+                        _ref2 = typeof config === "function" ? config() : config || {}, _ref2$cros = _ref2.cros, cros = _ref2$cros === undefined ? true : _ref2$cros, _ref2$cros_headers = _ref2.cros_headers, cros_headers = _ref2$cros_headers === undefined ? [] : _ref2$cros_headers, _ref2$cros_origin = _ref2.cros_origin, cros_origin = _ref2$cros_origin === undefined ? [] : _ref2$cros_origin, _ref2$frontpage_defau = _ref2.frontpage_default, frontpage_default = _ref2$frontpage_defau === undefined ? '' : _ref2$frontpage_defau, _ref2$apiroot = _ref2.apiroot, apiroot = _ref2$apiroot === undefined ? '/' : _ref2$apiroot, redis = _ref2.redis;
 
                         if (!redis) {
                             _context.next = 7;
@@ -219,29 +219,17 @@ var _create_server = function () {
                         _server.use(apiroot, _router);
 
                         if (!(typeof custom === "function")) {
-                            _context.next = 40;
+                            _context.next = 35;
                             break;
                         }
 
                         _context.next = 34;
-                        return custom();
+                        return custom(_server);
 
                     case 34:
-                        _ref3 = _context.sent;
-                        cus_express_fn = _ref3.express;
-
-                        if (!cus_express_fn) {
-                            _context.next = 40;
-                            break;
-                        }
-
-                        _context.next = 39;
-                        return cus_express_fn(_server);
-
-                    case 39:
                         _server = _context.sent;
 
-                    case 40:
+                    case 35:
 
                         // catch 404 and forward to error handler
                         _server.use(function (req, res, next) {
@@ -251,7 +239,7 @@ var _create_server = function () {
 
                         return _context.abrupt("return", _server);
 
-                    case 42:
+                    case 37:
                     case "end":
                         return _context.stop();
                 }
@@ -265,13 +253,13 @@ var _create_server = function () {
 }();
 
 var _create_router = function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(_ref5) {
-        var apiroot = _ref5.apiroot,
-            _modelClasses = _ref5.modelClasses,
-            beforeCall = _ref5.beforeCall,
-            afterCall = _ref5.afterCall,
-            method404 = _ref5.method404,
-            frontpage_default = _ref5.frontpage_default;
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(_ref4) {
+        var apiroot = _ref4.apiroot,
+            _modelClasses = _ref4.modelClasses,
+            beforeCall = _ref4.beforeCall,
+            afterCall = _ref4.afterCall,
+            method404 = _ref4.method404,
+            frontpage_default = _ref4.frontpage_default;
         return _regenerator2.default.wrap(function _callee2$(_context2) {
             while (1) {
                 switch (_context2.prev = _context2.next) {
@@ -298,7 +286,7 @@ var _create_router = function () {
     }));
 
     return function _create_router(_x3) {
-        return _ref4.apply(this, arguments);
+        return _ref3.apply(this, arguments);
     };
 }();
 
@@ -309,7 +297,7 @@ var _create_router = function () {
  * @returns {Promise.<*>}
  */
 var createServer = exports.createServer = function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3(options) {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3(options) {
         return _regenerator2.default.wrap(function _callee3$(_context3) {
             while (1) {
                 switch (_context3.prev = _context3.next) {
@@ -337,7 +325,7 @@ var createServer = exports.createServer = function () {
     }));
 
     return function createServer(_x4) {
-        return _ref6.apply(this, arguments);
+        return _ref5.apply(this, arguments);
     };
 }();
 
@@ -348,7 +336,7 @@ var createServer = exports.createServer = function () {
  * @returns {Promise.<*>}
  */
 var createServerInRouter = exports.createServerInRouter = function () {
-    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(options) {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(options) {
         return _regenerator2.default.wrap(function _callee4$(_context4) {
             while (1) {
                 switch (_context4.prev = _context4.next) {
@@ -376,7 +364,7 @@ var createServerInRouter = exports.createServerInRouter = function () {
     }));
 
     return function createServerInRouter(_x5) {
-        return _ref7.apply(this, arguments);
+        return _ref6.apply(this, arguments);
     };
 }();
 

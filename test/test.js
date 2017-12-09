@@ -1,5 +1,5 @@
 import should from 'should';
-import {GKErrors} from './../src/lib/class2api/gkerrors'
+import {GKErrors} from '../src/lib/class2api/gkerrors'
 import {ApiDesc, WebInvokeHepler, setApiRoot, save2Doc} from './../src/lib/testhelper'
 
 JSON.stringifyline = function (Obj) {
