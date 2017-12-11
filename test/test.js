@@ -72,6 +72,18 @@ describe('评论系统', function () {
         message.lastIndexOf('getArticle').should.be.above(-1)
     })
 
+    it('/a/customResponseResultStruck', async () => {
+        let response = await WebInvokeHepler(_run.accounts.user1)(
+            '/a2/customResponseResultStruck',
+            {},
+            ApiDesc(`以别名方式请求`))
+        //console.log(response)
+        let {data, errorCode} = response
+        errorCode.should.be.eql(123)
+    })
+
+    //
+
     it('/admin/editArticle', async () => {
         let response = await WebInvokeHepler(_run.accounts.admin)(
             '/admin/editArticle',
