@@ -1,5 +1,5 @@
 # 编辑文章 #- 接口：http://127.0.0.1:3002/admin/editArticle- post参数：```json{
-  "aID": 0.0646961640991286
+  "aID": 0.15474927007337524
 }```- 请求结果：```json{
   "err": {
     "_gankao": 1,
@@ -10,7 +10,7 @@
   "result": null
 }```
 # 删除文章 #- 接口：http://127.0.0.1:3002/admin/deleteArticle- post参数：```json{
-  "aID": 0.622694581282401
+  "aID": 0.25156028939407027
 }```- 请求结果：```json{
   "err": null,
   "result": {

@@ -113,8 +113,14 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
                             where = _sequelize2.default.where;
                             //
                             _model_objects.__resetDB = ResetDB;
+                            _model_objects.__createTransaction = createTransaction;
+                            _model_objects.__excuteSQL = excuteSQL;
+                            _model_objects.__fn = fn;
+                            _model_objects.__col = col;
+                            _model_objects.__literal = literal;
+                            _model_objects.__where = where;
 
-                        case 9:
+                        case 15:
                         case 'end':
                             return _context.stop();
                     }
@@ -127,81 +133,39 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
         };
     }();
 
-    var ResetDB = function () {
+    var createTransaction = function () {
         var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
-            var _config_option$reset_, key1, key2;
-
             return _regenerator2.default.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
                         case 0:
-                            _context2.prev = 0;
-                            _config_option$reset_ = _config_option.reset_key, key1 = _config_option$reset_.key1, key2 = _config_option$reset_.key2;
+                            _context2.next = 2;
+                            return sequelize.transaction();
 
-                            if (!(process.env.DB_RESET_1 === key1 && process.env.DB_RESET_2 === key2)) {
-                                _context2.next = 14;
-                                break;
-                            }
+                        case 2:
+                            return _context2.abrupt('return', _context2.sent);
 
-                            if (!(process.env.NODE_ENV !== 'production')) {
-                                _context2.next = 11;
-                                break;
-                            }
-
-                            console.info("DB Inited ... ...");
-                            _context2.next = 7;
-                            return sequelize.sync({ force: process.env.FORCE === "1" });
-
-                        case 7:
-                            console.info("DB Inited Done! ");
-                            return _context2.abrupt('return', true);
-
-                        case 11:
-                            console.error("危险！在production环境执行 Reset操作是被禁止的！");
-
-                        case 12:
-                            _context2.next = 15;
-                            break;
-
-                        case 14:
-                            console.info("ResetDB 调用失败，重置key无法与process.env.DB_RESET_1、process.env.DB_RESET_2匹配通过！嘿！注意这可是危险操作！");
-
-                        case 15:
-                            return _context2.abrupt('return', false);
-
-                        case 18:
-                            _context2.prev = 18;
-                            _context2.t0 = _context2['catch'](0);
-
-                            console.error('error in ResetDB:');
-                            console.error(_context2.t0);
-                            throw _context2.t0;
-
-                        case 23:
+                        case 3:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, undefined, [[0, 18]]);
+            }, _callee2, undefined);
         }));
 
-        return function ResetDB() {
+        return function createTransaction() {
             return _ref2.apply(this, arguments);
         };
     }();
-    //endregion
 
-
-    //region 功能代码
-
-    var createTransaction = function () {
-        var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
+    var excuteSQL = function () {
+        var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3(sql, options) {
             return _regenerator2.default.wrap(function _callee3$(_context3) {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
                         case 0:
                             _context3.next = 2;
-                            return sequelize.transaction();
+                            return sequelize.query(sql, options || {});
 
                         case 2:
                             return _context3.abrupt('return', _context3.sent);
@@ -214,35 +178,77 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
             }, _callee3, undefined);
         }));
 
-        return function createTransaction() {
+        return function excuteSQL(_x, _x2) {
             return _ref3.apply(this, arguments);
         };
     }();
 
-    var excuteSQL = function () {
-        var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(sql, options) {
+    var ResetDB = function () {
+        var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {
+            var _config_option$reset_, key1, key2;
+
             return _regenerator2.default.wrap(function _callee4$(_context4) {
                 while (1) {
                     switch (_context4.prev = _context4.next) {
                         case 0:
-                            _context4.next = 2;
-                            return sequelize.query(sql, options || {});
+                            _context4.prev = 0;
+                            _config_option$reset_ = _config_option.reset_key, key1 = _config_option$reset_.key1, key2 = _config_option$reset_.key2;
 
-                        case 2:
-                            return _context4.abrupt('return', _context4.sent);
+                            if (!(process.env.DB_RESET_1 === key1 && process.env.DB_RESET_2 === key2)) {
+                                _context4.next = 14;
+                                break;
+                            }
 
-                        case 3:
+                            if (!(process.env.NODE_ENV !== 'production')) {
+                                _context4.next = 11;
+                                break;
+                            }
+
+                            console.info("DB Inited ... ...");
+                            _context4.next = 7;
+                            return sequelize.sync({ force: process.env.FORCE === "1" });
+
+                        case 7:
+                            console.info("DB Inited Done! ");
+                            return _context4.abrupt('return', true);
+
+                        case 11:
+                            console.error("危险！在production环境执行 Reset操作是被禁止的！");
+
+                        case 12:
+                            _context4.next = 15;
+                            break;
+
+                        case 14:
+                            console.info("ResetDB 调用失败，重置key无法与process.env.DB_RESET_1、process.env.DB_RESET_2匹配通过！嘿！注意这可是危险操作！");
+
+                        case 15:
+                            return _context4.abrupt('return', false);
+
+                        case 18:
+                            _context4.prev = 18;
+                            _context4.t0 = _context4['catch'](0);
+
+                            console.error('error in ResetDB:');
+                            console.error(_context4.t0);
+                            throw _context4.t0;
+
+                        case 23:
                         case 'end':
                             return _context4.stop();
                     }
                 }
-            }, _callee4, undefined);
+            }, _callee4, undefined, [[0, 18]]);
         }));
 
-        return function excuteSQL(_x, _x2) {
+        return function ResetDB() {
             return _ref4.apply(this, arguments);
         };
     }();
+    //endregion
+
+
+    //region 功能代码
 
     return {
         define: function define(sequelizeModelFactory) {
@@ -292,14 +298,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
             return function INIT(_x3) {
                 return _ref5.apply(this, arguments);
             };
-        }(),
-        createTransaction: createTransaction,
-        ResetDB: ResetDB,
-        fn: fn,
-        col: col,
-        literal: literal,
-        where: where,
-        excuteSQL: excuteSQL
+        }()
     };
 };
 

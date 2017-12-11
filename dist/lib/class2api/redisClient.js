@@ -64,8 +64,6 @@ var getGankaoWXAuthToken = exports.getGankaoWXAuthToken = function () {
 }();
 
 var setting_redisConfig = exports.setting_redisConfig = function setting_redisConfig(redisConfig) {
-    console.log("__dirname:");
-    console.log(__dirname);
     (function () {
         if (!_redisConfig) {
             _redisConfig = redisConfig;

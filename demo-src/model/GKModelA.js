@@ -38,8 +38,14 @@ class GKModelA {
         let user2 = await DataModel_MainDB.DemoUser.findOne()
         console.log(`user2 = ${ JSON.stringify( user2.get()) }`)
 
+        let t = await DataModel.__createTransaction()
+        await user2.update({age:Math.random()*50}, {transaction: t})
+        t.commit()
+
         let [user3] = await DataModel_MainDB.__excuteSQL(`select * from demousers limit 1`)
         console.log(`user0 = ${ JSON.stringify( user3 ) }`)
+
+
 
         return {message: `getArticle.${name}，from user. ${uID}`}
     }
