@@ -114,6 +114,33 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
     export default ClassA
 ```
 
+# 接口返回值的结构
+class2api对所有请求的返回数据结构，统一为：
+```javascript
+{  
+    err,
+    result
+}
+```
+其中err代表内部异常或错误，凡是GKErrors和GKErrorWrap result抛出的错误都会捕捉err ，而result保存的是业务类静态方法的执行返回结果，且约定为必须为对象结构，不能是数字、字符串、布尔值等简单数据类型
+
+*特殊情况：如果你的系统有特殊原因，需要接口返回自定义的数据结构，可以使用以下方式来控制反转：
+```javascript
+    class ClassB {
+        constructor() {
+            throw '静态业务功能类无法实例化'
+        }
+        static async customResponseResultStruck() {
+            //TODO:.....
+    
+            //class2api内部约定，如API方法返回的是Function，则框架会调用函数并把其运行结果返回给客户端，以实现自定义特殊的response结构
+            return () => {
+                return {data: {name: 'huangyong'}, errorCode: 123}
+            }
+        }
+    }
+```
+
 # 组件提供的功能函数
 
 ## 空间列表
@@ -435,9 +462,7 @@ class2api内置的管理员身份校验函数，函数内将jwtoken参数会以h
         }) 
     
     })
-    
-    
-
+   
 ```
 
 
