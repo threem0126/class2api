@@ -19,8 +19,6 @@ export const getGankaoWXAuthToken = async (gkwxauthtoken)=> {
 }
 
 export const setting_redisConfig = (redisConfig)=> {
-    console.log("__dirname:");
-    console.log(__dirname);
     (() => {
         if(!_redisConfig){
             _redisConfig = redisConfig
