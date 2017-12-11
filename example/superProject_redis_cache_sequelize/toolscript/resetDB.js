@@ -1,10 +1,9 @@
-import {ResetDB} from 'class2api/dbhelper'
 import {DataModel} from './../src/tableloader'
 
 (async ()=>{
     try{
         //重建所有表
-        const hasReseted = await ResetDB();
+        const hasReseted = await DataModel.__resetDB();
         if(!hasReseted)
             throw '数据库未被重置'
         //...

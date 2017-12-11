@@ -1,10 +1,12 @@
 import Sequelize from 'sequelize';
 import * as DBUtils from './dbutils';
+import {hashcode} from './../class2api/util'
 import * as TableSetting from './tablesetting'
+import {GKErrors} from "../class2api/GKErrors_Inner";
 
+let _dbList = {}
 
-
-const DBModelLoader = (option)=> {
+const _inner_DBModelLoader = (option)=> {
     //内部初始化
     let sequelize;//内部初始化的sequelize实例子，注意，禁止暴露给外部，以避免安全问题
     let _config_option = option
@@ -50,6 +52,8 @@ const DBModelLoader = (option)=> {
         col = Sequelize.col
         literal = Sequelize.literal
         where = Sequelize.where
+        //
+        _model_objects.__resetDB = ResetDB
 
     }
 
@@ -113,6 +117,20 @@ const DBModelLoader = (option)=> {
         where,
         excuteSQL
     }
+}
+
+//内部带放重复创建的功能，相同的mysql配置，确保只创建一份sequelize对象
+const DBModelLoader = (option)=> {
+    if(!option || typeof option !=="object"){
+        throw GKErrors._SERVER_ERROR(`DBModelLoader调用缺少参数或参数不是{key/value}对象`)
+    }
+    let {database, host, port} = option
+    let hashKey = hashcode(JSON.stringify({database, host, port}))
+    if (!_dbList[hashKey]) {
+        let loader = _inner_DBModelLoader(option)
+        _dbList[hashKey] = loader
+    }
+    return _dbList[hashKey]
 }
 
 export {

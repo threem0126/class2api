@@ -13,7 +13,7 @@ export const DataModel = {
 
 
 //定义第二套数据库模型
-const myDBModelLoader_MainDB = DBModelLoader(_config.mysql)
+const myDBModelLoader_MainDB = DBModelLoader(_config.mysql2)
 export const DataModel_MainDB = {
     DemoUser: myDBModelLoader_MainDB.define(DemoUser),
 }

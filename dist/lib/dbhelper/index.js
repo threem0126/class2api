@@ -5,9 +5,21 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.DBUtils = exports.DBModelLoader = exports.TableSetting = undefined;
 
+var _iterator = require('babel-runtime/core-js/symbol/iterator');
+
+var _iterator2 = _interopRequireDefault(_iterator);
+
+var _symbol = require('babel-runtime/core-js/symbol');
+
+var _symbol2 = _interopRequireDefault(_symbol);
+
 var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -17,6 +29,8 @@ var _keys = require('babel-runtime/core-js/object/keys');
 
 var _keys2 = _interopRequireDefault(_keys);
 
+var _typeof = typeof _symbol2.default === "function" && typeof _iterator2.default === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj; };
+
 var _sequelize = require('sequelize');
 
 var _sequelize2 = _interopRequireDefault(_sequelize);
@@ -25,9 +39,13 @@ var _dbutils = require('./dbutils');
 
 var DBUtils = _interopRequireWildcard(_dbutils);
 
+var _util = require('./../class2api/util');
+
 var _tablesetting = require('./tablesetting');
 
 var TableSetting = _interopRequireWildcard(_tablesetting);
+
+var _GKErrors_Inner = require('../class2api/GKErrors_Inner');
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -35,7 +53,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _promise2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _promise2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-var DBModelLoader = function DBModelLoader(option) {
+var _dbList = {};
+
+var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
     //内部初始化
     var sequelize = void 0; //内部初始化的sequelize实例子，注意，禁止暴露给外部，以避免安全问题
     var _config_option = option;
@@ -91,8 +111,10 @@ var DBModelLoader = function DBModelLoader(option) {
                             col = _sequelize2.default.col;
                             literal = _sequelize2.default.literal;
                             where = _sequelize2.default.where;
+                            //
+                            _model_objects.__resetDB = ResetDB;
 
-                        case 8:
+                        case 9:
                         case 'end':
                             return _context.stop();
                     }
@@ -279,6 +301,23 @@ var DBModelLoader = function DBModelLoader(option) {
         where: where,
         excuteSQL: excuteSQL
     };
+};
+
+//内部带放重复创建的功能，相同的mysql配置，确保只创建一份sequelize对象
+var DBModelLoader = function DBModelLoader(option) {
+    if (!option || (typeof option === 'undefined' ? 'undefined' : _typeof(option)) !== "object") {
+        throw _GKErrors_Inner.GKErrors._SERVER_ERROR('DBModelLoader\u8C03\u7528\u7F3A\u5C11\u53C2\u6570\u6216\u53C2\u6570\u4E0D\u662F{key/value}\u5BF9\u8C61');
+    }
+    var database = option.database,
+        host = option.host,
+        port = option.port;
+
+    var hashKey = (0, _util.hashcode)((0, _stringify2.default)({ database: database, host: host, port: port }));
+    if (!_dbList[hashKey]) {
+        var loader = _inner_DBModelLoader(option);
+        _dbList[hashKey] = loader;
+    }
+    return _dbList[hashKey];
 };
 
 exports.TableSetting = TableSetting;
