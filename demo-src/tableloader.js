@@ -6,11 +6,9 @@ import DemoUser from './tables/DemoUser'
 //模型定义，在aloader.init内部会动态加载指定的定位文件，替换为真实的object的value值
 const myDBModelLoader = DBModelLoader(_config.mysql)
 //从加载器中结构出与目标库相关的常用函数
-let {createTransaction, ResetDB, fn, col, literal, where, excuteSQL} = myDBModelLoader;
 export const DataModel = {
     DemoUser: myDBModelLoader.define(DemoUser),
 }
-
 
 //定义第二套数据库模型
 const myDBModelLoader_MainDB = DBModelLoader(_config.mysql2)

@@ -54,7 +54,20 @@ const _inner_DBModelLoader = (option)=> {
         where = Sequelize.where
         //
         _model_objects.__resetDB = ResetDB
+        _model_objects.__createTransaction = createTransaction
+        _model_objects.__excuteSQL = excuteSQL
+        _model_objects.__fn = fn
+        _model_objects.__col = col
+        _model_objects.__literal = literal
+        _model_objects.__where = where
+    }
 
+    const createTransaction = async () => {
+        return await sequelize.transaction()
+    }
+
+    const excuteSQL = async (sql, options) => {
+        return await sequelize.query(sql, options || {});
     }
 
     const ResetDB = async () => {
@@ -84,14 +97,6 @@ const _inner_DBModelLoader = (option)=> {
 
 //region 功能代码
 
-    const createTransaction = async () => {
-        return await sequelize.transaction()
-    }
-
-    const excuteSQL = async (sql, options) => {
-        return await sequelize.query(sql, options || {});
-    }
-
     return {
         define: (sequelizeModelFactory) => {
             let _sequelizeModelFactory = sequelizeModelFactory
@@ -108,14 +113,7 @@ const _inner_DBModelLoader = (option)=> {
             _model_objects = model
             _ass = ass
             await _INIT(option)
-        },
-        createTransaction,
-        ResetDB,
-        fn,
-        col,
-        literal,
-        where,
-        excuteSQL
+        }
     }
 }
 

@@ -29,11 +29,18 @@ class GKModelA {
     static async getArticle({uID, name}) {
         console.log(GKErrors._SERVER_ERROR('错误1'))
 
+        let [user0] = await DataModel.__excuteSQL(`select * from demousers limit 1`)
+        console.log(`user0 = ${ JSON.stringify( user0 ) }`)
+
         let user1 = await DataModel.DemoUser.findOne()
         console.log(`user1 = ${ JSON.stringify( user1.get()) }`)
 
         let user2 = await DataModel_MainDB.DemoUser.findOne()
         console.log(`user2 = ${ JSON.stringify( user2.get()) }`)
+
+        let [user3] = await DataModel_MainDB.__excuteSQL(`select * from demousers limit 1`)
+        console.log(`user0 = ${ JSON.stringify( user3 ) }`)
+
         return {message: `getArticle.${name}，from user. ${uID}`}
     }
 

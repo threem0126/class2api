@@ -3,6 +3,7 @@ import compression from "compression";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import _config from "./config.js" ;
+import ClassA from './ClassA'
 import GKModelA from './model/GKModelA'
 import GKRuleManager from './model/GKRuleManager'
 import GKAdmin_ModelA from './model_admin/GKAdmin_ModelA'
@@ -27,7 +28,7 @@ setting_redisConfig(redis);
             redis
         },
         //将哪些类映射到API，可以定义路径别名
-        modelClasses:[GKModelA, {model:GKModelA, as:'a2'}, GKRuleManager, {model:GKAdmin_ModelA,as:"admin"}],
+        modelClasses:[{model:ClassA,as:"a"}, GKModelA, {model:GKModelA, as:'a2'}, GKRuleManager, {model:GKAdmin_ModelA,as:"admin"}],
         //在API方法执行前拦截
         async beforeCall({req, params, modelSetting}){  let {__Auth} = modelSetting
             if(process.env.NODE_ENV === "development") {
