@@ -32,8 +32,8 @@ const _inner_DBModelLoader = (option)=> {
                 idle: 10000
             },
             dialect: 'mysql',
-            benchmark: (process.env.SQL_PRINT === '0'),
-            logging: process.env.SQL_PRINT === '0' ?
+            benchmark: (process.env.SQL_PRINT === '1'),
+            logging: process.env.SQL_PRINT === '1' ?
                 ((...params) => console.log(...params)) : null
         });
 
