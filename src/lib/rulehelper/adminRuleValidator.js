@@ -40,25 +40,28 @@ class RuleValidator {
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
                     'Content-Type': 'application/json',
-                    'jwtoken':jwtoken
+                    'jwtoken': jwtoken
                 },
                 withCredentials: 'true',
                 json: true,
-                body:JSON.stringify({nothing:1})
+                body: JSON.stringify({nothing: 1})
             });
             let {err, result} = await res.json();
             if (err)
-                throw GKErrors._SERVER_ERROR(`验证身份时遇到错误${ err }`)
+                throw GKErrors._TOKEN_LOGIN_INVALID(`jwtoken无法识别：${ JSON.stringify(err) }`)
             return result
         } catch (e) {
             //权限认证出错
-            console.error(e)
-            if(process.env.NODE_ENV==="development") {
+            let {_gankao} = e
+            //非业务级报错，且在开发环境，则终止程序
+            if (_gankao !== '1' && process.env.NODE_ENV === "development") {
+                console.error(e)
                 setTimeout(() => {
                     throw e
                 })
+            } else {
+                throw GKErrors._SERVER_ERROR(`验证身份时遇到异常${ JSON.stringify(e) }`)
             }
-            throw GKErrors._SERVER_ERROR(`验证身份时遇到异常${e}`)
         }
     }
 

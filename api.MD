@@ -15,11 +15,11 @@
   }
 }```
 # 以别名方式请求 #- 接口：http://127.0.0.1:3002/a2/getArticle- post参数：```json{
-  "name": 0.7013085537955341
+  "name": 0.4907784636936334
 }```- 请求结果：```json{
   "err": null,
   "result": {
-    "message": "getArticle.0.7013085537955341，from user. 12345678"
+    "message": "getArticle.0.4907784636936334，from user. 12345678"
   }
 }```
 # 以别名方式请求 #- 接口：http://127.0.0.1:3002/a2/customResponseResultStruck- post参数：```json{}```- 请求结果：```json{
@@ -29,7 +29,7 @@
   "errorCode": 123
 }```
 # 编辑文章 #- 接口：http://127.0.0.1:3002/admin/editArticle- post参数：```json{
-  "aID": 0.7285301397729043
+  "aID": 0.8105905088104712
 }```- 请求结果：```json{
   "err": {
     "_gankao": 1,
@@ -40,7 +40,7 @@
   "result": null
 }```
 # 删除文章 #- 接口：http://127.0.0.1:3002/admin/deleteArticle- post参数：```json{
-  "aID": 0.9521752540686417
+  "aID": 0.6120546151249913
 }```- 请求结果：```json{
   "err": null,
   "result": {

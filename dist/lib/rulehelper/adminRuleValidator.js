@@ -131,7 +131,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
             var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref3) {
                 var jwtoken = _ref3.jwtoken;
 
-                var res, _ref4, err, result;
+                var res, _ref4, err, result, _gankao;
 
                 return _regenerator2.default.wrap(function _callee$(_context) {
                     while (1) {
@@ -175,7 +175,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                     break;
                                 }
 
-                                throw _GKErrors_Inner.GKErrors._SERVER_ERROR('\u9A8C\u8BC1\u8EAB\u4EFD\u65F6\u9047\u5230\u9519\u8BEF' + err);
+                                throw _GKErrors_Inner.GKErrors._TOKEN_LOGIN_INVALID('jwtoken\u65E0\u6CD5\u8BC6\u522B\uFF1A' + (0, _stringify2.default)(err));
 
                             case 13:
                                 return _context.abrupt('return', result);
@@ -185,15 +185,25 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                 _context.t0 = _context['catch'](2);
 
                                 //权限认证出错
-                                console.error(_context.t0);
-                                if (process.env.NODE_ENV === "development") {
-                                    setTimeout(function () {
-                                        throw _context.t0;
-                                    });
-                                }
-                                throw _GKErrors_Inner.GKErrors._SERVER_ERROR('\u9A8C\u8BC1\u8EAB\u4EFD\u65F6\u9047\u5230\u5F02\u5E38' + _context.t0);
+                                _gankao = _context.t0._gankao;
+                                //非业务级报错，且在开发环境，则终止程序
 
-                            case 21:
+                                if (!(_gankao !== '1' && process.env.NODE_ENV === "development")) {
+                                    _context.next = 24;
+                                    break;
+                                }
+
+                                console.error(_context.t0);
+                                setTimeout(function () {
+                                    throw _context.t0;
+                                });
+                                _context.next = 25;
+                                break;
+
+                            case 24:
+                                throw _GKErrors_Inner.GKErrors._SERVER_ERROR('\u9A8C\u8BC1\u8EAB\u4EFD\u65F6\u9047\u5230\u5F02\u5E38' + (0, _stringify2.default)(_context.t0));
+
+                            case 25:
                             case 'end':
                                 return _context.stop();
                         }

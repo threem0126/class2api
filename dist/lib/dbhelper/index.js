@@ -88,8 +88,8 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
                                     idle: 10000
                                 },
                                 dialect: 'mysql',
-                                benchmark: process.env.SQL_PRINT === '0',
-                                logging: process.env.SQL_PRINT === '0' ? function () {
+                                benchmark: process.env.SQL_PRINT === '1',
+                                logging: process.env.SQL_PRINT === '1' ? function () {
                                     var _console;
 
                                     return (_console = console).log.apply(_console, arguments);
