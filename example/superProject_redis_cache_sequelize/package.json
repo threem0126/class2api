@@ -1,5 +1,5 @@
 {
-  "name": "custom-server-express",
+  "name": "superProject-From-Class2api",
   "version": "1.0.0",
   "scripts": {
     "start": "NODE_ENV=development REDIS_SESSION=1 SQL_PRINT=0 node ./src/index.js  --progress",
