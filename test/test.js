@@ -54,11 +54,18 @@ describe('评论系统', function () {
         message.lastIndexOf('getArticle').should.be.above(-1)
     })
 
-    it('/gkmodela/getArticle', async () => {
+    it('/gkmodela/getArticle With Cache', async () => {
         let response = await WebInvokeHepler(_run.accounts.user1)('/gkmodela/getArticle', {name:"haungyong"})
         //console.log(response)
         let {err, result: {__fromCache}} = response
         __fromCache.should.be.eql(true)
+    })
+
+    it('/gkmodela/getArticle With force skip Cache ', async () => {
+        let response = await WebInvokeHepler(_run.accounts.user1)('/gkmodela/getArticle', {name:"haungyong",__nocache:1})
+        //console.log(response)
+        let {err, result: {__fromCache=false}} = response
+        __fromCache.should.be.eql(false)
     })
 
     it('/a/getArticle', async () => {
