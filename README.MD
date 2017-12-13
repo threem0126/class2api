@@ -141,6 +141,11 @@ class2api对所有请求的返回数据结构，统一为：
     }
 ```
 
+# 启动环境变量控制  
+- $ process.env.NO_API_CACHE=1  强制关闭静态类的API调用缓存，使cacheAble、clearCache失效
+- $ process.env.SQL_PRINT=1     开启sequelize的SQL执行日志的打印
+
+
 # 组件提供的功能函数
 
 ## 空间列表
@@ -239,7 +244,7 @@ return {
     
         @cacheAble({
             cacheKeyGene: (args) => {
-                let {name} = args[0]
+                let {name} = args[0] 
                 return `getArticle-${name}`
             }
         })
@@ -247,6 +252,29 @@ return {
             return {message: `getArticle.${name}，from user. ${uID}`}
         }
     }
+```
+*Q：如何判断某次API请求的结果是命中了缓存？*
+A：命中了缓存的调用，在其请求的返回结果中，带有__fromCache=1属性，如：
+```javascript
+{
+    err:null,
+    result:{name:'huangyong'},
+    __fromCache:1 //额外的输出标记
+}
+```
+
+*Q：如果需要在某次调用接口时强制禁用（绕过）API缓存机制？*
+A：传入__nocache=1参数，组件内部即会判断并绕过缓存，示例如
+```javascript
+        let options = {
+            uri: remote_api,  
+            body: {
+                fID:123,
+                __nocache:1
+            },
+            json: true, 
+        }
+        let {body} = await request.postAsync(options)
 ```
 
 - clearCache({cacheKeyGene:()=>{}}) 

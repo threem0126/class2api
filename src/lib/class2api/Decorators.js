@@ -71,6 +71,10 @@ export const cacheAble = ({cacheKeyGene}) => {
         }
         let oldValue = descriptor.value;
         descriptor.value = async function () {
+            if(process.env.NO_API_CACHE==='1') {
+                console.log(`force skip cache by process.env.NO_API_CACHE ...`)
+                return await oldValue(...arguments);
+            }
             let {__nocache} = arguments[0]
             if(__nocache){
                 console.log(`force skip cache ........ ${target.name}.${name}`)
@@ -118,6 +122,10 @@ export const clearCache = ({cacheKeyGene}) => {
     return function (target, name, descriptor) {
         let oldValue = descriptor.value;
         descriptor.value = async function () {
+            if(process.env.NO_API_CACHE==='1') {
+                console.log(`force skip cache by process.env.NO_API_CACHE ...`)
+                return await oldValue(...arguments);
+            }
             let key = ''
             if (typeof cacheKeyGene === "function") {
                 key = cacheKeyGene(arguments)

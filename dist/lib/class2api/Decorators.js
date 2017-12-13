@@ -223,25 +223,38 @@ var ____cache = {
                 while (1) {
                     switch (_context6.prev = _context6.next) {
                         case 0:
+                            if (!(process.env.NO_API_CACHE === '1')) {
+                                _context6.next = 5;
+                                break;
+                            }
+
+                            console.log('force skip cache by process.env.NO_API_CACHE ...');
+                            _context6.next = 4;
+                            return oldValue.apply(undefined, _args6);
+
+                        case 4:
+                            return _context6.abrupt('return', _context6.sent);
+
+                        case 5:
                             __nocache = _args6[0].__nocache;
 
                             if (!__nocache) {
-                                _context6.next = 6;
+                                _context6.next = 11;
                                 break;
                             }
 
                             console.log('force skip cache ........ ' + target.name + '.' + name);
-                            _context6.next = 5;
+                            _context6.next = 10;
                             return oldValue.apply(undefined, _args6);
 
-                        case 5:
+                        case 10:
                             return _context6.abrupt('return', _context6.sent);
 
-                        case 6:
+                        case 11:
                             key = '';
 
                             if (!cacheKeyGene) {
-                                _context6.next = 17;
+                                _context6.next = 22;
                                 break;
                             }
 
@@ -249,18 +262,18 @@ var ____cache = {
                             //返回空字符串时，忽略
 
                             if (!key) {
-                                _context6.next = 17;
+                                _context6.next = 22;
                                 break;
                             }
 
-                            _context6.next = 12;
+                            _context6.next = 17;
                             return ____cache.get(key);
 
-                        case 12:
+                        case 17:
                             Obj = _context6.sent;
 
                             if (!Obj) {
-                                _context6.next = 17;
+                                _context6.next = 22;
                                 break;
                             }
 
@@ -274,28 +287,28 @@ var ____cache = {
                             }
                             return _context6.abrupt('return', _result);
 
-                        case 17:
+                        case 22:
                             //if(process.env.NODE_ENV !=='production') {
                             console.log('miss cachekey .......' + key + '...');
                             //}
-                            _context6.next = 20;
+                            _context6.next = 25;
                             return oldValue.apply(undefined, _args6);
 
-                        case 20:
+                        case 25:
                             result = _context6.sent;
 
                             if (!(cacheKeyGene && key)) {
-                                _context6.next = 24;
+                                _context6.next = 29;
                                 break;
                             }
 
-                            _context6.next = 24;
+                            _context6.next = 29;
                             return ____cache.set(key, result);
 
-                        case 24:
+                        case 29:
                             return _context6.abrupt('return', result);
 
-                        case 25:
+                        case 30:
                         case 'end':
                             return _context6.stop();
                     }
@@ -324,51 +337,64 @@ var clearCache = exports.clearCache = function clearCache(_ref8) {
                 while (1) {
                     switch (_context7.prev = _context7.next) {
                         case 0:
+                            if (!(process.env.NO_API_CACHE === '1')) {
+                                _context7.next = 5;
+                                break;
+                            }
+
+                            console.log('force skip cache by process.env.NO_API_CACHE ...');
+                            _context7.next = 4;
+                            return oldValue.apply(undefined, _args7);
+
+                        case 4:
+                            return _context7.abrupt('return', _context7.sent);
+
+                        case 5:
                             key = '';
 
                             if (!(typeof cacheKeyGene === "function")) {
-                                _context7.next = 11;
+                                _context7.next = 16;
                                 break;
                             }
 
                             key = cacheKeyGene(_args7);
 
                             if (!(key !== "")) {
-                                _context7.next = 8;
+                                _context7.next = 13;
                                 break;
                             }
 
-                            _context7.next = 6;
+                            _context7.next = 11;
                             return ____cache.delete(key);
 
-                        case 6:
-                            _context7.next = 9;
+                        case 11:
+                            _context7.next = 14;
                             break;
 
-                        case 8:
+                        case 13:
                             //返回的key为空字符串，说明key无法提前确定，需要交给方法内部来调用清空
                             _args7[0].__cacheManage = function () {
                                 return ____cache;
                             };
 
-                        case 9:
-                            _context7.next = 12;
+                        case 14:
+                            _context7.next = 17;
                             break;
 
-                        case 11:
+                        case 16:
                             //修饰器的报错，级别更高，直接抛出终止程序
                             setTimeout(function () {
                                 throw '\u5728\u7C7B\u9759\u6001\u65B9\u6CD5 ' + target.name + '.' + name + ' \u4E0A\u8C03\u7528cacheAble\u4FEE\u9970\u5668\u65F6\u672A\u6307\u5B9A\u6709\u6548\u7684cacheKeyGene\u53C2\u6570';
                             });
 
-                        case 12:
-                            _context7.next = 14;
+                        case 17:
+                            _context7.next = 19;
                             return oldValue.apply(undefined, _args7);
 
-                        case 14:
+                        case 19:
                             return _context7.abrupt('return', _context7.sent);
 
-                        case 15:
+                        case 20:
                         case 'end':
                             return _context7.stop();
                     }
