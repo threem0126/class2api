@@ -21,8 +21,7 @@ class GKModelA {
      * @returns {Promise.<{message: string}>}
      */
     @cacheAble({
-        cacheKeyGene: (args) => {
-            let {name} = args[0]
+        cacheKeyGene: ({name}) => {
             return `getArticle-${name}`
         }
     })

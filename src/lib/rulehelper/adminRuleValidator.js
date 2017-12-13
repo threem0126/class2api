@@ -25,8 +25,7 @@ class RuleValidator {
      * @returns {Promise.<*>}
      */
     @cacheAble({
-        cacheKeyGene: (args) => {
-            let {jwtoken} = args[0];
+        cacheKeyGene: ({jwtoken}) => {
             return jwtoken;
         }
     })
@@ -66,8 +65,7 @@ class RuleValidator {
     }
 
     @cacheAble({
-        cacheKeyGene: (args) => {
-            let {jwtoken='', categoryName='', ruleName=''} = args[0];
+        cacheKeyGene: ({jwtoken='', categoryName='', ruleName=''}) => {
             //以jwtoken、功能组名称、权限名称来组合索引，混存上一次的判断结果
             return jwtoken ? `_ruleValidator_inner-${hashcode(jwtoken)}-${hashcode(categoryName)}-${hashcode(ruleName)}` : '';
         }

@@ -16,8 +16,7 @@ class GKModelA {
     }
 
     @cacheAble({
-        cacheKeyGene: (args) => {
-            let {name} = args[0]
+        cacheKeyGene: ({name}) => {
             return `hello-${name}`
         }
     })

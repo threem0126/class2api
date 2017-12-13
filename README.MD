@@ -243,8 +243,7 @@ return {
     class GKModelA {
     
         @cacheAble({
-            cacheKeyGene: (args) => {
-                let {name} = args[0] 
+            cacheKeyGene: ({name}) => {
                 return `getArticle-${name}`
             }
         })
@@ -264,7 +263,7 @@ A：命中了缓存的调用，在其请求的返回结果中，带有__fromCach
 ```
 
 *Q：如果需要在某次调用接口时强制禁用（绕过）API缓存机制？*
-A：传入__nocache=1参数，组件内部即会判断并绕过缓存，示例如
+A：传入__nocache=1参数，组件内部即会判断并绕过缓存，示例如：
 ```javascript
         let options = {
             uri: remote_api,  

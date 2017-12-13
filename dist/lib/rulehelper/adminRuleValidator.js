@@ -92,22 +92,21 @@ var _ref = class2api_config || {},
     admin_rule_center = _ref.admin_rule_center;
 
 var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
-    cacheKeyGene: function cacheKeyGene(args) {
-        var jwtoken = args[0].jwtoken;
+    cacheKeyGene: function cacheKeyGene(_ref2) {
+        var jwtoken = _ref2.jwtoken;
 
         return jwtoken;
     }
 }), _dec2 = (0, _Decorators.cacheAble)({
-    cacheKeyGene: function cacheKeyGene(args) {
-        var _args$ = args[0],
-            _args$$jwtoken = _args$.jwtoken,
-            jwtoken = _args$$jwtoken === undefined ? '' : _args$$jwtoken,
-            _args$$categoryName = _args$.categoryName,
-            categoryName = _args$$categoryName === undefined ? '' : _args$$categoryName,
-            _args$$ruleName = _args$.ruleName,
-            ruleName = _args$$ruleName === undefined ? '' : _args$$ruleName;
-        //以jwtoken、功能组名称、权限名称来组合索引，混存上一次的判断结果
+    cacheKeyGene: function cacheKeyGene(_ref3) {
+        var _ref3$jwtoken = _ref3.jwtoken,
+            jwtoken = _ref3$jwtoken === undefined ? '' : _ref3$jwtoken,
+            _ref3$categoryName = _ref3.categoryName,
+            categoryName = _ref3$categoryName === undefined ? '' : _ref3$categoryName,
+            _ref3$ruleName = _ref3.ruleName,
+            ruleName = _ref3$ruleName === undefined ? '' : _ref3$ruleName;
 
+        //以jwtoken、功能组名称、权限名称来组合索引，混存上一次的判断结果
         return jwtoken ? '_ruleValidator_inner-' + (0, _util.hashcode)(jwtoken) + '-' + (0, _util.hashcode)(categoryName) + '-' + (0, _util.hashcode)(ruleName) : '';
     }
 }), (_class = function () {
@@ -128,10 +127,10 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
     _createClass(RuleValidator, null, [{
         key: 'parseAdminAccountFromJWToken',
         value: function () {
-            var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref3) {
-                var jwtoken = _ref3.jwtoken;
+            var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref5) {
+                var jwtoken = _ref5.jwtoken;
 
-                var res, _ref4, err, result, _gankao;
+                var res, _ref6, err, result, _gankao;
 
                 return _regenerator2.default.wrap(function _callee$(_context) {
                     while (1) {
@@ -166,9 +165,9 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                 return res.json();
 
                             case 8:
-                                _ref4 = _context.sent;
-                                err = _ref4.err;
-                                result = _ref4.result;
+                                _ref6 = _context.sent;
+                                err = _ref6.err;
+                                result = _ref6.result;
 
                                 if (!err) {
                                     _context.next = 13;
@@ -212,7 +211,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
             }));
 
             function parseAdminAccountFromJWToken(_x) {
-                return _ref2.apply(this, arguments);
+                return _ref4.apply(this, arguments);
             }
 
             return parseAdminAccountFromJWToken;
@@ -220,14 +219,14 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
     }, {
         key: '_ruleValidator_inner',
         value: function () {
-            var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(_ref6) {
-                var sysName = _ref6.sysName,
-                    jwtoken = _ref6.jwtoken,
-                    categoryName = _ref6.categoryName,
-                    categoryDesc = _ref6.categoryDesc,
-                    ruleName = _ref6.ruleName,
-                    ruleDesc = _ref6.ruleDesc,
-                    codePath = _ref6.codePath;
+            var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(_ref8) {
+                var sysName = _ref8.sysName,
+                    jwtoken = _ref8.jwtoken,
+                    categoryName = _ref8.categoryName,
+                    categoryDesc = _ref8.categoryDesc,
+                    ruleName = _ref8.ruleName,
+                    ruleDesc = _ref8.ruleDesc,
+                    codePath = _ref8.codePath;
                 var res, jsonResult;
                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                     while (1) {
@@ -274,7 +273,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
             }));
 
             function _ruleValidator_inner(_x2) {
-                return _ref5.apply(this, arguments);
+                return _ref7.apply(this, arguments);
             }
 
             return _ruleValidator_inner;

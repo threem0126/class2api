@@ -52,8 +52,7 @@ export default class {
     }
 
     @cacheAble({
-        cacheKeyGene: (args) => {
-            let {req} = args[0]
+        cacheKeyGene: ({req}) => {
             return req.header('token') || ''
         }
     })

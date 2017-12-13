@@ -83,7 +83,8 @@ export const cacheAble = ({cacheKeyGene}) => {
 
             let key = ''
             if (cacheKeyGene) {
-                key = cacheKeyGene(arguments)
+                let [firstParam] = arguments
+                key = cacheKeyGene(firstParam)
                 //返回空字符串时，忽略
                 if(key) {
                     let Obj = await ____cache.get(key)
@@ -128,7 +129,8 @@ export const clearCache = ({cacheKeyGene}) => {
             }
             let key = ''
             if (typeof cacheKeyGene === "function") {
-                key = cacheKeyGene(arguments)
+                let [firstParam] = arguments
+                key = cacheKeyGene(firstParam)
                 if (key !== "") {
                     await ____cache.delete(key)
                 } else {

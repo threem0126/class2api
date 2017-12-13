@@ -23,8 +23,7 @@ class GKModelA {
     }
 
     @clearCache({
-        cacheKeyGene: (args) => {
-            let {aID} = args[0]
+        cacheKeyGene: ({aID}) => {
             return `article-${aID}`
         }
     })
@@ -35,8 +34,7 @@ class GKModelA {
     }
 
     @clearCache({
-        cacheKeyGene: (args) => {
-            let {aID} = args[0]
+        cacheKeyGene: ({aID}) => {
             return `article-${aID}`
         }
     })
