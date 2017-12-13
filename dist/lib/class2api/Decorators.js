@@ -230,7 +230,7 @@ var ____cache = {
                                 break;
                             }
 
-                            console.log('force skip cache by process.env.NO_API_CACHE ...');
+                            console.log('[' + target.name + '.' + name + '] force skip cache by process.env.NO_API_CACHE ...');
                             _context6.next = 4;
                             return oldValue.apply(undefined, _args6);
 
@@ -245,7 +245,7 @@ var ____cache = {
                                 break;
                             }
 
-                            console.log('force skip cache ........ ' + target.name + '.' + name);
+                            console.log('[' + target.name + '.' + name + '] force skip cache ........ ' + target.name + '.' + name);
                             _context6.next = 10;
                             return oldValue.apply(undefined, _args6);
 
@@ -285,7 +285,7 @@ var ____cache = {
 
                             if ((typeof _result === 'undefined' ? 'undefined' : _typeof(_result)) === "object") {
                                 //if (process.env.NODE_ENV !== 'production') {
-                                console.log('hit cachekey .......' + key + '...');
+                                console.log('[' + target.name + '.' + name + '] hit cachekey .......' + key + '...');
                                 //}
                                 _result.__fromCache = true;
                             }
@@ -293,7 +293,7 @@ var ____cache = {
 
                         case 23:
                             //if(process.env.NODE_ENV !=='production') {
-                            console.log('miss cachekey .......' + key + '...');
+                            console.log('[' + target.name + '.' + name + '] miss cachekey .......' + key + '...');
                             //}
                             _context6.next = 26;
                             return oldValue.apply(undefined, _args6);

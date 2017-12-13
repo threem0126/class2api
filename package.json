@@ -1,13 +1,13 @@
 {
   "name": "class2api",
-  "version": "2.4.3",
+  "version": "2.4.5",
   "description": "the lib for mapping your javascript class to api service.",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
-    "start:src": "MODEL=src node demo-src/index.js",
-    "start:srclite": "MODEL=srclite node demo-src/index.js",
-    "start:srcrouter": "MODEL=srcrouter node demo-src/index.js",
-    "test": "npm test",
+    "start:src": "NODE_ENV=development MODEL=src node demo-src/index.js",
+    "start:srclite": "NODE_ENV=development MODEL=srclite node demo-src/index.js",
+    "start:srcrouter": "NODE_ENV=development MODEL=srcrouter node demo-src/index.js",
+    "test": "NODE_ENV=development npm test",
     "build": "babel src -d dist "
   },
   "repository": {

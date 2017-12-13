@@ -11,16 +11,15 @@
 }```- 请求结果：```json{
   "err": null,
   "result": {
-    "message": "getArticle.haungyong，from user. 12345678",
-    "__fromCache": true
+    "message": "getArticle.haungyong，from user. 12345678"
   }
 }```
 # 以别名方式请求 #- 接口：http://127.0.0.1:3002/a2/getArticle- post参数：```json{
-  "name": 0.6366048994501772
+  "name": 0.8858765949530416
 }```- 请求结果：```json{
   "err": null,
   "result": {
-    "message": "getArticle.0.6366048994501772，from user. 12345678"
+    "message": "getArticle.0.8858765949530416，from user. 12345678"
   }
 }```
 # 以别名方式请求 #- 接口：http://127.0.0.1:3002/a2/customResponseResultStruck- post参数：```json{}```- 请求结果：```json{
@@ -30,18 +29,18 @@
   "errorCode": 123
 }```
 # 编辑文章 #- 接口：http://127.0.0.1:3002/admin/editArticle- post参数：```json{
-  "aID": 0.21970781922190374
+  "aID": 0.7057378081339583
 }```- 请求结果：```json{
   "err": {
     "_gankao": 1,
     "code": -6,
-    "message": "无访问权限（{\n  \"resean\": \"访问被拒绝（功能：[文章系统/编辑文章]，代码:[GKModelA.editArticle]，原因：未授权）\"\n}）",
-    "more": "{\n  \"resean\": \"访问被拒绝（功能：[文章系统/编辑文章]，代码:[GKModelA.editArticle]，原因：未授权）\"\n}"
+    "message": "无访问权限（{\n  \"resean\": \"访问被拒绝（功能：[文章系统/编辑文章]，代码:[GKAdmin_ModelA.editArticle]，原因：未授权）\"\n}）",
+    "more": "{\n  \"resean\": \"访问被拒绝（功能：[文章系统/编辑文章]，代码:[GKAdmin_ModelA.editArticle]，原因：未授权）\"\n}"
   },
   "result": null
 }```
 # 删除文章 #- 接口：http://127.0.0.1:3002/admin/deleteArticle- post参数：```json{
-  "aID": 0.6075494349165413
+  "aID": 0.1596296525682792
 }```- 请求结果：```json{
   "err": null,
   "result": {

@@ -227,13 +227,17 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                     ruleName = _ref8.ruleName,
                     ruleDesc = _ref8.ruleDesc,
                     codePath = _ref8.codePath;
-                var res, jsonResult;
+                var res, text, jsonResult;
                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                     while (1) {
                         switch (_context2.prev = _context2.next) {
                             case 0:
                                 _context2.prev = 0;
-                                _context2.next = 3;
+
+                                if (process.env.NODE_ENV === "development") {
+                                    console.log('\u6743\u9650,\u5411\u4E2D\u5FC3\u8BF7\u6C42\u6388\u6743\u8BA4\u8BC1(' + admin_rule_center.validator + '\uFF09...');
+                                }
+                                _context2.next = 4;
                                 return (0, _isomorphicFetch2.default)(admin_rule_center.validator, {
                                     method: 'post',
                                     rejectUnauthorized: false,
@@ -247,29 +251,59 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                     body: (0, _stringify2.default)({ sysName: sysName, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath })
                                 });
 
-                            case 3:
+                            case 4:
                                 res = _context2.sent;
-                                _context2.next = 6;
-                                return res.json();
+                                _context2.next = 7;
+                                return res.text();
 
-                            case 6:
-                                jsonResult = _context2.sent;
+                            case 7:
+                                text = _context2.sent;
+
+                                if (process.env.NODE_ENV === "development") {
+                                    console.log('\u6743\u9650\uFF0C\u6388\u6743\u7ED3\u679C\u8FD4\u56DE\uFF1A');
+                                    console.log(text);
+                                }
+                                _context2.prev = 9;
+                                jsonResult = JSON.parse(text);
                                 return _context2.abrupt('return', jsonResult);
 
-                            case 10:
-                                _context2.prev = 10;
-                                _context2.t0 = _context2['catch'](0);
-
-                                //权限认证出错
-                                console.error(_context2.t0);
-                                throw _GKErrors_Inner.GKErrors._RULE_VALIDATE_ERROR(_context2.t0);
-
                             case 14:
+                                _context2.prev = 14;
+                                _context2.t0 = _context2['catch'](9);
+
+                                console.error('\u6743\u9650\uFF0C\u6388\u6743\u7ED3\u679C\u4E3A\u975Ejson\u683C\u5F0F\u7684\u5B57\u7B26\u4E32\uFF0C\u5C01\u88C5\u4E3A{err,result}\u63A5\u53E3...');
+                                console.error({ err: null, result: text });
+                                return _context2.abrupt('return', { err: null, result: text });
+
+                            case 19:
+                                _context2.next = 31;
+                                break;
+
+                            case 21:
+                                _context2.prev = 21;
+                                _context2.t1 = _context2['catch'](0);
+
+                                if (!(process.env.NODE_ENV === "development")) {
+                                    _context2.next = 28;
+                                    break;
+                                }
+
+                                console.error('调用权限认证接口时遇到程序错误，开发环境，将终止程序 ...');
+                                throw _context2.t1;
+
+                            case 28:
+                                console.error('调用权限认证接口时遇到程序错误，非开发环境，转换为GKErrors._RULE_VALIDATE_ERROR错误继续向下传递 ...');
+                                console.error(_context2.t1);
+
+                            case 30:
+                                throw _GKErrors_Inner.GKErrors._RULE_VALIDATE_ERROR(_context2.t1);
+
+                            case 31:
                             case 'end':
                                 return _context2.stop();
                         }
                     }
-                }, _callee2, this, [[0, 10]]);
+                }, _callee2, this, [[0, 21], [9, 14]]);
             }));
 
             function _ruleValidator_inner(_x2) {

@@ -72,23 +72,42 @@ class RuleValidator {
     })
     static async _ruleValidator_inner({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath}) {
         try {
+            if(process.env.NODE_ENV==="development"){
+                console.log(`权限,向中心请求授权认证(${admin_rule_center.validator}）...`)
+            }
             let res = await fetch(admin_rule_center.validator, {
                 method: 'post',
                 rejectUnauthorized: false,
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
                     'Content-Type': 'application/json',
-                    'jwtoken':jwtoken
+                    'jwtoken': jwtoken
                 },
                 withCredentials: 'true',
                 json: true,
                 body: JSON.stringify({sysName, categoryName, categoryDesc, ruleName, ruleDesc, codePath})
             });
-            let jsonResult = await res.json();
-            return jsonResult
+            let text = await res.text()
+            if(process.env.NODE_ENV==="development"){
+                console.log(`权限，授权结果返回：`)
+                console.log(text)
+            }
+            try {
+                let jsonResult = JSON.parse(text)
+                return jsonResult //内部含err,result
+            } catch (e) {
+                console.error(`权限，授权结果为非json格式的字符串，封装为{err,result}接口...`)
+                console.error({err: null, result: text})
+                return {err: null, result: text}
+            }
         } catch (e) {
-            //权限认证出错
-            console.error(e)
+            if(process.env.NODE_ENV==="development"){
+                console.error('调用权限认证接口时遇到程序错误，开发环境，将终止程序 ...')
+                throw e
+            }else{
+                console.error('调用权限认证接口时遇到程序错误，非开发环境，转换为GKErrors._RULE_VALIDATE_ERROR错误继续向下传递 ...')
+                console.error(e)
+            }
             throw GKErrors._RULE_VALIDATE_ERROR(e)
         }
     }

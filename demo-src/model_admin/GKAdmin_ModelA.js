@@ -17,33 +17,22 @@ setting_redisConfig(redis)
         desc: '文章系统'
     }
 })
-class GKModelA {
+class GKAdmin_ModelA {
     constructor() {
         throw '静态业务功能类无法实例化'
     }
 
-    @clearCache({
-        cacheKeyGene: ({aID}) => {
-            return `article-${aID}`
-        }
-    })
     @accessRule({ruleName: '编辑文章', ruleDesc: '对文章进行编辑'})
     static async editArticle({aID}) {
         //...
         return GKSUCCESS()
     }
 
-    @clearCache({
-        cacheKeyGene: ({aID}) => {
-            return `article-${aID}`
-        }
-    })
     @accessRule({ruleName: '删除文章', ruleDesc: '对文章进行删除'})
     static async deleteArticle({aID}) {
         //...
         return GKSUCCESS()
     }
-
 }
 
-export default GKModelA
+export default GKAdmin_ModelA

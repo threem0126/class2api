@@ -72,12 +72,12 @@ export const cacheAble = ({cacheKeyGene}) => {
         let oldValue = descriptor.value;
         descriptor.value = async function () {
             if(process.env.NO_API_CACHE==='1') {
-                console.log(`force skip cache by process.env.NO_API_CACHE ...`)
+                console.log(`[${target.name}.${name}] force skip cache by process.env.NO_API_CACHE ...`)
                 return await oldValue(...arguments);
             }
             let {__nocache} = arguments[0]
             if(__nocache){
-                console.log(`force skip cache ........ ${target.name}.${name}`)
+                console.log(`[${target.name}.${name}] force skip cache ........ ${target.name}.${name}`)
                 return await oldValue(...arguments);
             }
 
@@ -92,7 +92,7 @@ export const cacheAble = ({cacheKeyGene}) => {
                         let result = (typeof Obj === "object") ? {...Obj} : Obj
                         if (typeof result === "object") {
                             //if (process.env.NODE_ENV !== 'production') {
-                                console.log(`hit cachekey .......${key}...`)
+                                console.log(`[${target.name}.${name}] hit cachekey .......${key}...`)
                             //}
                             result.__fromCache = true
                         }
@@ -101,7 +101,7 @@ export const cacheAble = ({cacheKeyGene}) => {
                 }
             }
             //if(process.env.NODE_ENV !=='production') {
-                console.log(`miss cachekey .......${key}...`)
+                console.log(`[${target.name}.${name}] miss cachekey .......${key}...`)
             //}
             let result = await oldValue(...arguments);
             if (cacheKeyGene && key) {
