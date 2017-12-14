@@ -53,12 +53,13 @@ class RuleValidator {
             //权限认证出错
             let {_gankao} = e
             //非业务级报错，且在开发环境，则终止程序
-            if (_gankao !== '1' && process.env.NODE_ENV === "development") {
+            if (_gankao !== '1' && process.env.NODE_ENV !== "production") {
                 console.error(e)
                 setTimeout(() => {
                     throw e
                 })
             } else {
+                console.error(e)
                 throw GKErrors._SERVER_ERROR(`验证身份时遇到异常${ JSON.stringify(e) }`)
             }
         }
@@ -72,7 +73,7 @@ class RuleValidator {
     })
     static async _ruleValidator_inner({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath}) {
         try {
-            if(process.env.NODE_ENV==="development"){
+            if(process.env.NODE_ENV!=="production"){
                 console.log(`权限,向中心请求授权认证(${admin_rule_center.validator}）...`)
             }
             let res = await fetch(admin_rule_center.validator, {
@@ -88,7 +89,7 @@ class RuleValidator {
                 body: JSON.stringify({sysName, categoryName, categoryDesc, ruleName, ruleDesc, codePath})
             });
             let text = await res.text()
-            if(process.env.NODE_ENV==="development"){
+            if(process.env.NODE_ENV!=="production"){
                 console.log(`权限，授权结果返回：`)
                 console.log(text)
             }
@@ -101,7 +102,7 @@ class RuleValidator {
                 return {err: null, result: text}
             }
         } catch (e) {
-            if(process.env.NODE_ENV==="development"){
+            if(process.env.NODE_ENV!=="production"){
                 console.error('调用权限认证接口时遇到程序错误，开发环境，将终止程序 ...')
                 throw e
             }else{
