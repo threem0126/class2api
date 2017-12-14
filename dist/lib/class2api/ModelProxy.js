@@ -262,7 +262,7 @@ var _bindRouter = function () {
 
                                                 _context3.t2.json.call(_context3.t2, _context3.t3);
 
-                                                if (process.env.NODE_ENV !== "production") {
+                                                if (process.env.NODE_ENV !== "production" && process.env.PRINT_API_RESULT === "1") {
                                                     console.log('api call result from(' + req.originalUrl + '):' + JSON.stringifyline(retData));
                                                 }
                                                 _context3.next = 46;

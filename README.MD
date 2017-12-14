@@ -144,6 +144,7 @@ class2api对所有请求的返回数据结构，统一为：
 # 启动环境变量控制  
 - $ process.env.NO_API_CACHE=1  强制关闭静态类的API调用缓存，使cacheAble、clearCache失效
 - $ process.env.SQL_PRINT=1     开启sequelize的SQL执行日志的打印
+- $ process.env.PRINT_API_RESULT=1     开启API方法执行的结果日志打印
 
 
 # 组件提供的功能函数
@@ -257,8 +258,10 @@ A：命中了缓存的调用，在其请求的返回结果中，带有__fromCach
 ```javascript
 {
     err:null,
-    result:{name:'huangyong'},
-    __fromCache:1 //额外的输出标记
+    result:{
+        name:'huangyong',
+        __fromCache:1 //额外的输出标记
+    }
 }
 ```
 

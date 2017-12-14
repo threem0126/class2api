@@ -80,7 +80,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             }
             let retData = {err: null, result: result}
             res.json(await resWrap({req, res, result:retData}));
-            if (process.env.NODE_ENV !== "production") {
+            if (process.env.NODE_ENV !== "production" && process.env.PRINT_API_RESULT === "1") {
                 console.log(`api call result from(${req.originalUrl}):${JSON.stringifyline(retData)}`);
             }
         } catch (err) {
