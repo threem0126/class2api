@@ -130,7 +130,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
             var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref5) {
                 var jwtoken = _ref5.jwtoken;
 
-                var res, _ref6, err, result, _gankao;
+                var res, _ref6, err, result, _gankao, _gankao2;
 
                 return _regenerator2.default.wrap(function _callee$(_context) {
                     while (1) {
@@ -170,44 +170,62 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                 result = _ref6.result;
 
                                 if (!err) {
-                                    _context.next = 13;
+                                    _context.next = 18;
                                     break;
                                 }
 
+                                _gankao = err._gankao;
+
+                                if (!(_gankao === '1')) {
+                                    _context.next = 17;
+                                    break;
+                                }
+
+                                throw err;
+
+                            case 17:
                                 throw _GKErrors_Inner.GKErrors._TOKEN_LOGIN_INVALID('jwtoken\u65E0\u6CD5\u8BC6\u522B\uFF1A' + (0, _stringify2.default)(err));
 
-                            case 13:
+                            case 18:
                                 return _context.abrupt('return', result);
 
-                            case 16:
-                                _context.prev = 16;
+                            case 21:
+                                _context.prev = 21;
                                 _context.t0 = _context['catch'](2);
 
                                 //权限认证出错
-                                _gankao = _context.t0._gankao;
-                                //非业务级报错，且在开发环境，则终止程序
+                                _gankao2 = _context.t0._gankao;
 
-                                if (!(_gankao !== '1' && process.env.NODE_ENV === "development")) {
-                                    _context.next = 24;
+                                console.error(_context.t0);
+
+                                if (!(_gankao2 === '1')) {
+                                    _context.next = 29;
                                     break;
                                 }
 
-                                console.error(_context.t0);
+                                throw _context.t0;
+
+                            case 29:
+                                if (!(process.env.NODE_ENV !== "production")) {
+                                    _context.next = 33;
+                                    break;
+                                }
+
                                 setTimeout(function () {
                                     throw _context.t0;
                                 });
-                                _context.next = 25;
+                                _context.next = 34;
                                 break;
 
-                            case 24:
+                            case 33:
                                 throw _GKErrors_Inner.GKErrors._SERVER_ERROR('\u9A8C\u8BC1\u8EAB\u4EFD\u65F6\u9047\u5230\u5F02\u5E38' + (0, _stringify2.default)(_context.t0));
 
-                            case 25:
+                            case 34:
                             case 'end':
                                 return _context.stop();
                         }
                     }
-                }, _callee, this, [[2, 16]]);
+                }, _callee, this, [[2, 21]]);
             }));
 
             function parseAdminAccountFromJWToken(_x) {
@@ -234,7 +252,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                             case 0:
                                 _context2.prev = 0;
 
-                                if (process.env.NODE_ENV === "development") {
+                                if (process.env.NODE_ENV !== "production") {
                                     console.log('\u6743\u9650,\u5411\u4E2D\u5FC3\u8BF7\u6C42\u6388\u6743\u8BA4\u8BC1(' + admin_rule_center.validator + '\uFF09...');
                                 }
                                 _context2.next = 4;
@@ -259,7 +277,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                             case 7:
                                 text = _context2.sent;
 
-                                if (process.env.NODE_ENV === "development") {
+                                if (process.env.NODE_ENV !== "production") {
                                     console.log('\u6743\u9650\uFF0C\u6388\u6743\u7ED3\u679C\u8FD4\u56DE\uFF1A');
                                     console.log(text);
                                 }
@@ -283,7 +301,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                 _context2.prev = 21;
                                 _context2.t1 = _context2['catch'](0);
 
-                                if (!(process.env.NODE_ENV === "development")) {
+                                if (!(process.env.NODE_ENV !== "production")) {
                                     _context2.next = 28;
                                     break;
                                 }
