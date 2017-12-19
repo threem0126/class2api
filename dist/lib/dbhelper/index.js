@@ -298,7 +298,8 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
             return function INIT(_x3) {
                 return _ref5.apply(this, arguments);
             };
-        }()
+        }(),
+        excuteSQL: excuteSQL
     };
 };
 

@@ -113,7 +113,8 @@ const _inner_DBModelLoader = (option)=> {
             _model_objects = model
             _ass = ass
             await _INIT(option)
-        }
+        },
+        excuteSQL
     }
 }
 

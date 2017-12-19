@@ -26,7 +26,7 @@ export const ass = {
 //集中定义SQL语句，一般不用，只建议替代某些复杂的sequelize查询
 export const SQLFunctions = {
     queryDemoData: async ({mobile}) => {
-        let [user] = await excuteSQL(`select * from users where mobile = ? and status=0 limit 1 `, [mobile])
+        let [user] = await myDBModelLoader.excuteSQL(`select * from users where mobile = ? and status=0 limit 1 `, [mobile])
         return user
     }
 };
