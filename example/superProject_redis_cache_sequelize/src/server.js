@@ -27,7 +27,7 @@ const beforeCall = async ({req, params, modelSetting})=> {
     return params
 }
 
-const afterCall = async ({req,res,result})=> {
+const afterCall = async ({req,result})=> {
     let {__user} = req
     if (__user) {
         result.__user = __user

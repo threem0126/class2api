@@ -24,7 +24,7 @@ const beforeCall = async ({req, params, modelSetting})=> {
 }
 
 //在API方法执行后
-const afterCall = async ({req,res,result})=> {
+const afterCall = async ({req,result})=> {
     // let {err, result} = result
     let {__user} = req
     if (__user) {

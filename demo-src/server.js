@@ -41,7 +41,7 @@ createServer({
     },
 
     //在API方法执行完成之后拦截
-    afterCall({req,res,result}){
+    afterCall({req,result}){
         // let {err, result} = result
         console.log(`afterCall... [${ req.originalUrl }] ${ JSON.stringify(result) }`)
         return result
