@@ -31,8 +31,8 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             throw '可选参数fn_afterCall必须是function类型的参数';
         }
     }
-    let resWrap = async ({req, res, result}) => {
-        return fn_afterCall ?await fn_afterCall({req, res, result}) : result
+    let resWrap = async ({req, result}) => {
+        return fn_afterCall ?await fn_afterCall({req, result}) : result
     }
     let result;
     let _BusinessModel = BusinessModel;
