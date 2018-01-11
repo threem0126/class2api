@@ -20,12 +20,13 @@ export const ApiDesc=(desc)=> {
 export const WebInvokeHepler = (user) => {
     if(!user)
         throw `WebInvokeHepler方法缺少参数user`
-    let {token='', jwtoken=''} = user
+    let {token='', jwtoken='', otherheaders={}} = user
     return async (apiPath, postParams, apiDesc) => {
         let options = {
             uri: remote_api + apiPath,
             rejectUnauthorized: false,
             headers: {
+                ...otherheaders,
                 token, jwtoken // 这里提供身份验证的token，注意命名为：jwtoken
             },
             body: postParams,

@@ -244,7 +244,9 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                     categoryDesc = _ref8.categoryDesc,
                     ruleName = _ref8.ruleName,
                     ruleDesc = _ref8.ruleDesc,
-                    codePath = _ref8.codePath;
+                    codePath = _ref8.codePath,
+                    _ref8$apiInvokeParams = _ref8.apiInvokeParams,
+                    apiInvokeParams = _ref8$apiInvokeParams === undefined ? {} : _ref8$apiInvokeParams;
                 var res, text, jsonResult;
                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                     while (1) {
@@ -266,7 +268,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                     },
                                     withCredentials: 'true',
                                     json: true,
-                                    body: (0, _stringify2.default)({ sysName: sysName, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath })
+                                    body: (0, _stringify2.default)({ sysName: sysName, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath, apiInvokeParams: apiInvokeParams })
                                 });
 
                             case 4:

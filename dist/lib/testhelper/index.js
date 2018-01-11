@@ -13,6 +13,10 @@ var _getIterator2 = require('babel-runtime/core-js/get-iterator');
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -22,6 +26,8 @@ var _stringify = require('babel-runtime/core-js/json/stringify');
 var _stringify2 = _interopRequireDefault(_stringify);
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = (0, _getIterator3.default)(arr), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if ((0, _isIterable3.default)(Object(arr))) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _extends = _assign2.default || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _request = require('request');
 
@@ -59,7 +65,9 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user) {
     var _user$token = user.token,
         token = _user$token === undefined ? '' : _user$token,
         _user$jwtoken = user.jwtoken,
-        jwtoken = _user$jwtoken === undefined ? '' : _user$jwtoken;
+        jwtoken = _user$jwtoken === undefined ? '' : _user$jwtoken,
+        _user$otherheaders = user.otherheaders,
+        otherheaders = _user$otherheaders === undefined ? {} : _user$otherheaders;
 
     return function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(apiPath, postParams, apiDesc) {
@@ -72,9 +80,9 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user) {
                             options = {
                                 uri: remote_api + apiPath,
                                 rejectUnauthorized: false,
-                                headers: {
+                                headers: _extends({}, otherheaders, {
                                     token: token, jwtoken: jwtoken // 这里提供身份验证的token，注意命名为：jwtoken
-                                },
+                                }),
                                 body: postParams,
                                 json: true
                             };

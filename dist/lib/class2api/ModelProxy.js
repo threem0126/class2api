@@ -106,7 +106,6 @@ var _bindRouter = function () {
                         resWrap = function () {
                             var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref3) {
                                 var req = _ref3.req,
-                                    res = _ref3.res,
                                     result = _ref3.result;
                                 return _regenerator2.default.wrap(function _callee$(_context) {
                                     while (1) {
@@ -118,7 +117,7 @@ var _bindRouter = function () {
                                                 }
 
                                                 _context.next = 3;
-                                                return fn_afterCall({ req: req, res: res, result: result });
+                                                return fn_afterCall({ req: req, result: result });
 
                                             case 3:
                                                 _context.t0 = _context.sent;

@@ -121,11 +121,12 @@ const _create_server = async (model, options)=> {
             }
         });
     }
-    _server.use(apiroot, _router)
 
     if (typeof custom === "function") {
         _server = await custom(_server)
     }
+
+    _server.use(apiroot, _router)
 
     // catch 404 and forward to error handler
     _server.use(function (req, res, next) {

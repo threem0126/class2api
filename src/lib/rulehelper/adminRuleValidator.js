@@ -80,7 +80,7 @@ class RuleValidator {
             return jwtoken ? `_ruleValidator_inner-${hashcode(jwtoken)}-${hashcode(categoryName)}-${hashcode(ruleName)}` : '';
         }
     })
-    static async _ruleValidator_inner({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath}) {
+    static async _ruleValidator_inner({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath,apiInvokeParams={}}) {
         try {
             if(process.env.NODE_ENV!=="production"){
                 console.log(`权限,向中心请求授权认证(${admin_rule_center.validator}）...`)
@@ -95,7 +95,7 @@ class RuleValidator {
                 },
                 withCredentials: 'true',
                 json: true,
-                body: JSON.stringify({sysName, categoryName, categoryDesc, ruleName, ruleDesc, codePath})
+                body: JSON.stringify({sysName, categoryName, categoryDesc, ruleName, ruleDesc, codePath, apiInvokeParams})
             });
             let text = await res.text()
             if(process.env.NODE_ENV!=="production"){

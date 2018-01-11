@@ -21,6 +21,10 @@ var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -40,6 +44,8 @@ var _adminRuleValidator = require('./adminRuleValidator');
 var _adminRuleValidator2 = _interopRequireDefault(_adminRuleValidator);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _promise2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _promise2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
@@ -76,13 +82,14 @@ var ruleValidator = function () {
             categoryDesc = _ref3.categoryDesc,
             ruleName = _ref3.ruleName,
             ruleDesc = _ref3.ruleDesc,
-            codePath = _ref3.codePath;
+            codePath = _ref3.codePath,
+            apiInvokeParams = _ref3.apiInvokeParams;
         var params;
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        params = { jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath };
+                        params = { jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath, apiInvokeParams: apiInvokeParams };
 
                         if (!_ruleValidator_custom) {
                             _context.next = 7;
@@ -156,7 +163,7 @@ var setting_CustomRuleValidator = exports.setting_CustomRuleValidator = function
  * @param ruleDesc
  * @returns {Function}
  */
-var accessRule = exports.accessRule = function accessRule(_ref5) {
+var accessRule = function accessRule(_ref5) {
     var ruleName = _ref5.ruleName,
         _ref5$ruleDesc = _ref5.ruleDesc,
         ruleDesc = _ref5$ruleDesc === undefined ? '' : _ref5$ruleDesc;
@@ -175,6 +182,9 @@ var accessRule = exports.accessRule = function accessRule(_ref5) {
                 categoryName,
                 categoryDesc,
                 _ref8,
+                req_noused,
+                apiInvokeParams,
+                _ref9,
                 err,
                 result,
                 canAccess,
@@ -220,24 +230,31 @@ var accessRule = exports.accessRule = function accessRule(_ref5) {
 
                         case 12:
                             _ref7 = target.__modelSetting ? target.__modelSetting().__ruleCategory : { name: '无名', desc: '-' }, categoryName = _ref7.name, categoryDesc = _ref7.desc;
-                            _context3.next = 15;
+                            _ref8 = _args3[0] || {}, req_noused = _ref8.req, apiInvokeParams = _objectWithoutProperties(_ref8, ['req']);
+
+                            apiInvokeParams = (0, _stringify2.default)(apiInvokeParams);
+                            if (apiInvokeParams.length > 505) {
+                                apiInvokeParams = apiInvokeParams.substr(0, 500) + '[...]';
+                            }
+                            _context3.next = 18;
                             return ruleValidator({
                                 jwtoken: jwtoken,
                                 categoryName: categoryName,
                                 categoryDesc: categoryDesc,
                                 ruleName: '' + ruleName,
                                 ruleDesc: ruleDesc,
-                                codePath: target.name + '.' + name
+                                codePath: target.name + '.' + name,
+                                apiInvokeParams: apiInvokeParams
                             });
 
-                        case 15:
-                            _ref8 = _context3.sent;
-                            err = _ref8.err;
-                            result = _ref8.result;
+                        case 18:
+                            _ref9 = _context3.sent;
+                            err = _ref9.err;
+                            result = _ref9.result;
                             canAccess = result.canAccess, resean = result.resean;
 
                             if (canAccess) {
-                                _context3.next = 21;
+                                _context3.next = 24;
                                 break;
                             }
 
@@ -245,14 +262,14 @@ var accessRule = exports.accessRule = function accessRule(_ref5) {
                                 resean: '\u8BBF\u95EE\u88AB\u62D2\u7EDD\uFF08\u529F\u80FD\uFF1A[' + categoryName + '/' + ruleName + ']\uFF0C\u4EE3\u7801:[' + target.name + '.' + name + ']\uFF0C\u539F\u56E0\uFF1A' + (resean || '-') + '\uFF09'
                             });
 
-                        case 21:
-                            _context3.next = 23;
+                        case 24:
+                            _context3.next = 26;
                             return oldValue.apply(undefined, _args3);
 
-                        case 23:
+                        case 26:
                             return _context3.abrupt('return', _context3.sent);
 
-                        case 24:
+                        case 27:
                         case 'end':
                             return _context3.stop();
                     }
@@ -269,9 +286,10 @@ var accessRule = exports.accessRule = function accessRule(_ref5) {
  * @param jstoken
  * @returns {Promise.<*>}
  */
+exports.accessRule = accessRule;
 var parseAdminAccountFromJWToken = exports.parseAdminAccountFromJWToken = function () {
-    var _ref9 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(_ref10) {
-        var jwtoken = _ref10.jwtoken;
+    var _ref10 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(_ref11) {
+        var jwtoken = _ref11.jwtoken;
         return _regenerator2.default.wrap(function _callee4$(_context4) {
             while (1) {
                 switch (_context4.prev = _context4.next) {
@@ -291,6 +309,6 @@ var parseAdminAccountFromJWToken = exports.parseAdminAccountFromJWToken = functi
     }));
 
     return function parseAdminAccountFromJWToken(_x3) {
-        return _ref9.apply(this, arguments);
+        return _ref10.apply(this, arguments);
     };
 }();

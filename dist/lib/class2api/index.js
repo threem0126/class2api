@@ -216,20 +216,21 @@ var _create_server = function () {
                                 }
                             });
                         }
-                        _server.use(apiroot, _router);
 
                         if (!(typeof custom === "function")) {
-                            _context.next = 35;
+                            _context.next = 34;
                             break;
                         }
 
-                        _context.next = 34;
+                        _context.next = 33;
                         return custom(_server);
 
-                    case 34:
+                    case 33:
                         _server = _context.sent;
 
-                    case 35:
+                    case 34:
+
+                        _server.use(apiroot, _router);
 
                         // catch 404 and forward to error handler
                         _server.use(function (req, res, next) {

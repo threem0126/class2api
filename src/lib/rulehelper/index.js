@@ -21,8 +21,8 @@ let _ruleValidator_custom;
  * @param codePath
  * @returns {Promise.<*>}
  */
-const ruleValidator = async ({jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath})=> {
-    let params = {jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath}
+const ruleValidator = async ({jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath, apiInvokeParams})=> {
+    let params = {jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath,apiInvokeParams}
     if (_ruleValidator_custom) {
         //调用外部的自定义验证函数
         return await _ruleValidator_custom({jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath})
@@ -77,19 +77,25 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
             try {
                 jwtoken = arguments[0]['req'].headers['jwtoken']
                 if (!jwtoken)
-                    throw  GKErrors._NOT_ACCESS_PERMISSION(`身份未明，您没有访问${target.name}.${name}对应API接口的权限`)
+                    throw GKErrors._NOT_ACCESS_PERMISSION(`身份未明，您没有访问${target.name}.${name}对应API接口的权限`)
             } catch (err) {
-                throw  GKErrors._NOT_ACCESS_PERMISSION(`身份无法识别，在API对应的静态方法上未读取到req请求对象的headers['jwtoken']`)
+                throw GKErrors._NOT_ACCESS_PERMISSION(`身份无法识别，在API对应的静态方法上未读取到req请求对象的headers['jwtoken']`)
             }
             let {name: categoryName, desc: categoryDesc} = target.__modelSetting ?
                 target.__modelSetting().__ruleCategory : {name: '无名', desc: '-'}
+            let {req:req_noused, ...apiInvokeParams} = arguments[0] || {}
+            apiInvokeParams = JSON.stringify(apiInvokeParams)
+            if(apiInvokeParams.length>505) {
+                apiInvokeParams = apiInvokeParams.substr(0, 500) + '[...]'
+            }
             let {err, result} = await ruleValidator({
                 jwtoken,
                 categoryName,
                 categoryDesc,
                 ruleName: `${ruleName}`,
                 ruleDesc,
-                codePath: `${target.name}.${name}`
+                codePath: `${target.name}.${name}`,
+                apiInvokeParams
             });
             let {canAccess, resean} = result
             if (!canAccess) {
