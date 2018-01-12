@@ -83,8 +83,13 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
             }
             let {name: categoryName, desc: categoryDesc} = target.__modelSetting ?
                 target.__modelSetting().__ruleCategory : {name: '无名', desc: '-'}
-            let {req:req_noused, ...apiInvokeParams} = arguments[0] || {}
-            apiInvokeParams = JSON.stringify(apiInvokeParams)
+            let apiInvokeParams = ''
+            let {req:req_noused, res:res_noused, ..._apiInvokeParams} = arguments[0] || {}
+            try{
+                apiInvokeParams = JSON.stringify(_apiInvokeParams)
+            }catch (err) {
+                apiInvokeParams = 'call params stringify error'
+            }
             if(apiInvokeParams.length>505) {
                 apiInvokeParams = apiInvokeParams.substr(0, 500) + '[...]'
             }

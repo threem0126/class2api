@@ -181,9 +181,11 @@ var accessRule = function accessRule(_ref5) {
                 _ref7,
                 categoryName,
                 categoryDesc,
+                apiInvokeParams,
                 _ref8,
                 req_noused,
-                apiInvokeParams,
+                res_noused,
+                _apiInvokeParams,
                 _ref9,
                 err,
                 result,
@@ -230,13 +232,18 @@ var accessRule = function accessRule(_ref5) {
 
                         case 12:
                             _ref7 = target.__modelSetting ? target.__modelSetting().__ruleCategory : { name: '无名', desc: '-' }, categoryName = _ref7.name, categoryDesc = _ref7.desc;
-                            _ref8 = _args3[0] || {}, req_noused = _ref8.req, apiInvokeParams = _objectWithoutProperties(_ref8, ['req']);
+                            apiInvokeParams = '';
+                            _ref8 = _args3[0] || {}, req_noused = _ref8.req, res_noused = _ref8.res, _apiInvokeParams = _objectWithoutProperties(_ref8, ['req', 'res']);
 
-                            apiInvokeParams = (0, _stringify2.default)(apiInvokeParams);
+                            try {
+                                apiInvokeParams = (0, _stringify2.default)(_apiInvokeParams);
+                            } catch (err) {
+                                apiInvokeParams = 'call params stringify error';
+                            }
                             if (apiInvokeParams.length > 505) {
                                 apiInvokeParams = apiInvokeParams.substr(0, 500) + '[...]';
                             }
-                            _context3.next = 18;
+                            _context3.next = 19;
                             return ruleValidator({
                                 jwtoken: jwtoken,
                                 categoryName: categoryName,
@@ -247,14 +254,14 @@ var accessRule = function accessRule(_ref5) {
                                 apiInvokeParams: apiInvokeParams
                             });
 
-                        case 18:
+                        case 19:
                             _ref9 = _context3.sent;
                             err = _ref9.err;
                             result = _ref9.result;
                             canAccess = result.canAccess, resean = result.resean;
 
                             if (canAccess) {
-                                _context3.next = 24;
+                                _context3.next = 25;
                                 break;
                             }
 
@@ -262,14 +269,14 @@ var accessRule = function accessRule(_ref5) {
                                 resean: '\u8BBF\u95EE\u88AB\u62D2\u7EDD\uFF08\u529F\u80FD\uFF1A[' + categoryName + '/' + ruleName + ']\uFF0C\u4EE3\u7801:[' + target.name + '.' + name + ']\uFF0C\u539F\u56E0\uFF1A' + (resean || '-') + '\uFF09'
                             });
 
-                        case 24:
-                            _context3.next = 26;
+                        case 25:
+                            _context3.next = 27;
                             return oldValue.apply(undefined, _args3);
 
-                        case 26:
+                        case 27:
                             return _context3.abrupt('return', _context3.sent);
 
-                        case 27:
+                        case 28:
                         case 'end':
                             return _context3.stop();
                     }
