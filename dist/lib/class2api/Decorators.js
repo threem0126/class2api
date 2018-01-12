@@ -256,28 +256,33 @@ var ____cache = {
                             key = '';
 
                             if (!cacheKeyGene) {
-                                _context6.next = 23;
+                                _context6.next = 24;
                                 break;
                             }
 
                             _arguments = Array.prototype.slice.call(_args6), firstParam = _arguments[0];
 
                             key = cacheKeyGene(firstParam);
+                            if (typeof key !== "string") {
+                                //if (process.env.NODE_ENV !== 'production') {
+                                console.log('[' + target.name + '.' + name + '] \u7F13\u5B58\u4FEE\u9970\u5668\u7684cacheKeyGene\u51FD\u6570\u5FC5\u9700\u8FD4\u56DE\u5B57\u7B26\u4E32\u7ED3\u679C\uFF0C\u76EE\u524D\u662F ' + key + '...');
+                                //}
+                            }
                             //返回空字符串时，忽略
 
                             if (!key) {
-                                _context6.next = 23;
+                                _context6.next = 24;
                                 break;
                             }
 
-                            _context6.next = 18;
+                            _context6.next = 19;
                             return ____cache.get(key);
 
-                        case 18:
+                        case 19:
                             Obj = _context6.sent;
 
                             if (!Obj) {
-                                _context6.next = 23;
+                                _context6.next = 24;
                                 break;
                             }
 
@@ -291,28 +296,28 @@ var ____cache = {
                             }
                             return _context6.abrupt('return', _result);
 
-                        case 23:
+                        case 24:
                             //if(process.env.NODE_ENV !=='production') {
                             console.log('[' + target.name + '.' + name + '] miss cachekey .......' + key + '...');
                             //}
-                            _context6.next = 26;
+                            _context6.next = 27;
                             return oldValue.apply(undefined, _args6);
 
-                        case 26:
+                        case 27:
                             result = _context6.sent;
 
                             if (!(cacheKeyGene && key)) {
-                                _context6.next = 30;
+                                _context6.next = 31;
                                 break;
                             }
 
-                            _context6.next = 30;
+                            _context6.next = 31;
                             return ____cache.set(key, result);
 
-                        case 30:
+                        case 31:
                             return _context6.abrupt('return', result);
 
-                        case 31:
+                        case 32:
                         case 'end':
                             return _context6.stop();
                     }
@@ -360,7 +365,7 @@ var clearCache = exports.clearCache = function clearCache(_ref8) {
                             key = '';
 
                             if (!(typeof cacheKeyGene === "function")) {
-                                _context7.next = 17;
+                                _context7.next = 21;
                                 break;
                             }
 
@@ -368,42 +373,52 @@ var clearCache = exports.clearCache = function clearCache(_ref8) {
 
                             key = cacheKeyGene(firstParam);
 
-                            if (!(key !== "")) {
-                                _context7.next = 14;
+                            if (!(typeof key !== "string")) {
+                                _context7.next = 13;
                                 break;
                             }
 
-                            _context7.next = 12;
-                            return ____cache.delete(key);
-
-                        case 12:
-                            _context7.next = 15;
+                            //if (process.env.NODE_ENV !== 'production') {
+                            console.log('[' + target.name + '.' + name + '] \u7F13\u5B58\u4FEE\u9970\u5668\u7684cacheKeyGene\u51FD\u6570\u5FC5\u9700\u8FD4\u56DE\u5B57\u7B26\u4E32\u7ED3\u679C\uFF0C\u76EE\u524D\u662F ' + key + '...');
+                            //}
+                            _context7.next = 19;
                             break;
 
-                        case 14:
+                        case 13:
+                            if (!(key === "")) {
+                                _context7.next = 17;
+                                break;
+                            }
+
                             //返回的key为空字符串，说明key无法提前确定，需要交给方法内部来调用清空
                             _args7[0].__cacheManage = function () {
                                 return ____cache;
                             };
-
-                        case 15:
-                            _context7.next = 18;
+                            _context7.next = 19;
                             break;
 
                         case 17:
+                            _context7.next = 19;
+                            return ____cache.delete(key);
+
+                        case 19:
+                            _context7.next = 22;
+                            break;
+
+                        case 21:
                             //修饰器的报错，级别更高，直接抛出终止程序
                             setTimeout(function () {
                                 throw '\u5728\u7C7B\u9759\u6001\u65B9\u6CD5 ' + target.name + '.' + name + ' \u4E0A\u8C03\u7528cacheAble\u4FEE\u9970\u5668\u65F6\u672A\u6307\u5B9A\u6709\u6548\u7684cacheKeyGene\u53C2\u6570';
                             });
 
-                        case 18:
-                            _context7.next = 20;
+                        case 22:
+                            _context7.next = 24;
                             return oldValue.apply(undefined, _args7);
 
-                        case 20:
+                        case 24:
                             return _context7.abrupt('return', _context7.sent);
 
-                        case 21:
+                        case 25:
                         case 'end':
                             return _context7.stop();
                     }

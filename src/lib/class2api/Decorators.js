@@ -85,6 +85,11 @@ export const cacheAble = ({cacheKeyGene}) => {
             if (cacheKeyGene) {
                 let [firstParam] = arguments
                 key = cacheKeyGene(firstParam)
+                if(typeof key !=="string") {
+                    //if (process.env.NODE_ENV !== 'production') {
+                    console.log(`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)
+                    //}
+                }
                 //返回空字符串时，忽略
                 if(key) {
                     let Obj = await ____cache.get(key)
@@ -131,13 +136,17 @@ export const clearCache = ({cacheKeyGene}) => {
             if (typeof cacheKeyGene === "function") {
                 let [firstParam] = arguments
                 key = cacheKeyGene(firstParam)
-                if (key !== "") {
-                    await ____cache.delete(key)
-                } else {
+                if(typeof key !=="string") {
+                    //if (process.env.NODE_ENV !== 'production') {
+                    console.log(`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)
+                    //}
+                }else if (key === "") {
                     //返回的key为空字符串，说明key无法提前确定，需要交给方法内部来调用清空
                     arguments[0].__cacheManage = () => {
                         return ____cache
                     }
+                } else {
+                    await ____cache.delete(key)
                 }
             } else {
                 //修饰器的报错，级别更高，直接抛出终止程序
