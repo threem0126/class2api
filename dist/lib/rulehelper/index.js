@@ -185,6 +185,7 @@ var accessRule = function accessRule(_ref5) {
                 _ref8,
                 req_noused,
                 res_noused,
+                ___frontpageURL_noused,
                 _apiInvokeParams,
                 _ref9,
                 err,
@@ -233,7 +234,7 @@ var accessRule = function accessRule(_ref5) {
                         case 12:
                             _ref7 = target.__modelSetting ? target.__modelSetting().__ruleCategory : { name: '无名', desc: '-' }, categoryName = _ref7.name, categoryDesc = _ref7.desc;
                             apiInvokeParams = '';
-                            _ref8 = _args3[0] || {}, req_noused = _ref8.req, res_noused = _ref8.res, _apiInvokeParams = _objectWithoutProperties(_ref8, ['req', 'res']);
+                            _ref8 = _args3[0] || {}, req_noused = _ref8.req, res_noused = _ref8.res, ___frontpageURL_noused = _ref8.___frontpageURL, _apiInvokeParams = _objectWithoutProperties(_ref8, ['req', 'res', '___frontpageURL']);
 
                             try {
                                 apiInvokeParams = (0, _stringify2.default)(_apiInvokeParams);

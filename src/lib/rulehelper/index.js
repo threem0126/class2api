@@ -84,7 +84,7 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
             let {name: categoryName, desc: categoryDesc} = target.__modelSetting ?
                 target.__modelSetting().__ruleCategory : {name: '无名', desc: '-'}
             let apiInvokeParams = ''
-            let {req:req_noused, res:res_noused, ..._apiInvokeParams} = arguments[0] || {}
+            let {req:req_noused, res:res_noused, ___frontpageURL:___frontpageURL_noused,..._apiInvokeParams} = arguments[0] || {}
             try{
                 apiInvokeParams = JSON.stringify(_apiInvokeParams)
             }catch (err) {
