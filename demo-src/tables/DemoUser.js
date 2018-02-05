@@ -21,7 +21,9 @@ export default (sequelize, DataTypes)=> {
         },
         instanceMethods: {},
         defaultScope: {},
-        scopes: {},
+        scopes: {
+            Older: {where: {age:{$gt:18}}},
+        },
         comment: '备注'
     });
     return DemoUser;

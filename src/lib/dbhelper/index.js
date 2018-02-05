@@ -37,10 +37,26 @@ const _inner_DBModelLoader = (option)=> {
                 ((...params) => console.log(...params)) : null
         });
 
+        let hasScope =false
+        //先初始化非Scope的Model
         Object.keys(_model_objects).forEach(function (modelName) {
             let fun = _model_objects[modelName]
-            _model_objects[modelName] = fun.call()
+            if(!fun.scopeBaseModelName) {
+                _model_objects[modelName] = fun.call()
+            }else{
+                hasScope = true
+            }
         });
+
+        if(hasScope) {
+            //再初始化Scope类型的Model
+            Object.keys(_model_objects).forEach(function (modelName) {
+                let fun = _model_objects[modelName]
+                if (fun.scopeBaseModelName) {
+                    _model_objects[modelName] = fun.call(null, _model_objects[fun.scopeBaseModelName])
+                }
+            });
+        }
 
         //补充初始化model的关联关系
         Object.keys(_model_objects).forEach(function (modelName) {
@@ -103,6 +119,14 @@ const _inner_DBModelLoader = (option)=> {
             return () => {
                 return _sequelizeModelFactory(sequelize, Sequelize)
             }
+        },
+        defineScope: (sequelizeModelScopeFactory, baseModelName) => {
+            let _sequelizeModelScopeFactory = sequelizeModelScopeFactory
+            let fun = (baseModel) => {
+                return _sequelizeModelScopeFactory(baseModel)
+            }
+            fun.scopeBaseModelName = baseModelName
+            return fun
         },
         INIT: async ({model, ass}) => {
             if (!model)

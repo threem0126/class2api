@@ -87,7 +87,9 @@ export const cacheAble = ({cacheKeyGene}) => {
                 key = cacheKeyGene(firstParam)
                 if(typeof key !=="string") {
                     //if (process.env.NODE_ENV !== 'production') {
-                    console.log(`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)
+                    setTimeout(() => {
+                        throw (`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)
+                    })
                     //}
                 }
                 //返回空字符串时，忽略
