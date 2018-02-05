@@ -71,7 +71,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
     //region 初始化sequelize对象
     var _INIT = function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-            var database, user, password, host, port;
+            var database, user, password, host, port, hasScope;
             return _regenerator2.default.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
@@ -96,10 +96,27 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
                                 } : null
                             });
 
+                            hasScope = false;
+                            //先初始化非Scope的Model
+
                             (0, _keys2.default)(_model_objects).forEach(function (modelName) {
                                 var fun = _model_objects[modelName];
-                                _model_objects[modelName] = fun.call();
+                                if (!fun.scopeBaseModelName) {
+                                    _model_objects[modelName] = fun.call();
+                                } else {
+                                    hasScope = true;
+                                }
                             });
+
+                            if (hasScope) {
+                                //再初始化Scope类型的Model
+                                (0, _keys2.default)(_model_objects).forEach(function (modelName) {
+                                    var fun = _model_objects[modelName];
+                                    if (fun.scopeBaseModelName) {
+                                        _model_objects[modelName] = fun.call(null, _model_objects[fun.scopeBaseModelName]);
+                                    }
+                                });
+                            }
 
                             //补充初始化model的关联关系
                             (0, _keys2.default)(_model_objects).forEach(function (modelName) {
@@ -120,7 +137,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
                             _model_objects.__literal = literal;
                             _model_objects.__where = where;
 
-                        case 15:
+                        case 17:
                         case 'end':
                             return _context.stop();
                     }
@@ -256,6 +273,14 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
             return function () {
                 return _sequelizeModelFactory(sequelize, _sequelize2.default);
             };
+        },
+        defineScope: function defineScope(sequelizeModelScopeFactory, baseModelName) {
+            var _sequelizeModelScopeFactory = sequelizeModelScopeFactory;
+            var fun = function fun(baseModel) {
+                return _sequelizeModelScopeFactory(baseModel);
+            };
+            fun.scopeBaseModelName = baseModelName;
+            return fun;
         },
         INIT: function () {
             var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee5(_ref6) {

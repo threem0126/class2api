@@ -265,7 +265,9 @@ var ____cache = {
                             key = cacheKeyGene(firstParam);
                             if (typeof key !== "string") {
                                 //if (process.env.NODE_ENV !== 'production') {
-                                console.log('[' + target.name + '.' + name + '] \u7F13\u5B58\u4FEE\u9970\u5668\u7684cacheKeyGene\u51FD\u6570\u5FC5\u9700\u8FD4\u56DE\u5B57\u7B26\u4E32\u7ED3\u679C\uFF0C\u76EE\u524D\u662F ' + key + '...');
+                                setTimeout(function () {
+                                    throw '[' + target.name + '.' + name + '] \u7F13\u5B58\u4FEE\u9970\u5668\u7684cacheKeyGene\u51FD\u6570\u5FC5\u9700\u8FD4\u56DE\u5B57\u7B26\u4E32\u7ED3\u679C\uFF0C\u76EE\u524D\u662F ' + key + '...';
+                                });
                                 //}
                             }
                             //返回空字符串时，忽略
