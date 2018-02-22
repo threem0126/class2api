@@ -130,9 +130,9 @@ const _inner_DBModelLoader = (option)=> {
         },
         INIT: async ({model, ass}) => {
             if (!model)
-                throw `未提供model参数`
+                throw `DBModelLoader.INIT() 未提供model参数`
             if (!ass)
-                throw `未提供ass参数`
+                throw `DBModelLoader.INIT() 未提供ass参数`
 
             _model_objects = model
             _ass = ass

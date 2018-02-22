@@ -3,6 +3,41 @@
 - class2api暴露的API接口仅以post方式提供请求服务（注意：不支持get等其他方式！）
 - 作为微服务，使用内置Express时，class2api不开启sessin。（注：当使用createServerInRouter挂载到现有的Express应用下时，可以使用宿主Express实例的session机制）
 
+# 快速创建应用的代码
+
+## 创建业务类ClassA.js
+```javascript
+    //ClassA.js
+    class ClassA {
+        static async hello({name}) {
+            return {message: `this is a message from Api: got name [${name}]`}
+        }
+    } 
+    export default ClassA
+```
+
+## 绑定微服务
+```javascript
+    //server.js
+    import {createServer} from 'class2api'
+    import ClassA from './ClassA'
+    
+    let port = 3002;
+    
+    //创建微服务对象
+    createServer(ClassA)
+        .then((server)=>{
+            server.listen(3002, "0.0.0.0", (err)=>{
+                if (err) {console.error(err)}
+                console.info("==> API Started, test for $ curl -d 'name=huangyong' 'http://127.0.0.1:%s/ClassA/hello'.", port);
+            });
+        })
+``` 
+
+现在，就可以访问服务接口：
+```
+$ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
+```
 
 # 快速运行源码Demo：
 
@@ -48,46 +83,6 @@ $ npm i mocha -g
 $ mocha test/test.run -t 5000
 ```
 另外，源码中还有一个初级的示例项目可供参考，位于/example/baseProject
-
-# 快速创建应用的代码
-
-## 创建一个业务类ClassA.js
-```javascript
-    //ClassA.js
-    class ClassA {
-        static async hello({name}) {
-            return {message: `this is a message from Api: got name [${name}]`}
-        }
-    } 
-    export default ClassA
-```
-
-## 极速创建微服务
-```javascript
-    //server.js
-    import {createServer} from 'class2api'
-    import ClassA from './ClassA'
-    
-    //创建微服务对象
-    createServer({
-        modelClasses: [{model: ClassA, as: 'a'}],
-        beforeCall:async ({req, params, modelSetting})=>{
-            return params
-        }
-    }).then((server)=>{  
-        server.listen(3002, "0.0.0.0", function onStart(err){
-            if (err)console.log(err)
-            console.info("==> 🌎 Listening on port %s. Open up http://0.0.0.0:%s/ in your browser.", port, port);
-        });
-    }).catch((error)=>{
-        setTimeout(function(){throw error})
-    })
-``` 
-
-现在，就可以访问服务接口：
-```
-$ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
-```
 
 # 业务静态类的编写约定与最佳实践：
 - 类名需为命名类，不能匿名

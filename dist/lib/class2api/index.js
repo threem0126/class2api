@@ -87,13 +87,19 @@ var _router = void 0;
 
 var _create_server = function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(model, options) {
-        var config, custom, modelClasses, beforeCall, afterCall, method404, _ref2, _ref2$cros, cros, _ref2$cros_headers, cros_headers, _ref2$cros_origin, cros_origin, _ref2$frontpage_defau, frontpage_default, _ref2$apiroot, apiroot, redis, _modelClasses, allow_Header;
+        var _options, config, custom, modelClasses, beforeCall, afterCall, method404, _ref2, _ref2$cros, cros, _ref2$cros_headers, cros_headers, _ref2$cros_origin, cros_origin, _ref2$frontpage_defau, frontpage_default, _ref2$apiroot, apiroot, redis, _modelClasses, allow_Header;
 
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        config = options.config, custom = options.custom, modelClasses = options.modelClasses, beforeCall = options.beforeCall, afterCall = options.afterCall, method404 = options.method404;
+
+                        //当options为class时，做转化封装
+                        if (typeof options === "function" && options instanceof Object) {
+                            options = { modelClasses: [options] };
+                        }
+
+                        _options = options, config = _options.config, custom = _options.custom, modelClasses = _options.modelClasses, beforeCall = _options.beforeCall, afterCall = _options.afterCall, method404 = _options.method404;
                         // if (model==='server' && typeof config !== "function") {
                         //     throw  `server模式下，配置参数中必需传入config[Function]属性`
                         // }
@@ -101,29 +107,29 @@ var _create_server = function () {
                         _ref2 = typeof config === "function" ? config() : config || {}, _ref2$cros = _ref2.cros, cros = _ref2$cros === undefined ? true : _ref2$cros, _ref2$cros_headers = _ref2.cros_headers, cros_headers = _ref2$cros_headers === undefined ? [] : _ref2$cros_headers, _ref2$cros_origin = _ref2.cros_origin, cros_origin = _ref2$cros_origin === undefined ? [] : _ref2$cros_origin, _ref2$frontpage_defau = _ref2.frontpage_default, frontpage_default = _ref2$frontpage_defau === undefined ? '' : _ref2$frontpage_defau, _ref2$apiroot = _ref2.apiroot, apiroot = _ref2$apiroot === undefined ? '/' : _ref2$apiroot, redis = _ref2.redis;
 
                         if (!redis) {
-                            _context.next = 7;
+                            _context.next = 8;
                             break;
                         }
 
-                        _context.next = 5;
+                        _context.next = 6;
                         return (0, _redisClient.setting_redisConfig)(redis);
 
-                    case 5:
-                        _context.next = 7;
+                    case 6:
+                        _context.next = 8;
                         return (0, _redisClient.getRedisClient)();
 
-                    case 7:
+                    case 8:
                         _modelClasses = typeof modelClasses === "function" ? modelClasses() : modelClasses || [];
 
                         if (_modelClasses instanceof Array) {
-                            _context.next = 10;
+                            _context.next = 11;
                             break;
                         }
 
                         throw "\u65E0\u6CD5\u8BC6\u522B\u6307\u5B9A\u7684\u7C7B\u6E05\u5355\uFF0C\u56E0\u4E3AmodelClasses\u914D\u7F6E\u9879\u683C\u5F0F\u6709\u8BEF\uFF0C\u671F\u671B\u662FArray\u5217\u8868";
 
-                    case 10:
-                        _context.next = 12;
+                    case 11:
+                        _context.next = 13;
                         return _create_router({
                             apiroot: apiroot,
                             modelClasses: _modelClasses,
@@ -133,11 +139,11 @@ var _create_server = function () {
                             frontpage_default: frontpage_default
                         });
 
-                    case 12:
+                    case 13:
                         _router = _context.sent;
 
                         if (!(model === 'router')) {
-                            _context.next = 16;
+                            _context.next = 17;
                             break;
                         }
 
@@ -145,7 +151,7 @@ var _create_server = function () {
                         console.log("\u4EE5\u8DEF\u7531\u7ED1\u5B9A\u6A21\u5F0F\u5F00\u542Fclass2api\uFF0Ccros\u8DE8\u57DF\u8BBE\u7F6E\u3001session\u3001\u7B49\u914D\u7F6E\u90FD\u5C06\u5FFD\u7565\uFF0C\u7531\u5916\u90E8\u7684express\u5B9E\u4F8B\u63A7\u5236\uFF01");
                         return _context.abrupt("return", _router);
 
-                    case 16:
+                    case 17:
 
                         // Security
                         _server = (0, _express2.default)();
@@ -218,17 +224,17 @@ var _create_server = function () {
                         }
 
                         if (!(typeof custom === "function")) {
-                            _context.next = 34;
+                            _context.next = 35;
                             break;
                         }
 
-                        _context.next = 33;
+                        _context.next = 34;
                         return custom(_server);
 
-                    case 33:
+                    case 34:
                         _server = _context.sent;
 
-                    case 34:
+                    case 35:
 
                         _server.use(apiroot, _router);
 
@@ -240,7 +246,7 @@ var _create_server = function () {
 
                         return _context.abrupt("return", _server);
 
-                    case 37:
+                    case 38:
                     case "end":
                         return _context.stop();
                 }

@@ -295,7 +295,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
                                     break;
                                 }
 
-                                throw '\u672A\u63D0\u4F9Bmodel\u53C2\u6570';
+                                throw 'DBModelLoader.INIT() \u672A\u63D0\u4F9Bmodel\u53C2\u6570';
 
                             case 2:
                                 if (ass) {
@@ -303,7 +303,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
                                     break;
                                 }
 
-                                throw '\u672A\u63D0\u4F9Bass\u53C2\u6570';
+                                throw 'DBModelLoader.INIT() \u672A\u63D0\u4F9Bass\u53C2\u6570';
 
                             case 4:
 

@@ -1,0 +1,19 @@
+# build output
+dist
+.next
+build
+
+# dependencies
+node_modules
+package-lock.json
+
+# logs
+*.log
+
+# coverage
+.nyc_output
+coverage
+
+# test output
+test/**/out
+.DS_Store

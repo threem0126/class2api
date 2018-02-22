@@ -21,6 +21,11 @@ let _router;
 
 const _create_server = async (model, options)=> {
 
+    //当options为class时，做转化封装
+    if(typeof options ==="function" &&  options instanceof Object){
+        options = {modelClasses:[options]}
+    }
+
     let {config, custom, modelClasses, beforeCall, afterCall, method404} = options
     // if (model==='server' && typeof config !== "function") {
     //     throw  `server模式下，配置参数中必需传入config[Function]属性`

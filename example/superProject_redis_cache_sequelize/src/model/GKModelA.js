@@ -36,6 +36,15 @@ class GKModelA {
         }
     }
 
+    static async customResponseResultStruck() {
+        //TODO:.....
+
+        //class2api内部会判断，如果API方法返回的是Function，则框架会把函数的运行执行结果返回给客户端，以实现自定义特殊的response结构
+        return () => {
+            return {data: {name: 'huangyong'}, errorCode: 123}
+        }
+    }
+
 }
 
 export default GKModelA
