@@ -17,10 +17,12 @@ export const setApiRoot = (apiRoot)=> {
 export const ApiDesc=(desc)=> {
     return desc
 }
-export const WebInvokeHepler = (user) => {
-    if(!user)
+export const WebInvokeHepler = (user,method) => {
+    if (!user)
         throw `WebInvokeHepler方法缺少参数user`
-    let {token='', jwtoken='', otherheaders={}} = user
+    if (!method)
+        method = 'post'
+    let {token = '', jwtoken = '', otherheaders = {}} = user
     return async (apiPath, postParams, apiDesc) => {
         let options = {
             uri: remote_api + apiPath,
@@ -32,7 +34,8 @@ export const WebInvokeHepler = (user) => {
             body: postParams,
             json: true,
         }
-        let {body} = await request.postAsync(options)
+        let funPromise = (method === 'post') ? request.postAsync(options) : request.getAsync({...postParams, ...(options.headers)})
+        let {body} = await funPromise
         if (apiDesc) {
             docapi.push([apiDesc, options.uri, postParams, body])
         }

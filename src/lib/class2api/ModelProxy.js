@@ -38,9 +38,10 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
     let _BusinessModel = BusinessModel;
     let _frontpage_default = frontpage_default;
     let router = express.Router();
-    router.get('*', async function (req, res, next) {
-        res.json({err: 'get请求方式未实现, 仅限Post方式', result: null});
-    });
+    //开放get请求方式（注意：此时无法head传值）
+    // router.get('*', async function (req, res, next) {
+    //     res.json({err: 'get请求方式未实现, 仅限Post方式', result: null});
+    // });
     router.all('*', async function (req, res, next) {
         try {
             let pathItems = req.path.split("/");
@@ -48,10 +49,11 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             if (!_BusinessModel[methodName]) {
                 throw `api请求的地址(${req.originalUrl})中对应的类不存在${methodName}方法,请确认映射的类是否正确!`;
             }
-            if (!req.body) {
-                throw `api请求中的body为空，没有提交内容传入!`;
+            if (!req.body && !res.query) {
+                throw `api请求中的body和query都为空，没有提交内容传入!`;
             }
-            let {queryObj = req.body} = req.body;
+            //queryObj是对早期传值方式的兼容（早期会将所有参数包裹在queryObj属性里）
+            let {queryObj = (req.body||res.query)} = req.body;
             let params = queryObj;
             let paramsMerged = null;
 
