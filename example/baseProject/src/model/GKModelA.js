@@ -7,6 +7,10 @@ class GKModelA {
         throw '静态业务功能类无法实例化'
     }
 
+    static async hello({name}) {
+        return {message: `this is a message from Api: got name [${name}]`}
+    }
+
     /**
      * getArticle
      *

@@ -70,20 +70,20 @@ var router_listen_created = false;
 // });
 // {req,res,result}
 var _bindRouter = function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(BusinessModel, fn_beforeCall, fn_afterCall, frontpage_default) {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3(BusinessModel, fn_beforeCall, fn_afterCall, frontpage_default) {
         var resWrap, result, _BusinessModel, _frontpage_default, router;
 
-        return _regenerator2.default.wrap(function _callee4$(_context4) {
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
             while (1) {
-                switch (_context4.prev = _context4.next) {
+                switch (_context3.prev = _context3.next) {
                     case 0:
                         if (!fn_beforeCall) {
-                            _context4.next = 3;
+                            _context3.next = 3;
                             break;
                         }
 
                         if (!(typeof fn_beforeCall !== 'function')) {
-                            _context4.next = 3;
+                            _context3.next = 3;
                             break;
                         }
 
@@ -91,12 +91,12 @@ var _bindRouter = function () {
 
                     case 3:
                         if (!fn_afterCall) {
-                            _context4.next = 6;
+                            _context3.next = 6;
                             break;
                         }
 
                         if (!(typeof fn_afterCall !== 'function')) {
-                            _context4.next = 6;
+                            _context3.next = 6;
                             break;
                         }
 
@@ -147,56 +147,41 @@ var _bindRouter = function () {
                         _BusinessModel = BusinessModel;
                         _frontpage_default = frontpage_default;
                         router = _express2.default.Router();
+                        //开放get请求方式（注意：此时无法head传值）
+                        // router.get('*', async function (req, res, next) {
+                        //     res.json({err: 'get请求方式未实现, 仅限Post方式', result: null});
+                        // });
 
-                        router.get('*', function () {
+                        router.all('*', function () {
                             var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(req, res, next) {
+                                var pathItems, methodName, _req$body$queryObj, queryObj, params, paramsMerged, modelSetting, apipath, retData;
+
                                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                                     while (1) {
                                         switch (_context2.prev = _context2.next) {
                                             case 0:
-                                                res.json({ err: 'get请求方式未实现, 仅限Post方式', result: null });
-
-                                            case 1:
-                                            case 'end':
-                                                return _context2.stop();
-                                        }
-                                    }
-                                }, _callee2, this);
-                            }));
-
-                            return function (_x6, _x7, _x8) {
-                                return _ref4.apply(this, arguments);
-                            };
-                        }());
-                        router.all('*', function () {
-                            var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3(req, res, next) {
-                                var pathItems, methodName, _req$body$queryObj, queryObj, params, paramsMerged, modelSetting, apipath, retData;
-
-                                return _regenerator2.default.wrap(function _callee3$(_context3) {
-                                    while (1) {
-                                        switch (_context3.prev = _context3.next) {
-                                            case 0:
-                                                _context3.prev = 0;
+                                                _context2.prev = 0;
                                                 pathItems = req.path.split("/");
                                                 methodName = pathItems[1] ? pathItems[1] : null;
 
                                                 if (_BusinessModel[methodName]) {
-                                                    _context3.next = 5;
+                                                    _context2.next = 5;
                                                     break;
                                                 }
 
                                                 throw 'api\u8BF7\u6C42\u7684\u5730\u5740(' + req.originalUrl + ')\u4E2D\u5BF9\u5E94\u7684\u7C7B\u4E0D\u5B58\u5728' + methodName + '\u65B9\u6CD5,\u8BF7\u786E\u8BA4\u6620\u5C04\u7684\u7C7B\u662F\u5426\u6B63\u786E!';
 
                                             case 5:
-                                                if (req.body) {
-                                                    _context3.next = 7;
+                                                if (!(!req.body && !res.query)) {
+                                                    _context2.next = 7;
                                                     break;
                                                 }
 
-                                                throw 'api\u8BF7\u6C42\u4E2D\u7684body\u4E3A\u7A7A\uFF0C\u6CA1\u6709\u63D0\u4EA4\u5185\u5BB9\u4F20\u5165!';
+                                                throw 'api\u8BF7\u6C42\u4E2D\u7684body\u548Cquery\u90FD\u4E3A\u7A7A\uFF0C\u6CA1\u6709\u63D0\u4EA4\u5185\u5BB9\u4F20\u5165!';
 
                                             case 7:
-                                                _req$body$queryObj = req.body.queryObj, queryObj = _req$body$queryObj === undefined ? req.body : _req$body$queryObj;
+                                                //queryObj是对早期传值方式的兼容（早期会将所有参数包裹在queryObj属性里）
+                                                _req$body$queryObj = req.body.queryObj, queryObj = _req$body$queryObj === undefined ? req.body || res.query : _req$body$queryObj;
                                                 params = queryObj;
                                                 paramsMerged = null;
 
@@ -204,47 +189,47 @@ var _bindRouter = function () {
                                                 params.___frontpageURL = _url2.default.parse(req.headers['frontpage'] || _frontpage_default || '');
 
                                                 if (!(fn_beforeCall && typeof fn_beforeCall === 'function')) {
-                                                    _context3.next = 17;
+                                                    _context2.next = 17;
                                                     break;
                                                 }
 
                                                 //如果有要对传入参数做验证，则在fn_beforeCall中处理
                                                 modelSetting = _BusinessModel.__modelSetting ? _BusinessModel.__modelSetting() : {};
                                                 apipath = _BusinessModel.name + '.' + req.path;
-                                                _context3.next = 16;
+                                                _context2.next = 16;
                                                 return fn_beforeCall({ apipath: apipath, req: req, params: params, modelSetting: modelSetting });
 
                                             case 16:
-                                                paramsMerged = _context3.sent;
+                                                paramsMerged = _context2.sent;
 
                                             case 17:
-                                                _context3.next = 19;
+                                                _context2.next = 19;
                                                 return _BusinessModel[methodName](_extends({}, paramsMerged || params, {
                                                     req: req
                                                 }));
 
                                             case 19:
-                                                result = _context3.sent;
+                                                result = _context2.sent;
 
                                                 if (!(typeof result === "function")) {
-                                                    _context3.next = 27;
+                                                    _context2.next = 27;
                                                     break;
                                                 }
 
-                                                _context3.t0 = res;
-                                                _context3.next = 24;
+                                                _context2.t0 = res;
+                                                _context2.next = 24;
                                                 return resWrap({ req: req, res: res, result: result() });
 
                                             case 24:
-                                                _context3.t1 = _context3.sent;
+                                                _context2.t1 = _context2.sent;
 
-                                                _context3.t0.json.call(_context3.t0, _context3.t1);
+                                                _context2.t0.json.call(_context2.t0, _context2.t1);
 
-                                                return _context3.abrupt('return');
+                                                return _context2.abrupt('return');
 
                                             case 27:
                                                 if (!((typeof result === 'undefined' ? 'undefined' : _typeof(result)) !== "object" || (0, _lodash.keys)(result).length === 0)) {
-                                                    _context3.next = 29;
+                                                    _context2.next = 29;
                                                     break;
                                                 }
 
@@ -252,70 +237,70 @@ var _bindRouter = function () {
 
                                             case 29:
                                                 retData = { err: null, result: result };
-                                                _context3.t2 = res;
-                                                _context3.next = 33;
+                                                _context2.t2 = res;
+                                                _context2.next = 33;
                                                 return resWrap({ req: req, res: res, result: retData });
 
                                             case 33:
-                                                _context3.t3 = _context3.sent;
+                                                _context2.t3 = _context2.sent;
 
-                                                _context3.t2.json.call(_context3.t2, _context3.t3);
+                                                _context2.t2.json.call(_context2.t2, _context2.t3);
 
                                                 if (process.env.NODE_ENV !== "production" && process.env.PRINT_API_RESULT === "1") {
                                                     console.log('api call result from(' + req.originalUrl + '):' + JSON.stringifyline(retData));
                                                 }
-                                                _context3.next = 46;
+                                                _context2.next = 46;
                                                 break;
 
                                             case 38:
-                                                _context3.prev = 38;
-                                                _context3.t4 = _context3['catch'](0);
+                                                _context2.prev = 38;
+                                                _context2.t4 = _context2['catch'](0);
 
                                                 if (process.env.NODE_ENV !== "production") {
                                                     //region 让错误直接抛出，并终止程序。不需要时可以整体注释掉
                                                     console.dir('\u8FD9\u91CC\uFF1A\u9664\u4E86\u7A0B\u5E8F\u903B\u8F91\u7EA7\u522B\u7684Exception\u9519\u8BEF\uFF0C\u5728\u975E\u6B63\u5F0F\u73AF\u5883\u4F1A\u7EC8\u6B62\u7A0B\u5E8F\uFF0C\u4FBF\u4E8E\u8C03\u8BD5\u6392\u67E5\u3002\u4E0D\u9700\u8981\u65F6\u53EF\u4EE5\u627E\u5230\u6211\u7684\u4F4D\u7F6E\u5E76\u6CE8\u91CA\u6389');
-                                                    if (!_context3.t4._gankao) {
+                                                    if (!_context2.t4._gankao) {
                                                         //通过timeout排除错误，会导致程序终止
                                                         setTimeout(function () {
-                                                            throw _context3.t4;
+                                                            throw _context2.t4;
                                                         });
                                                     } else {
                                                         //程序逻辑级别的Exception，输出到控制台即可
                                                     }
-                                                    console.error(_context3.t4);
+                                                    console.error(_context2.t4);
                                                     //endregion
                                                 } else {
-                                                    console.error(_context3.t4);
+                                                    console.error(_context2.t4);
                                                 }
-                                                _context3.t5 = res;
-                                                _context3.next = 44;
-                                                return resWrap({ req: req, res: res, result: { err: _context3.t4, result: null } });
+                                                _context2.t5 = res;
+                                                _context2.next = 44;
+                                                return resWrap({ req: req, res: res, result: { err: _context2.t4, result: null } });
 
                                             case 44:
-                                                _context3.t6 = _context3.sent;
+                                                _context2.t6 = _context2.sent;
 
-                                                _context3.t5.json.call(_context3.t5, _context3.t6);
+                                                _context2.t5.json.call(_context2.t5, _context2.t6);
 
                                             case 46:
                                             case 'end':
-                                                return _context3.stop();
+                                                return _context2.stop();
                                         }
                                     }
-                                }, _callee3, this, [[0, 38]]);
+                                }, _callee2, this, [[0, 38]]);
                             }));
 
-                            return function (_x9, _x10, _x11) {
-                                return _ref5.apply(this, arguments);
+                            return function (_x6, _x7, _x8) {
+                                return _ref4.apply(this, arguments);
                             };
                         }());
-                        return _context4.abrupt('return', router);
+                        return _context3.abrupt('return', router);
 
-                    case 14:
+                    case 13:
                     case 'end':
-                        return _context4.stop();
+                        return _context3.stop();
                 }
             }
-        }, _callee4, undefined);
+        }, _callee3, undefined);
     }));
 
     return function _bindRouter(_x, _x2, _x3, _x4) {
@@ -350,19 +335,19 @@ var _bindRouter = function () {
 // }
 
 var CreateListenRouter = exports.CreateListenRouter = function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee6(options) {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee5(options) {
         var apiroot, modelClasses, beforeCall, afterCall, method404, frontpage_default, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, classObj, model, as, aPath;
 
-        return _regenerator2.default.wrap(function _callee6$(_context6) {
+        return _regenerator2.default.wrap(function _callee5$(_context5) {
             while (1) {
-                switch (_context6.prev = _context6.next) {
+                switch (_context5.prev = _context5.next) {
                     case 0:
                         if (!router_listen_created) {
-                            _context6.next = 2;
+                            _context5.next = 2;
                             break;
                         }
 
-                        return _context6.abrupt('return', router);
+                        return _context5.abrupt('return', router);
 
                     case 2:
                         apiroot = options.apiroot, modelClasses = options.modelClasses, beforeCall = options.beforeCall, afterCall = options.afterCall, method404 = options.method404, frontpage_default = options.frontpage_default;
@@ -372,57 +357,57 @@ var CreateListenRouter = exports.CreateListenRouter = function () {
                         _iteratorNormalCompletion = true;
                         _didIteratorError = false;
                         _iteratorError = undefined;
-                        _context6.prev = 6;
+                        _context5.prev = 6;
                         _iterator = (0, _getIterator3.default)(modelClasses);
 
                     case 8:
                         if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                            _context6.next = 36;
+                            _context5.next = 36;
                             break;
                         }
 
                         classObj = _step.value;
 
                         if (!(typeof classObj === "function")) {
-                            _context6.next = 20;
+                            _context5.next = 20;
                             break;
                         }
 
-                        _context6.t0 = router;
-                        _context6.t1 = '/' + classObj.name.toLowerCase();
-                        _context6.next = 15;
+                        _context5.t0 = router;
+                        _context5.t1 = '/' + classObj.name.toLowerCase();
+                        _context5.next = 15;
                         return _bindRouter(classObj, beforeCall, afterCall);
 
                     case 15:
-                        _context6.t2 = _context6.sent;
+                        _context5.t2 = _context5.sent;
 
-                        _context6.t0.use.call(_context6.t0, _context6.t1, _context6.t2);
+                        _context5.t0.use.call(_context5.t0, _context5.t1, _context5.t2);
 
                         console.log('mapped class \'' + classObj.name + '\' to \'' + apiroot + classObj.name.toLowerCase() + '/*\' ... OK!');
-                        _context6.next = 33;
+                        _context5.next = 33;
                         break;
 
                     case 20:
                         model = classObj.model, as = classObj.as;
 
                         if (!(model && as)) {
-                            _context6.next = 32;
+                            _context5.next = 32;
                             break;
                         }
 
                         aPath = (as || model.name).toLowerCase();
-                        _context6.t3 = router;
-                        _context6.t4 = '/' + aPath;
-                        _context6.next = 27;
+                        _context5.t3 = router;
+                        _context5.t4 = '/' + aPath;
+                        _context5.next = 27;
                         return _bindRouter(model, beforeCall, afterCall, frontpage_default);
 
                     case 27:
-                        _context6.t5 = _context6.sent;
+                        _context5.t5 = _context5.sent;
 
-                        _context6.t3.use.call(_context6.t3, _context6.t4, _context6.t5);
+                        _context5.t3.use.call(_context5.t3, _context5.t4, _context5.t5);
 
                         console.log('mapped class \'' + model.name + '\' to \'' + apiroot + aPath + '/*\' ... OK!');
-                        _context6.next = 33;
+                        _context5.next = 33;
                         break;
 
                     case 32:
@@ -430,65 +415,65 @@ var CreateListenRouter = exports.CreateListenRouter = function () {
 
                     case 33:
                         _iteratorNormalCompletion = true;
-                        _context6.next = 8;
+                        _context5.next = 8;
                         break;
 
                     case 36:
-                        _context6.next = 42;
+                        _context5.next = 42;
                         break;
 
                     case 38:
-                        _context6.prev = 38;
-                        _context6.t6 = _context6['catch'](6);
+                        _context5.prev = 38;
+                        _context5.t6 = _context5['catch'](6);
                         _didIteratorError = true;
-                        _iteratorError = _context6.t6;
+                        _iteratorError = _context5.t6;
 
                     case 42:
-                        _context6.prev = 42;
-                        _context6.prev = 43;
+                        _context5.prev = 42;
+                        _context5.prev = 43;
 
                         if (!_iteratorNormalCompletion && _iterator.return) {
                             _iterator.return();
                         }
 
                     case 45:
-                        _context6.prev = 45;
+                        _context5.prev = 45;
 
                         if (!_didIteratorError) {
-                            _context6.next = 48;
+                            _context5.next = 48;
                             break;
                         }
 
                         throw _iteratorError;
 
                     case 48:
-                        return _context6.finish(45);
+                        return _context5.finish(45);
 
                     case 49:
-                        return _context6.finish(42);
+                        return _context5.finish(42);
 
                     case 50:
 
                         //拦截未匹配到的其他方法
                         router.all('*', function () {
-                            var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee5(req, res, next) {
+                            var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(req, res, next) {
                                 var retObj;
-                                return _regenerator2.default.wrap(function _callee5$(_context5) {
+                                return _regenerator2.default.wrap(function _callee4$(_context4) {
                                     while (1) {
-                                        switch (_context5.prev = _context5.next) {
+                                        switch (_context4.prev = _context4.next) {
                                             case 0:
-                                                _context5.prev = 0;
+                                                _context4.prev = 0;
 
                                                 if (!(typeof method404 === 'function')) {
-                                                    _context5.next = 6;
+                                                    _context4.next = 6;
                                                     break;
                                                 }
 
-                                                _context5.next = 4;
+                                                _context4.next = 4;
                                                 return method404(req, res);
 
                                             case 4:
-                                                _context5.next = 9;
+                                                _context4.next = 9;
                                                 break;
 
                                             case 6:
@@ -498,41 +483,41 @@ var CreateListenRouter = exports.CreateListenRouter = function () {
                                                 res.json(retObj);
 
                                             case 9:
-                                                _context5.next = 15;
+                                                _context4.next = 15;
                                                 break;
 
                                             case 11:
-                                                _context5.prev = 11;
-                                                _context5.t0 = _context5['catch'](0);
+                                                _context4.prev = 11;
+                                                _context4.t0 = _context4['catch'](0);
 
                                                 res.status = 404;
-                                                res.json({ err: '404\u5904\u7406\u9519\u8BEF(' + (0, _stringify2.default)(_context5.t0) + ')', result: null });
+                                                res.json({ err: '404\u5904\u7406\u9519\u8BEF(' + (0, _stringify2.default)(_context4.t0) + ')', result: null });
 
                                             case 15:
                                             case 'end':
-                                                return _context5.stop();
+                                                return _context4.stop();
                                         }
                                     }
-                                }, _callee5, undefined, [[0, 11]]);
+                                }, _callee4, undefined, [[0, 11]]);
                             }));
 
-                            return function (_x13, _x14, _x15) {
-                                return _ref7.apply(this, arguments);
+                            return function (_x10, _x11, _x12) {
+                                return _ref6.apply(this, arguments);
                             };
                         }());
                         router_listen_created = true;
 
-                        return _context6.abrupt('return', router);
+                        return _context5.abrupt('return', router);
 
                     case 53:
                     case 'end':
-                        return _context6.stop();
+                        return _context5.stop();
                 }
             }
-        }, _callee6, undefined, [[6, 38, 42, 50], [43,, 45, 49]]);
+        }, _callee5, undefined, [[6, 38, 42, 50], [43,, 45, 49]]);
     }));
 
-    return function CreateListenRouter(_x12) {
-        return _ref6.apply(this, arguments);
+    return function CreateListenRouter(_x9) {
+        return _ref5.apply(this, arguments);
     };
 }();

@@ -30,6 +30,17 @@ describe('评论系统', function () {
     });
     //endregion
 
+    it('/a2/hello 以get方式请求', async () => {
+        let response = await WebInvokeHepler(_run.accounts.user1)(
+            '/a2/hello',
+            {name: "haungyong"},
+            ApiDesc(`hello测试方法`)
+        )
+        let {err, result} = response
+        let {message} = result
+        message.lastIndexOf('haungyong').should.be.above(-1)
+    })
+
     it('/gkmodela/getArticle', async () => {
         let response = await WebInvokeHepler(_run.accounts.user1)('/gkmodela/getArticle', {name:"haungyong"})
         //console.log(response)

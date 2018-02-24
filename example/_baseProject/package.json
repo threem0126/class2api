@@ -13,6 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "class2api": "^2.5.10"
+    "class2api": "^2.5.11"
   }
 }

@@ -60,8 +60,9 @@ var setApiRoot = exports.setApiRoot = function setApiRoot(apiRoot) {
 var ApiDesc = exports.ApiDesc = function ApiDesc(desc) {
     return desc;
 };
-var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user) {
+var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user, method) {
     if (!user) throw 'WebInvokeHepler\u65B9\u6CD5\u7F3A\u5C11\u53C2\u6570user';
+    if (!method) method = 'post';
     var _user$token = user.token,
         token = _user$token === undefined ? '' : _user$token,
         _user$jwtoken = user.jwtoken,
@@ -71,7 +72,7 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user) {
 
     return function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee(apiPath, postParams, apiDesc) {
-            var options, _ref2, body;
+            var options, funPromise, _ref2, body;
 
             return _regenerator2.default.wrap(function _callee$(_context) {
                 while (1) {
@@ -86,10 +87,11 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user) {
                                 body: postParams,
                                 json: true
                             };
-                            _context.next = 3;
-                            return _request2.default.postAsync(options);
+                            funPromise = method === 'post' ? _request2.default.postAsync(options) : _request2.default.getAsync(_extends({}, postParams, options.headers));
+                            _context.next = 4;
+                            return funPromise;
 
-                        case 3:
+                        case 4:
                             _ref2 = _context.sent;
                             body = _ref2.body;
 
@@ -98,7 +100,7 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user) {
                             }
                             return _context.abrupt('return', body);
 
-                        case 7:
+                        case 8:
                         case 'end':
                             return _context.stop();
                     }
