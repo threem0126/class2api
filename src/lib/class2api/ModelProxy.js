@@ -66,11 +66,15 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
                 paramsMerged = await fn_beforeCall({apipath, req, params, modelSetting});
             }
             //合并入req对象
-            result = await _BusinessModel[methodName]({
-                    ...(paramsMerged || params),
-                    req
-                }
-            );
+            if (req.method === 'GET') {
+                result = await _BusinessModel[methodName]({...(paramsMerged || params), req, res});
+            } else {
+                result = await _BusinessModel[methodName]({...(paramsMerged || params), req});
+            }
+            let {redirected} = result
+            if(redirected)
+                return
+
             //反转控制，如果返回的结果时函数，则取值后直接作为返回结构，这里主要是为了兼容一些特殊的返回数据结构
             if (typeof result === "function") {
                 res.json(await resWrap({req, res, result: result()}))

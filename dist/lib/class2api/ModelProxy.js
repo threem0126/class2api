@@ -154,7 +154,7 @@ var _bindRouter = function () {
 
                         router.all('*', function () {
                             var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(req, res, next) {
-                                var pathItems, methodName, source, _source$queryObj, queryObj, params, paramsMerged, modelSetting, apipath, retData;
+                                var pathItems, methodName, source, _source$queryObj, queryObj, params, paramsMerged, modelSetting, apipath, _result, redirected, retData;
 
                                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                                     while (1) {
@@ -204,45 +204,68 @@ var _bindRouter = function () {
                                                 paramsMerged = _context2.sent;
 
                                             case 18:
-                                                _context2.next = 20;
-                                                return _BusinessModel[methodName](_extends({}, paramsMerged || params, {
-                                                    req: req
-                                                }));
+                                                if (!(req.method === 'GET')) {
+                                                    _context2.next = 24;
+                                                    break;
+                                                }
 
-                                            case 20:
+                                                _context2.next = 21;
+                                                return _BusinessModel[methodName](_extends({}, paramsMerged || params, { req: req, res: res }));
+
+                                            case 21:
+                                                result = _context2.sent;
+                                                _context2.next = 27;
+                                                break;
+
+                                            case 24:
+                                                _context2.next = 26;
+                                                return _BusinessModel[methodName](_extends({}, paramsMerged || params, { req: req }));
+
+                                            case 26:
                                                 result = _context2.sent;
 
+                                            case 27:
+                                                _result = result, redirected = _result.redirected;
+
+                                                if (!redirected) {
+                                                    _context2.next = 30;
+                                                    break;
+                                                }
+
+                                                return _context2.abrupt('return');
+
+                                            case 30:
                                                 if (!(typeof result === "function")) {
-                                                    _context2.next = 28;
+                                                    _context2.next = 37;
                                                     break;
                                                 }
 
                                                 _context2.t0 = res;
-                                                _context2.next = 25;
+                                                _context2.next = 34;
                                                 return resWrap({ req: req, res: res, result: result() });
 
-                                            case 25:
+                                            case 34:
                                                 _context2.t1 = _context2.sent;
 
                                                 _context2.t0.json.call(_context2.t0, _context2.t1);
 
                                                 return _context2.abrupt('return');
 
-                                            case 28:
+                                            case 37:
                                                 if (!((typeof result === 'undefined' ? 'undefined' : _typeof(result)) !== "object" || (0, _lodash.keys)(result).length === 0)) {
-                                                    _context2.next = 30;
+                                                    _context2.next = 39;
                                                     break;
                                                 }
 
                                                 throw '\u975E\u7B80\u5355\u6570\u636E\u7C7B\u578B\u7684\u63A5\u53E3\u8FD4\u56DE\u503C\u5FC5\u987B\u5305\u542Bkey\uFF0Fvalue\u7ED3\u6784\uFF0C\u63A5\u53E3' + req.originalUrl + '\u7C7B\u7684' + methodName + '\u65B9\u6CD5\u8FD4\u56DE\u7684\u6570\u636E\u7ED3\u6784\u4E0D\u5177\u6709key/value\u7ED3\u6784\uFF0C\u4E0D\u7B26\u5408\u89C4\u8303!';
 
-                                            case 30:
+                                            case 39:
                                                 retData = { err: null, result: result };
                                                 _context2.t2 = res;
-                                                _context2.next = 34;
+                                                _context2.next = 43;
                                                 return resWrap({ req: req, res: res, result: retData });
 
-                                            case 34:
+                                            case 43:
                                                 _context2.t3 = _context2.sent;
 
                                                 _context2.t2.json.call(_context2.t2, _context2.t3);
@@ -250,11 +273,11 @@ var _bindRouter = function () {
                                                 if (process.env.NODE_ENV !== "production" && process.env.PRINT_API_RESULT === "1") {
                                                     console.log('api call result from(' + req.originalUrl + '):' + JSON.stringifyline(retData));
                                                 }
-                                                _context2.next = 47;
+                                                _context2.next = 56;
                                                 break;
 
-                                            case 39:
-                                                _context2.prev = 39;
+                                            case 48:
+                                                _context2.prev = 48;
                                                 _context2.t4 = _context2['catch'](0);
 
                                                 if (process.env.NODE_ENV !== "production") {
@@ -274,20 +297,20 @@ var _bindRouter = function () {
                                                     console.error(_context2.t4);
                                                 }
                                                 _context2.t5 = res;
-                                                _context2.next = 45;
+                                                _context2.next = 54;
                                                 return resWrap({ req: req, res: res, result: { err: _context2.t4, result: null } });
 
-                                            case 45:
+                                            case 54:
                                                 _context2.t6 = _context2.sent;
 
                                                 _context2.t5.json.call(_context2.t5, _context2.t6);
 
-                                            case 47:
+                                            case 56:
                                             case 'end':
                                                 return _context2.stop();
                                         }
                                     }
-                                }, _callee2, this, [[0, 39]]);
+                                }, _callee2, this, [[0, 48]]);
                             }));
 
                             return function (_x6, _x7, _x8) {
