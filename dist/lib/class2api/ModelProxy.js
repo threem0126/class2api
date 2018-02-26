@@ -154,7 +154,7 @@ var _bindRouter = function () {
 
                         router.all('*', function () {
                             var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(req, res, next) {
-                                var pathItems, methodName, _req$body$queryObj, queryObj, params, paramsMerged, modelSetting, apipath, retData;
+                                var pathItems, methodName, source, _source$queryObj, queryObj, params, paramsMerged, modelSetting, apipath, retData;
 
                                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                                     while (1) {
@@ -181,7 +181,8 @@ var _bindRouter = function () {
 
                                             case 7:
                                                 //queryObj是对早期传值方式的兼容（早期会将所有参数包裹在queryObj属性里）
-                                                _req$body$queryObj = req.body.queryObj, queryObj = _req$body$queryObj === undefined ? req.body || res.query : _req$body$queryObj;
+                                                source = req.method === 'POST' ? req.body : req.query;
+                                                _source$queryObj = source.queryObj, queryObj = _source$queryObj === undefined ? source : _source$queryObj;
                                                 params = queryObj;
                                                 paramsMerged = null;
 
@@ -189,59 +190,59 @@ var _bindRouter = function () {
                                                 params.___frontpageURL = _url2.default.parse(req.headers['frontpage'] || _frontpage_default || '');
 
                                                 if (!(fn_beforeCall && typeof fn_beforeCall === 'function')) {
-                                                    _context2.next = 17;
+                                                    _context2.next = 18;
                                                     break;
                                                 }
 
                                                 //如果有要对传入参数做验证，则在fn_beforeCall中处理
                                                 modelSetting = _BusinessModel.__modelSetting ? _BusinessModel.__modelSetting() : {};
                                                 apipath = _BusinessModel.name + '.' + req.path;
-                                                _context2.next = 16;
+                                                _context2.next = 17;
                                                 return fn_beforeCall({ apipath: apipath, req: req, params: params, modelSetting: modelSetting });
 
-                                            case 16:
+                                            case 17:
                                                 paramsMerged = _context2.sent;
 
-                                            case 17:
-                                                _context2.next = 19;
+                                            case 18:
+                                                _context2.next = 20;
                                                 return _BusinessModel[methodName](_extends({}, paramsMerged || params, {
                                                     req: req
                                                 }));
 
-                                            case 19:
+                                            case 20:
                                                 result = _context2.sent;
 
                                                 if (!(typeof result === "function")) {
-                                                    _context2.next = 27;
+                                                    _context2.next = 28;
                                                     break;
                                                 }
 
                                                 _context2.t0 = res;
-                                                _context2.next = 24;
+                                                _context2.next = 25;
                                                 return resWrap({ req: req, res: res, result: result() });
 
-                                            case 24:
+                                            case 25:
                                                 _context2.t1 = _context2.sent;
 
                                                 _context2.t0.json.call(_context2.t0, _context2.t1);
 
                                                 return _context2.abrupt('return');
 
-                                            case 27:
+                                            case 28:
                                                 if (!((typeof result === 'undefined' ? 'undefined' : _typeof(result)) !== "object" || (0, _lodash.keys)(result).length === 0)) {
-                                                    _context2.next = 29;
+                                                    _context2.next = 30;
                                                     break;
                                                 }
 
                                                 throw '\u975E\u7B80\u5355\u6570\u636E\u7C7B\u578B\u7684\u63A5\u53E3\u8FD4\u56DE\u503C\u5FC5\u987B\u5305\u542Bkey\uFF0Fvalue\u7ED3\u6784\uFF0C\u63A5\u53E3' + req.originalUrl + '\u7C7B\u7684' + methodName + '\u65B9\u6CD5\u8FD4\u56DE\u7684\u6570\u636E\u7ED3\u6784\u4E0D\u5177\u6709key/value\u7ED3\u6784\uFF0C\u4E0D\u7B26\u5408\u89C4\u8303!';
 
-                                            case 29:
+                                            case 30:
                                                 retData = { err: null, result: result };
                                                 _context2.t2 = res;
-                                                _context2.next = 33;
+                                                _context2.next = 34;
                                                 return resWrap({ req: req, res: res, result: retData });
 
-                                            case 33:
+                                            case 34:
                                                 _context2.t3 = _context2.sent;
 
                                                 _context2.t2.json.call(_context2.t2, _context2.t3);
@@ -249,11 +250,11 @@ var _bindRouter = function () {
                                                 if (process.env.NODE_ENV !== "production" && process.env.PRINT_API_RESULT === "1") {
                                                     console.log('api call result from(' + req.originalUrl + '):' + JSON.stringifyline(retData));
                                                 }
-                                                _context2.next = 46;
+                                                _context2.next = 47;
                                                 break;
 
-                                            case 38:
-                                                _context2.prev = 38;
+                                            case 39:
+                                                _context2.prev = 39;
                                                 _context2.t4 = _context2['catch'](0);
 
                                                 if (process.env.NODE_ENV !== "production") {
@@ -273,20 +274,20 @@ var _bindRouter = function () {
                                                     console.error(_context2.t4);
                                                 }
                                                 _context2.t5 = res;
-                                                _context2.next = 44;
+                                                _context2.next = 45;
                                                 return resWrap({ req: req, res: res, result: { err: _context2.t4, result: null } });
 
-                                            case 44:
+                                            case 45:
                                                 _context2.t6 = _context2.sent;
 
                                                 _context2.t5.json.call(_context2.t5, _context2.t6);
 
-                                            case 46:
+                                            case 47:
                                             case 'end':
                                                 return _context2.stop();
                                         }
                                     }
-                                }, _callee2, this, [[0, 38]]);
+                                }, _callee2, this, [[0, 39]]);
                             }));
 
                             return function (_x6, _x7, _x8) {

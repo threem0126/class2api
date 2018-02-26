@@ -8,6 +8,6 @@ createServer(ClassA)
     .then((server)=>{
         server.listen(3002, "0.0.0.0", (err)=>{
             if (err) {console.error(err)}
-            console.info("==> API Started, test for $ curl -d 'name=huangyong' 'http://127.0.0.1:%s/ClassA/hello'.", port);
+            console.info("==> API Started, test for $ curl -d 'name=huangyong&age=23&year=1979' 'http://127.0.0.1:%s/ClassA/hello'.", port);
         });
     })

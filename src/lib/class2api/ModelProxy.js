@@ -53,7 +53,8 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
                 throw `api请求中的body和query都为空，没有提交内容传入!`;
             }
             //queryObj是对早期传值方式的兼容（早期会将所有参数包裹在queryObj属性里）
-            let {queryObj = (req.body||res.query)} = req.body;
+            let source = req.method==='POST'?req.body:req.query
+            let {queryObj = source} = source;
             let params = queryObj;
             let paramsMerged = null;
 

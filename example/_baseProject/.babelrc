@@ -1,11 +1,9 @@
 {
   "presets": [
-    "env"
+    "env",
+    "stage-0"
   ],
   "plugins": [
-    "transform-object-rest-spread",
-    "transform-class-properties",
-    "transform-runtime",
     [
       "module-resolver",
       {
