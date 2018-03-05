@@ -3,6 +3,15 @@
 - class2api暴露的API接口仅以post方式提供请求服务（注意：不支持get等其他方式！）
 - 作为微服务，使用内置Express时，class2api不开启sessin。（注：当使用createServerInRouter挂载到现有的Express应用下时，可以使用宿主Express实例的session机制）
 
+# 推荐Class2api的理由：
+- 目前还没有一套开源的流行的、将业务类映射为API输出的框架
+- 基于Express（只添加了很薄的一层服务），内核稳定、插件生态丰富
+- 省去了繁琐的项目环境配置，ES6、Babel等
+- 让团队专注于业务类的逻辑实现
+- Sequelize代码模版
+- 内置缓存服务，支持缓存API方法输出的结果，并可反向控制
+- 后续将扩展支持其他更高性能webServer框架
+
 # 快速创建应用的代码
 
 ## 创建业务类ClassA.js
@@ -107,7 +116,7 @@ $ mocha test/test.run -t 5000
     export default ClassA
 ```
 
-# 接口返回值的结构
+# 接口返回值的默认结构、反向定制
 class2api对所有请求的返回数据结构，统一为：
 ```javascript
 {  
@@ -173,7 +182,7 @@ class2api对所有请求的返回数据结构，统一为：
 ```
 
 - createServerInRouter(opts)
-创建服务器(使用外部的Express，只返回router供绑定路由)，opts参数与createServer函数基本相同，除了自动忽略custom参数。可参考项目中的server-router.js源码
+创建服务器(使用外部的Express，只返回router供绑定路由)，opts参数与createServer函数基本相同，除了自动忽略custom参数。可参考项目中的demo-src/server-router.js源码
 
 - setting_redisConfig
 设置内置redis的连接参数，因为考虑到import声明自动提前的问题，为确保其他自定义业务类内部初始化时依赖redis实例的场景。建议的，最佳方法是定义个独立的init.js，并在server.js顶部第一行引用
@@ -487,7 +496,6 @@ class2api内置的管理员身份校验函数，函数内将jwtoken参数会以h
     })
    
 ```
-
 
 $ npm publish --registry=http://registry.npmjs.org  --  
 

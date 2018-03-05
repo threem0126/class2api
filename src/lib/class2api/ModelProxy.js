@@ -71,9 +71,6 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             } else {
                 result = await _BusinessModel[methodName]({...(paramsMerged || params), req});
             }
-            let {redirected} = result
-            if(redirected)
-                return
 
             //反转控制，如果返回的结果时函数，则取值后直接作为返回结构，这里主要是为了兼容一些特殊的返回数据结构
             if (typeof result === "function") {
@@ -85,6 +82,10 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             if (typeof result !== "object" || keys(result).length === 0) {
                 throw `非简单数据类型的接口返回值必须包含key／value结构，接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，不符合规范!`;
             }
+            let {__redirected} = result
+            if(__redirected)
+                return
+
             let retData = {err: null, result: result}
             res.json(await resWrap({req, res, result:retData}));
             if (process.env.NODE_ENV !== "production" && process.env.PRINT_API_RESULT === "1") {

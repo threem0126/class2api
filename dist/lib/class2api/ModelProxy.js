@@ -154,7 +154,7 @@ var _bindRouter = function () {
 
                         router.all('*', function () {
                             var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(req, res, next) {
-                                var pathItems, methodName, source, _source$queryObj, queryObj, params, paramsMerged, modelSetting, apipath, _result, redirected, retData;
+                                var pathItems, methodName, source, _source$queryObj, queryObj, params, paramsMerged, modelSetting, apipath, _result, __redirected, retData;
 
                                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                                     while (1) {
@@ -225,39 +225,39 @@ var _bindRouter = function () {
                                                 result = _context2.sent;
 
                                             case 27:
-                                                _result = result, redirected = _result.redirected;
-
-                                                if (!redirected) {
-                                                    _context2.next = 30;
-                                                    break;
-                                                }
-
-                                                return _context2.abrupt('return');
-
-                                            case 30:
                                                 if (!(typeof result === "function")) {
-                                                    _context2.next = 37;
+                                                    _context2.next = 34;
                                                     break;
                                                 }
 
                                                 _context2.t0 = res;
-                                                _context2.next = 34;
+                                                _context2.next = 31;
                                                 return resWrap({ req: req, res: res, result: result() });
 
-                                            case 34:
+                                            case 31:
                                                 _context2.t1 = _context2.sent;
 
                                                 _context2.t0.json.call(_context2.t0, _context2.t1);
 
                                                 return _context2.abrupt('return');
 
-                                            case 37:
+                                            case 34:
                                                 if (!((typeof result === 'undefined' ? 'undefined' : _typeof(result)) !== "object" || (0, _lodash.keys)(result).length === 0)) {
-                                                    _context2.next = 39;
+                                                    _context2.next = 36;
                                                     break;
                                                 }
 
                                                 throw '\u975E\u7B80\u5355\u6570\u636E\u7C7B\u578B\u7684\u63A5\u53E3\u8FD4\u56DE\u503C\u5FC5\u987B\u5305\u542Bkey\uFF0Fvalue\u7ED3\u6784\uFF0C\u63A5\u53E3' + req.originalUrl + '\u7C7B\u7684' + methodName + '\u65B9\u6CD5\u8FD4\u56DE\u7684\u6570\u636E\u7ED3\u6784\u4E0D\u5177\u6709key/value\u7ED3\u6784\uFF0C\u4E0D\u7B26\u5408\u89C4\u8303!';
+
+                                            case 36:
+                                                _result = result, __redirected = _result.__redirected;
+
+                                                if (!__redirected) {
+                                                    _context2.next = 39;
+                                                    break;
+                                                }
+
+                                                return _context2.abrupt('return');
 
                                             case 39:
                                                 retData = { err: null, result: result };
