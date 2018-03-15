@@ -1,5 +1,7 @@
 import {createServer} from 'class2api'
 import GKModelA from './model/GKModelA'
+import path from 'path'
+import express from 'express'
 
 let node_env = process.env.NODE_ENV || "development"
 let port = process.env.PORT || 3002;
@@ -44,8 +46,14 @@ createServer({
     // 将哪些类映射到API，可以定义路径别名
     modelClasses:[GKModelA, {model:GKModelA, as:'a2'}],
     beforeCall,
-    afterCall
-
+    afterCall,
+    custom:(expressInstence)=> {
+        //定义静态资源路径，所有的静态类型文件都会转向这个位置
+        let staticPath = path.join(__dirname, "./../static")
+        console.log(`staticPath：${staticPath}`)
+        expressInstence.use(express.static(staticPath))
+        return expressInstence
+    }
 }).then((server)=>{
 
     //开始监听指定的端口
