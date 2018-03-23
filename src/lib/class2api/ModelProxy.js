@@ -170,16 +170,21 @@ export const CreateListenRouter = async (options)=> {
             if (typeof method404 === 'function') {
                 await method404(req, res)
             } else {
-                let retObj = {err: `API方法未定义(${ req.path }, 请确认类是否存在或类的名称是否有变更！)`, result: null}
-                console.error(JSON.stringify(retObj))
-                res.json(retObj);
+                if (process.env.NODE_ENV === "production") {
+                    res.status = 404;
+                    res.json({err: 'API Not Defined!', result: null})
+                } else {
+                    let retObj = {err: `API方法未定义(${ req.path }, 请确认类是否存在或类的名称是否有变更！)`, result: null}
+                    console.error(JSON.stringify(retObj))
+                    res.json(retObj);
+                }
             }
         } catch (err) {
             res.status = 404;
             res.json({err: `404处理错误(${JSON.stringify(err)})`, result: null});
         }
     });
-    router_listen_created = true
 
+    router_listen_created = true;
     return router
 }

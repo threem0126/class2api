@@ -497,40 +497,45 @@ var CreateListenRouter = exports.CreateListenRouter = function () {
                                                 return method404(req, res);
 
                                             case 4:
-                                                _context4.next = 9;
+                                                _context4.next = 7;
                                                 break;
 
                                             case 6:
-                                                retObj = { err: 'API\u65B9\u6CD5\u672A\u5B9A\u4E49(' + req.path + ', \u8BF7\u786E\u8BA4\u7C7B\u662F\u5426\u5B58\u5728\u6216\u7C7B\u7684\u540D\u79F0\u662F\u5426\u6709\u53D8\u66F4\uFF01)', result: null };
+                                                if (process.env.NODE_ENV === "production") {
+                                                    res.status = 404;
+                                                    res.json({ err: 'API Not Defined!', result: null });
+                                                } else {
+                                                    retObj = { err: 'API\u65B9\u6CD5\u672A\u5B9A\u4E49(' + req.path + ', \u8BF7\u786E\u8BA4\u7C7B\u662F\u5426\u5B58\u5728\u6216\u7C7B\u7684\u540D\u79F0\u662F\u5426\u6709\u53D8\u66F4\uFF01)', result: null };
 
-                                                console.error((0, _stringify2.default)(retObj));
-                                                res.json(retObj);
+                                                    console.error((0, _stringify2.default)(retObj));
+                                                    res.json(retObj);
+                                                }
 
-                                            case 9:
-                                                _context4.next = 15;
+                                            case 7:
+                                                _context4.next = 13;
                                                 break;
 
-                                            case 11:
-                                                _context4.prev = 11;
+                                            case 9:
+                                                _context4.prev = 9;
                                                 _context4.t0 = _context4['catch'](0);
 
                                                 res.status = 404;
                                                 res.json({ err: '404\u5904\u7406\u9519\u8BEF(' + (0, _stringify2.default)(_context4.t0) + ')', result: null });
 
-                                            case 15:
+                                            case 13:
                                             case 'end':
                                                 return _context4.stop();
                                         }
                                     }
-                                }, _callee4, undefined, [[0, 11]]);
+                                }, _callee4, undefined, [[0, 9]]);
                             }));
 
                             return function (_x10, _x11, _x12) {
                                 return _ref6.apply(this, arguments);
                             };
                         }());
-                        router_listen_created = true;
 
+                        router_listen_created = true;
                         return _context5.abrupt('return', router);
 
                     case 53:
