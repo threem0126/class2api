@@ -148,7 +148,20 @@ class2api对所有请求的返回数据结构，统一为：
 - $ process.env.SQL_PRINT=1     开启sequelize的SQL执行日志的打印
 - $ process.env.PRINT_API_RESULT=1     开启API方法执行的结果日志打印
 
-
+# api路径嵌套，以及跨域授权配置
+```javascript
+    //创建微服务对象
+    createServer({
+        config:{
+            apiroot: '/api_v2',//如需要时，可以指定API服务的起始路径，特别是在映射路径的方式中
+            cros:true,
+            cros_headers:['customHeader'], 
+            cros_origin:['http://web.domain.com'], 
+        },
+        //... 
+    }) 
+```
+cros_origin:[*****]
 
 # 组件提供的功能函数
 ！！！！！前方高能，文档导航结构尚需优化，建议分段阅读！！！！！
