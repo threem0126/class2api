@@ -1,5 +1,5 @@
-import {GKSUCCESS, modelSetting, clearCache,createServer,setting_redisConfig} from 'class2api'
-import {accessRule,parseAdminAccountFromJWToken} from "class2api/rulehelper";
+import {GKSUCCESS, modelSetting, clearCache,createServer,setting_redisConfig} from '../../bin/class2api'
+import {accessRule,parseAdminAccountFromJWToken} from "bin/class2api/rulehelper";
 import _config from "./../config.js" ;
 
 let {redis} = _config

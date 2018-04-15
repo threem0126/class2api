@@ -3,7 +3,7 @@ import compression from "compression";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import ClassA from './ClassA'
-import {createServerInRouter} from 'class2api'
+import {createServerInRouter} from '../bin/class2api'
 
 //Security
 let _server = express();

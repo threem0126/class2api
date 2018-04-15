@@ -1,0 +1,16 @@
+{
+  "tpl": {
+    "base": {
+      "url": "https://github.com/threem0126/class2api_example_base.git",
+      "branch": "master"
+    },
+    "normal": {
+      "url": "https://github.com/threem0126/class2api_example_normal.git",
+      "branch": "master"
+    },
+    "super": {
+      "url": "https://github.com/threem0126/class2api_example_super.git",
+      "branch": "master"
+    }
+  }
+}

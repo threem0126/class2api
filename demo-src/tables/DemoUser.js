@@ -1,4 +1,4 @@
-import {TableSetting} from 'class2api/dbhelper';
+import {TableSetting} from 'bin/class2api/dbhelper';
 
 export default (sequelize, DataTypes)=> {
 //region

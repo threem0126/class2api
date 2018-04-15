@@ -1,4 +1,4 @@
-import {GKSUCCESS, modelSetting, cacheAble, clearCache} from 'class2api'
+import {GKSUCCESS, modelSetting, cacheAble, clearCache} from '../../bin/class2api'
 
 export default class {
     constructor() {

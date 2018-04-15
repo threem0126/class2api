@@ -1,4 +1,4 @@
-import {DBModelLoader} from 'class2api/dbhelper'
+import {DBModelLoader} from 'bin/class2api/dbhelper'
 import _config from './config'
 import DemoUser from './tables/DemoUser'
 import Older_Scope from './tables/Older.scope'

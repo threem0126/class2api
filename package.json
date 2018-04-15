@@ -21,15 +21,18 @@
   ],
   "author": "threem0126",
   "files": [
+    "bin",
     "dist",
+    "command",
     "testhelper.js",
     "rulehelper.js",
     "dbhelper.js",
     "gkerrors.js",
-    "util.js"
+    "util.js",
+    "templates.json"
   ],
   "bin": {
-    "class2api": "./dist/bin/class2api.js"
+    "class2api": "bin/class2api"
   },
   "license": "ISC",
   "dependencies": {
@@ -53,6 +56,10 @@
     "sequelize": "^3.30.4"
   },
   "devDependencies": {
+    "chalk": "^1.1.3",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.9.0",
     "npm-check": "^5.5.2",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.5.1",

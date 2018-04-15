@@ -12,84 +12,34 @@
 - 内置缓存服务，支持缓存API方法输出的结果，并可反向控制
 - 后续将扩展支持其他更高性能webServer框架
 
-# 快速创建应用的代码
+# 快速创建应用的代码，提供三种脚手架
 
-## 创建业务类ClassA.js
-```javascript
-    //ClassA.js
-    class ClassA {
-        static async hello({name}) {
-            return {message: `this is a message from Api: got name [${name}]`}
-        }
-    } 
-    export default ClassA
-```
-
-## 绑定微服务
-```javascript
-    //server.js
-    import {createServer} from 'class2api'
-    import ClassA from './ClassA' 
-    
-    //创建微服务对象
-    createServer(ClassA)
-        .then((server)=>{
-            server.listen(3002, "0.0.0.0", (err)=>{
-                if (err) {console.error(err)}
-                console.info("==> API Started, test for $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/ClassA/hello'.");
-            });
-        })
+## base：
 ``` 
-
-现在，就可以访问服务接口：
+$ class2api init 
 ```
+
+根据提示输入
+``` 
+$ class2api i
+选择哪种脚手架模版？（base/normal/super）: base
+给创建的新项目取个名字: teasdf 
+
+ 远程提取模版文件 ...
+
+ √ 创建成功!
+
+ 开始体验:
+
+ cd teasdf && npm install && npm start
+ 
+```
+
+最终：
+``` 
 $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
 ```
-
-# 快速运行源码Demo：
-
-- 快速安装依赖组建
-```
-$ npm i 
-或
-$ npm i --registry=https://registry.npm.taobao.org 
-```
-
-- 基于源码版本运行Demo应用(独立Server版本)
-```
-$ npm run start:src 
-```
-
-- 基于源码版本运行Demo应用(ExpressRouter路由挂载版本)
-```
-$ npm run start:srcrouter
-```
-
-- 运行单元测试（先运行Demo应用）
-```
-$ mocha test/test.run
-```
-
-# 运行较复杂的示例项目：
-按以下步骤运行源码中较复杂的示例项目，它带有sequelize-ORM、API自动缓存、管理身份与权限校验等高阶场景
-- 在本地创建名为gankao_demo123的mysql数据库
-- 执行数据库初始化脚本
-```
-$ FORCE=0 DB_RESET_1=123234537569 DB_RESET_2=wrq5hfoiuy12344376 node toolscript/resetDB.run.js
-```
-- 在源码根目录下，进入node示例项目并执行
-```
-$ cd example/superProject_redis_cache_sequelize/ 
-$ npm i 
-$ npm run start
-```
-- 执行对应示例项目的单元测试
-```
-$ cd example/superProject_redis_cache_sequelize/ 
-$ npm i mocha -g
-$ mocha test/test.run -t 5000
-```
-另外，源码中还有一个初级的示例项目可供参考，位于/example/baseProject
+ 
 
 # 业务静态类的编写约定与最佳实践：
 - 类名需为命名类，不能匿名
