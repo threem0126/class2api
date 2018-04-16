@@ -11,6 +11,10 @@
     "super": {
       "url": "https://github.com/threem0126/class2api_example_super.git",
       "branch": "master"
+    },
+    "admin": {
+      "url": "https://github.com/threem0126/class2api_example_admin.git",
+      "branch": "master"
     }
   }
 }

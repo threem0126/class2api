@@ -1,6 +1,7 @@
 import request from 'request'
 import Promise from 'bluebird'
 import fs from 'fs'
+import {map, keys} from 'lodash'
 
 Promise.promisifyAll(request)
 
@@ -10,6 +11,14 @@ JSON.stringifyline = function (Obj) {
 
 let remote_api
 let docapi = []
+
+const joinParamsForGet = (props)=> {
+    let ret = []
+    map(keys(props), (k) => {
+        ret.push(`${k}=${props[k]}`)
+    })
+    return ret.join("&")
+}
 
 export const setApiRoot = (apiRoot)=> {
     remote_api = apiRoot
@@ -25,7 +34,7 @@ export const WebInvokeHepler = (user,method) => {
     let {token = '', jwtoken = '', otherheaders = {}} = user
     return async (apiPath, postParams, apiDesc) => {
         let options = {
-            uri: remote_api + apiPath,
+            url: remote_api + apiPath,
             rejectUnauthorized: false,
             headers: {
                 ...otherheaders,
@@ -34,15 +43,14 @@ export const WebInvokeHepler = (user,method) => {
             body: postParams,
             json: true,
         }
-        let funPromise = (method === 'post') ? request.postAsync(options) : request.getAsync({
-            uri: options.uri,
+        let funPromise = (method === 'post') ? request.postAsync(options) : request.getAsync(options.url+"?"+joinParamsForGet({
             ...postParams, ...(options.headers)
-        })
+        }))
         let {body} = await funPromise
         if (apiDesc) {
             docapi.push([apiDesc, options.uri, postParams, body])
         }
-        if (method === 'get') {
+        if (method !== 'post') {
             try {
                 body = JSON.parse(body)
             } catch (err) {

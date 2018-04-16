@@ -31,14 +31,15 @@ describe('评论系统', function () {
     //endregion
 
     it('/a/hello', async () => {
-        let response = await WebInvokeHepler(_run.accounts.user1)(
+        let response = await WebInvokeHepler(_run.accounts.user1, "get")(
             '/a/hello',
             {name: "haungyong"},
             ApiDesc(`hello测试方法`)
         )
-        //console.log(response)
+        console.log(response)
         let {err, result} = response
         let {message} = result
+        console.log(message)
         message.lastIndexOf('haungyong').should.be.above(-1)
     })
 

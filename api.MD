@@ -1,4 +1,7 @@
-# hello测试方法 #- 接口：http://127.0.0.1:3002/a/hello- post参数：```json{
+# hello测试方法 #- 接口：undefined- post参数：```json{
+  "name": "haungyong"
+}```- 请求结果：```json"{\"err\":null,\"result\":{\"message\":\"this is a message from Api: got name [haungyong]\"}}"```
+# hello测试方法 #- 接口：undefined- post参数：```json{
   "name": "haungyong"
 }```- 请求结果：```json{
   "err": null,
@@ -6,38 +9,31 @@
     "message": "this is a message from Api: got name [haungyong]"
   }
 }```
-# hello测试方法 #- 接口：http://127.0.0.1:3002/a/hello- post参数：```json{
+# 方法getArticle #- 接口：undefined- post参数：```json{
   "name": "haungyong"
 }```- 请求结果：```json{
   "err": null,
   "result": {
-    "message": "this is a message from Api: got name [haungyong]"
+    "message": "getArticle.haungyong，from user. 12345678",
+    "__fromCache": true
   }
 }```
-# 方法getArticle #- 接口：http://127.0.0.1:3002/gkmodela/getArticle- post参数：```json{
-  "name": "haungyong"
+# 以别名方式请求 #- 接口：undefined- post参数：```json{
+  "name": 0.45707495070753845
 }```- 请求结果：```json{
   "err": null,
   "result": {
-    "message": "getArticle.haungyong，from user. undefined"
+    "message": "getArticle.0.45707495070753845，from user. 12345678"
   }
 }```
-# 以别名方式请求 #- 接口：http://127.0.0.1:3002/a2/getArticle- post参数：```json{
-  "name": 0.04998945791277043
-}```- 请求结果：```json{
-  "err": null,
-  "result": {
-    "message": "getArticle.0.04998945791277043，from user. undefined"
-  }
-}```
-# 以别名方式请求 #- 接口：http://127.0.0.1:3002/a2/customResponseResultStruck- post参数：```json{}```- 请求结果：```json{
+# 以别名方式请求 #- 接口：undefined- post参数：```json{}```- 请求结果：```json{
   "data": {
     "name": "huangyong"
   },
   "errorCode": 123
 }```
-# 编辑文章 #- 接口：http://127.0.0.1:3002/admin/editArticle- post参数：```json{
-  "aID": 0.11342941427234154
+# 编辑文章 #- 接口：undefined- post参数：```json{
+  "aID": 0.6612113839691949
 }```- 请求结果：```json{
   "err": {
     "_gankao": 1,
@@ -47,8 +43,8 @@
   },
   "result": null
 }```
-# 删除文章 #- 接口：http://127.0.0.1:3002/admin/deleteArticle- post参数：```json{
-  "aID": 0.802200168714736
+# 删除文章 #- 接口：undefined- post参数：```json{
+  "aID": 0.7989269043771328
 }```- 请求结果：```json{
   "err": null,
   "result": {

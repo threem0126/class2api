@@ -41,6 +41,8 @@ var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _lodash = require('lodash');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _bluebird2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _bluebird2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -53,6 +55,14 @@ JSON.stringifyline = function (Obj) {
 
 var remote_api = void 0;
 var docapi = [];
+
+var joinParamsForGet = function joinParamsForGet(props) {
+    var ret = [];
+    (0, _lodash.map)((0, _lodash.keys)(props), function (k) {
+        ret.push(k + '=' + props[k]);
+    });
+    return ret.join("&");
+};
 
 var setApiRoot = exports.setApiRoot = function setApiRoot(apiRoot) {
     remote_api = apiRoot;
@@ -79,7 +89,7 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user, m
                     switch (_context.prev = _context.next) {
                         case 0:
                             options = {
-                                uri: remote_api + apiPath,
+                                url: remote_api + apiPath,
                                 rejectUnauthorized: false,
                                 headers: _extends({}, otherheaders, {
                                     token: token, jwtoken: jwtoken // 这里提供身份验证的token，注意命名为：jwtoken
@@ -87,9 +97,7 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user, m
                                 body: postParams,
                                 json: true
                             };
-                            funPromise = method === 'post' ? _request2.default.postAsync(options) : _request2.default.getAsync(_extends({
-                                uri: options.uri
-                            }, postParams, options.headers));
+                            funPromise = method === 'post' ? _request2.default.postAsync(options) : _request2.default.getAsync(options.url + "?" + joinParamsForGet(_extends({}, postParams, options.headers)));
                             _context.next = 4;
                             return funPromise;
 
@@ -100,7 +108,7 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user, m
                             if (apiDesc) {
                                 docapi.push([apiDesc, options.uri, postParams, body]);
                             }
-                            if (method === 'get') {
+                            if (method !== 'post') {
                                 try {
                                     body = JSON.parse(body);
                                 } catch (err) {
