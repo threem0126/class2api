@@ -34,10 +34,21 @@ export const WebInvokeHepler = (user,method) => {
             body: postParams,
             json: true,
         }
-        let funPromise = (method === 'post') ? request.postAsync(options) : request.getAsync({...postParams, ...(options.headers)})
+        let funPromise = (method === 'post') ? request.postAsync(options) : request.getAsync({
+            uri: options.uri,
+            ...postParams, ...(options.headers)
+        })
         let {body} = await funPromise
         if (apiDesc) {
             docapi.push([apiDesc, options.uri, postParams, body])
+        }
+        if (method === 'get') {
+            try {
+                body = JSON.parse(body)
+            } catch (err) {
+                console.error(`error in class2api ...JSON.parse(body) :`)
+                console.error(err)
+            }
         }
         return body
     }

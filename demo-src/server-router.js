@@ -3,7 +3,10 @@ import compression from "compression";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import ClassA from './ClassA'
-import {createServerInRouter} from '../bin/class2api'
+import GKModelA from './model/GKModelA'
+import GKRuleManager from './model/GKRuleManager'
+import GKAdmin_ModelA from './model_admin/GKAdmin_ModelA'
+import {createServerInRouter} from '/class2api'
 
 //Security
 let _server = express();
@@ -17,7 +20,13 @@ _server.use(compression());
 
 //创建微服务对象（路径route对象）
 (async ()=>{
-    _server.use(await createServerInRouter(ClassA));
+    let option = {
+        modelClasses: [{model: ClassA, as: "a"}, GKModelA, {
+            model: GKModelA,
+            as: 'a2'
+        }, GKRuleManager, {model: GKAdmin_ModelA, as: "admin"}]
+    }
+    _server.use(await createServerInRouter(option));
 })();
 
 let port = 3002;

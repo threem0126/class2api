@@ -1,4 +1,4 @@
-import {createServer} from '../bin/class2api'
+import {createServer} from '/class2api'
 import ClassA from './ClassA'
 
 let port = 3002;

@@ -5,6 +5,7 @@ logs
 *.rar
 npm-debug.log*
 node_modules
+.idea
 /.idea
 /build
 /example/baseProject/node_modules

@@ -1,5 +1,8 @@
-import {GKSUCCESS, modelSetting, clearCache,createServer,setting_redisConfig} from '../../bin/class2api'
-import {accessRule,parseAdminAccountFromJWToken} from "bin/class2api/rulehelper";
+/**
+ * 后台管理层的业务逻辑封装类，带jwtoken的验证机制，提供给业务后台web管理端调用访问
+ */
+import {GKSUCCESS, modelSetting, clearCache,createServer,setting_redisConfig} from '/class2api'
+import {accessRule,parseAdminAccountFromJWToken} from "/class2api/rulehelper";
 import _config from "./../config.js" ;
 
 let {redis} = _config

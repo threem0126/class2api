@@ -1,5 +1,5 @@
-import {GKSUCCESS, modelSetting, cacheAble, clearCache} from '../../bin/class2api'
-import {GKErrors} from 'bin/class2api/gkerrors'
+import {GKSUCCESS, modelSetting, cacheAble, clearCache} from '/class2api'
+import {GKErrors} from '/class2api/gkerrors'
 import DemoAuth from "../model_private/DemoAuth";
 import {DataModel,DataModel_MainDB} from "./../tableloader";
 

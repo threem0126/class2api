@@ -87,7 +87,9 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user, m
                                 body: postParams,
                                 json: true
                             };
-                            funPromise = method === 'post' ? _request2.default.postAsync(options) : _request2.default.getAsync(_extends({}, postParams, options.headers));
+                            funPromise = method === 'post' ? _request2.default.postAsync(options) : _request2.default.getAsync(_extends({
+                                uri: options.uri
+                            }, postParams, options.headers));
                             _context.next = 4;
                             return funPromise;
 
@@ -98,9 +100,17 @@ var WebInvokeHepler = exports.WebInvokeHepler = function WebInvokeHepler(user, m
                             if (apiDesc) {
                                 docapi.push([apiDesc, options.uri, postParams, body]);
                             }
+                            if (method === 'get') {
+                                try {
+                                    body = JSON.parse(body);
+                                } catch (err) {
+                                    console.error('error in class2api ...JSON.parse(body) :');
+                                    console.error(err);
+                                }
+                            }
                             return _context.abrupt('return', body);
 
-                        case 8:
+                        case 9:
                         case 'end':
                             return _context.stop();
                     }

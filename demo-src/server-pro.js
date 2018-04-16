@@ -1,6 +1,6 @@
 import _config from "./config.js" ;
-import {createServer,setting_redisConfig} from '../bin/class2api'
-import {GKErrors} from 'bin/class2api/gkerrors'
+import {createServer,setting_redisConfig} from '/class2api'
+import {GKErrors} from '/class2api/gkerrors'
 import ClassA from './ClassA'
 import GKModelA from './model/GKModelA'
 import GKRuleManager from './model/GKRuleManager'
