@@ -1,6 +1,6 @@
 {
   "name": "class2api",
-  "version": "2.5.18",
+  "version": "2.6.2",
   "description": "the lib for mapping your javascript class to api service.",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
@@ -32,12 +32,16 @@
     "templates.json"
   ],
   "bin": {
-    "class2api": "bin/class2api"
+    "class2api": "dist/bin/class2api.js"
   },
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.4.0",
     "body-parser": "^1.14.2",
+    "chalk": "^1.1.3",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.9.0",
     "compression": "^1.6.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
@@ -56,10 +60,6 @@
     "sequelize": "^3.30.4"
   },
   "devDependencies": {
-    "chalk": "^1.1.3",
-    "co": "^4.6.0",
-    "co-prompt": "^1.0.0",
-    "commander": "^2.9.0",
     "npm-check": "^5.5.2",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.5.1",

@@ -1,8 +1,21 @@
-"use strict";
+#!/usr/bin/env node --harmony
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
+'use strict';
+
+process.env.NODE_PATH = __dirname + '/../../node_modules/';
+
+var program = require('commander');
+
+program.version(require('../../package').version);
+
+program.usage('<command>');
+
+program.command('init').description('从脚手架创建一个新项目').alias('i').action(function () {
+    require('../../command/init')();
 });
-exports.default = {
-    name: "temp"
-};
+
+program.parse(process.argv);
+
+if (!program.args.length) {
+    program.help();
+}
