@@ -14,14 +14,21 @@
 
 # 快速创建应用的代码，提供三种脚手架
 
+```javascript
+    //先全局安装class2api
+    $ npm i class2api -g
+    
+```
+
 ## base：
-``` 
-$ class2api.js init 
+```javascript
+//从脚手架初始化新项目
+$ class2api init 
 ```
 
 根据提示输入
 ``` 
-$ class2api.js i
+$ class2api init
 选择哪种脚手架模版？（base/normal/super）: base
 给创建的新项目取个名字: teasdf 
 
@@ -50,7 +57,7 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
 - 为了增加API返回数据值的可扩展能力，类静态方法的返回值必须用对象形式，不能使用字符串、整数、浮点、布尔等简单值类型。
 - 某些场景，只需要API返回操作是否成功的信息，可以使用内置的GKSUCCESS([props])函数，它封装一个简单结构{success: true,...props}，其中props参数是附加信息，当props是对象时，自动扩展到结构里，当props是非对象时，以msg属性扩展到结构里
 ```javascript
-    import {GKSUCCESS} from 'class2api.js'
+    import {GKSUCCESS} from 'class2api'
     class ClassA {
         constructor() {
             throw '静态业务功能类无法实例化'
@@ -117,13 +124,13 @@ cros_origin:[*****]
 ！！！！！前方高能，文档导航结构尚需优化，建议分段阅读！！！！！
 
 ## 空间列表
-- class2api.js             主空间，提供微服务创建、缓存修饰器、redis配置/访问等基础套件
-- class2api.js/dbhelper    sequelize模型创建与管理的助手函数空间，可简化model的声明与引用
-- class2api.js/rulehelper  管理后台专用的身份检验、权限校验
-- class2api.js/testhelper  测试相关的辅助套件，快速执行基于http接口调用的单元测试，以及收集单元测试的请求与结果json快照，并在mocha的after拦截中保存到指定文件，以作为文档参考
-- class2api.js/gkerrors    常用的预设错误类型
+- class2api             主空间，提供微服务创建、缓存修饰器、redis配置/访问等基础套件
+- class2api/dbhelper    sequelize模型创建与管理的助手函数空间，可简化model的声明与引用
+- class2api/rulehelper  管理后台专用的身份检验、权限校验
+- class2api/testhelper  测试相关的辅助套件，快速执行基于http接口调用的单元测试，以及收集单元测试的请求与结果json快照，并在mocha的after拦截中保存到指定文件，以作为文档参考
+- class2api/gkerrors    常用的预设错误类型
 
-## class2api.js    主空间
+## class2api    主空间
 - createServer(opts)
 创建服务器(使用内建的独立Express实例) ,opts为参数项，具体如下：
 ```javascript
@@ -153,7 +160,7 @@ cros_origin:[*****]
 设置内置redis的连接参数，因为考虑到import声明自动提前的问题，为确保其他自定义业务类内部初始化时依赖redis实例的场景。建议的，最佳方法是定义个独立的init.js，并在server.js顶部第一行引用
 ```javascript
 //init.js
-import {setting_redisConfig} from 'class2api.js'
+import {setting_redisConfig} from 'class2api'
 setting_redisConfig({
     host: "127.0.0.1",
     port: 6379,
@@ -186,7 +193,7 @@ return {
 **__Auth**:Function，与业务类相关的身份验证函数，内部进行身份判断，并返回带有uID的用户信息对象
 **__ruleCategory**:{name//权限组名称,desc//权限组的备注描述}，
 ```javascript
-    import {parseAdminAccountFromJWToken} from "class2api.js/rulehelper";
+    import {parseAdminAccountFromJWToken} from "class2api/rulehelper";
     @modelSetting({
         __Auth:async ({req})=>{
             //后台的用户验证，解析header中的jwtoken信息，调用class2api/rulehelper的解析，注意与非后台常规用户验证的区别
@@ -284,10 +291,10 @@ A：传入__nocache=1参数，组件内部即会判断并绕过缓存，示例�
 
 - crashAfterMe(hintMsg)  修饰器,运行完类方法就人为抛出异常中断程序，调试用，生产环境下自动失效
 
-## class2api.js/gkerrors   常用预设的错误（code值为负数）
+## class2api/gkerrors   常用预设的错误（code值为负数）
 - GKErrors  预设错误有：
 ```javascript
-    import {GKErrors} from 'class2api.js/gkerrors' 
+    import {GKErrors} from 'class2api/gkerrors' 
     GKErrors._TOKEN_PARSE_FAIL      //token解析失败 
     GKErrors._RULE_VALIDATE_ERROR   //权限认证过程中发生异常
     GKErrors._TOKEN_LOGIN_INVALID   //请先登录
@@ -299,7 +306,7 @@ A：传入__nocache=1参数，组件内部即会判断并绕过缓存，示例�
     GKErrors._NOT_PARAMS        //缺少参数
 ```
 
-## class2api.js/dbhelper
+## class2api/dbhelper
 sequelize模型创建与管理的助手函数空间，可参考项目中的tableloader.js示例文件
 
 - TableSetting  
@@ -308,7 +315,7 @@ sequelizeModel定义model时的几个扩展设置，包括：
 2、TableSetting.extendDateTimeVirtualFields(DataTypes, [customfields])设置，为时间字段扩展出可读性强的时间格式化后的虚字段，名称约定为'*****_display'，设置内默认为created_at、updated_at扩展，第二个[customfields]参数追加需要扩展格式化的自定义时间字段
 ```javascript
     //DemoUser.js
-    import {TableSetting} from 'class2api.js/dbhelper';
+    import {TableSetting} from 'class2api/dbhelper';
     
     export default (sequelize, DataTypes)=> {
         const User = sequelize.define('demouser', {
@@ -333,7 +340,7 @@ sequelizeModel定义model时的几个扩展设置，包括：
 - DBModelLoader 
 加载Model定义文件, 参考示例项目中的tableloader.js文件，代码段：
 ```javascript
-    import {DBModelLoader} from 'class2api.js/dbhelper'
+    import {DBModelLoader} from 'class2api/dbhelper'
     import _config from './config'
     import DemoUser from './tables/DemoUser'
     
@@ -373,7 +380,7 @@ sequezeli的where函数的引用
 - excuteSQL(sql,[replaceparam1,replaceparam2,...]) 
 执行指定的SQL语句，一般适用于无法用sequelize表达式的复杂查询或更新操作
 
-## class2api.js/rulehelper
+## class2api/rulehelper
 适用于后台管理系统的身份检验、权限校验的辅助函数库
 
 - accessRule({ruleName, ruleDesc})
@@ -415,7 +422,7 @@ exports.config = {
 - parseAdminAccountFromJWToken({jwtoken})
 class2api内置的管理员身份校验函数，函数内将jwtoken参数会以header的方式发送给class2api.config.js中指定的config.admin_rule_center.auth接口，auth接口端返回详细的用户信息（按约定，用户信息中含有标识唯一的uID属性）
 
-## class2api.js/testhelper
+## class2api/testhelper
 测试辅助函数库，为了接近真实环境，以及确保接口调用的全流程，class2api的单元测试原则上都以http调用的方式执行，而避免用类调用。
 注：当需要测试业务功能类本身时，还是可以在业务类层面直接调用，以避开微服务框架以及http通讯的干扰
 
@@ -426,7 +433,7 @@ class2api内置的管理员身份校验函数，函数内将jwtoken参数会以h
 - save2Doc      保存本次mocha用例中所有提供了ApiDesc参数的API请求的post入参与res返回结果
 ```javascript
     //testhelper的最小化案例 
-    import {ApiDesc, WebInvokeHepler, setApiRoot, save2Doc} from 'class2api.js/testhelper'
+    import {ApiDesc, WebInvokeHepler, setApiRoot, save2Doc} from 'class2api/testhelper'
     
     let _run = {
         accounts: {
@@ -442,7 +449,7 @@ class2api内置的管理员身份校验函数，函数内将jwtoken参数会以h
     //配置远程请求endpoint
     setApiRoot(remote_api);
     
-    describe('评论系统', function () {
+    describe('接口服务', function () {
      
         after(function () {
             save2Doc({save2File:'api.MD'})
