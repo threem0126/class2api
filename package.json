@@ -1,6 +1,6 @@
 {
   "name": "class2api",
-  "version": "2.6.10",
+  "version": "2.6.11",
   "description": "the lib for mapping your javascript class to api service.",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
@@ -45,6 +45,7 @@
     "compression": "^1.6.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
+    "fs": "0.0.1-security",
     "hashcode": "^1.0.3",
     "helmet": "^3.6.0",
     "hpp": "^0.2.2",

@@ -16,7 +16,7 @@ program
     .description('从脚手架创建一个新项目')
     .alias('i')
     .action(() => {
-        require('../../command/init')()
+        require('../command/init')()
     })
 
 program.parse(process.argv)
