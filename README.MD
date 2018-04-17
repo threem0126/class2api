@@ -3,7 +3,7 @@
 - class2api暴露的API接口仅以post方式提供请求服务（注意：不支持get等其他方式！）
 - 作为微服务，使用内置Express时，class2api不开启sessin。（注：当使用createServerInRouter挂载到现有的Express应用下时，可以使用宿主Express实例的session机制）
 
-# 快速创建应用的代码，提供三种脚手架
+# 快速创建应用的代码，提供3种项目模版(脚手架)
 
 ```javascript
     //先全局安装class2api
