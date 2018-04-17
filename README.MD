@@ -3,34 +3,27 @@
 - class2api暴露的API接口仅以post方式提供请求服务（注意：不支持get等其他方式！）
 - 作为微服务，使用内置Express时，class2api不开启sessin。（注：当使用createServerInRouter挂载到现有的Express应用下时，可以使用宿主Express实例的session机制）
 
-# 推荐Class2api的理由：
-- 目前还没有一套开源的流行的、将业务类映射为API输出的框架
-- 基于Express（添加了很薄的一层路径映射），内核稳定、插件生态丰富
-- 省去了繁琐的项目环境配置，ES6、Babel等
-- 让团队专注于业务类的逻辑实现
-- Sequelize代码模版
-- 内置缓存服务，支持缓存API方法输出的结果，并可反向控制
-- 后续将扩展支持其他更高性能webServer框架
-
 # 快速创建应用的代码，提供三种脚手架
 
 ```javascript
     //先全局安装class2api
-    $ npm i class2api -g
+    $ npm i class2api -g 
     
-```
-
-## base：
-```javascript
-//从脚手架初始化新项目
-$ class2api init 
+    //从脚手架初始化新项目
+    $ class2api init 
 ```
 
 根据提示输入
 ``` 
 $ class2api init
-选择哪种脚手架模版？（base/normal/super）: base
-给创建的新项目取个名字: teasdf 
+ 脚手架模版类型：
+ - base   ——精简型，不带before/after拦截器
+ - normal ——普通型，带before/after拦截器、API缓存机制
+ - super  ——增强型，带before/after拦截器、API缓存机制、数据库访问
+ - admin  ——管理后台权限认证型，super的基础上附带管理身份权限校验(暂未开放)
+选择以上哪种模版？（base/normal/super/admin）: 
+
+给创建的新项目取个名字: baseDemo 
 
  远程提取模版文件 ...
 
@@ -38,7 +31,7 @@ $ class2api init
 
  开始体验:
 
- cd teasdf && npm install && npm start
+ $ cd baseDemo && npm install && npm start
  
 ```
 
@@ -47,6 +40,14 @@ $ class2api init
 $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
 ```
  
+# 推荐Class2api的理由：
+- 目前还没有一套开源的流行的、将业务类映射为API输出的框架
+- 让团队专注于业务类的逻辑实现
+- 基于Express（添加了很薄的一层路径映射），内核稳定、插件生态丰富
+- 省去了繁琐的项目环境配置，ES6、Babel等
+- Sequelize代码模版
+- 内置缓存服务，支持缓存API方法输出的结果，并可反向控制
+- 平滑扩展，后续将扩展支持其他更高性能webServer框架
 
 # 业务静态类的编写约定与最佳实践：
 - 类名需为命名类，不能匿名
