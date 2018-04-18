@@ -20,7 +20,7 @@
   - [访问内置的Redis缓存实例](#%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%AE%E7%9A%84redis%E7%BC%93%E5%AD%98%E5%AE%9E%E4%BE%8B)
   - [自定义错误常量对象](#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF%E5%B8%B8%E9%87%8F%E5%AF%B9%E8%B1%A1)
   - [业务类的修饰器扩展](#%E4%B8%9A%E5%8A%A1%E7%B1%BB%E7%9A%84%E4%BF%AE%E9%A5%B0%E5%99%A8%E6%89%A9%E5%B1%95)
-  - [API缓存机制](#api%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6)
+  - [API方法缓存机制](#api%E6%96%B9%E6%B3%95%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6)
     - [启用缓存](#%E5%90%AF%E7%94%A8%E7%BC%93%E5%AD%98)
     - [清除缓存](#%E6%B8%85%E9%99%A4%E7%BC%93%E5%AD%98)
   - [执行中断设置（开发调试用）](#%E6%89%A7%E8%A1%8C%E4%B8%AD%E6%96%AD%E8%AE%BE%E7%BD%AE%E5%BC%80%E5%8F%91%E8%B0%83%E8%AF%95%E7%94%A8)
@@ -37,6 +37,9 @@
     - [后台管理jwtoken的身份查询](#%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86jwtoken%E7%9A%84%E8%BA%AB%E4%BB%BD%E6%9F%A5%E8%AF%A2)
   - [测试辅助工具](#%E6%B5%8B%E8%AF%95%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7)
   - [启动环境变量](#%E5%90%AF%E5%8A%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
+- [下一步TODO：](#%E4%B8%8B%E4%B8%80%E6%AD%A5todo)
+    - [权限控制点信息的自动采集与上传](#%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E7%82%B9%E4%BF%A1%E6%81%AF%E7%9A%84%E8%87%AA%E5%8A%A8%E9%87%87%E9%9B%86%E4%B8%8E%E4%B8%8A%E4%BC%A0)
+    - [业务类的方法注释，文档自动化](#%E4%B8%9A%E5%8A%A1%E7%B1%BB%E7%9A%84%E6%96%B9%E6%B3%95%E6%B3%A8%E9%87%8A%E6%96%87%E6%A1%A3%E8%87%AA%E5%8A%A8%E5%8C%96)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
