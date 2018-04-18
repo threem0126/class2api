@@ -4,43 +4,43 @@
 
 - [概要](#%E6%A6%82%E8%A6%81)
 - [从脚手架快速创建项目](#%E4%BB%8E%E8%84%9A%E6%89%8B%E6%9E%B6%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE)
-  - [class2api的由来：](#class2api%E7%9A%84%E7%94%B1%E6%9D%A5)
-  - [业务静态类的编写约定：](#%E4%B8%9A%E5%8A%A1%E9%9D%99%E6%80%81%E7%B1%BB%E7%9A%84%E7%BC%96%E5%86%99%E7%BA%A6%E5%AE%9A)
-  - [启动环境变量](#%E5%90%AF%E5%8A%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
-    - [创建全新独立的接口应用](#%E5%88%9B%E5%BB%BA%E5%85%A8%E6%96%B0%E7%8B%AC%E7%AB%8B%E7%9A%84%E6%8E%A5%E5%8F%A3%E5%BA%94%E7%94%A8)
-    - [在现有Express应用中扩展API路由](#%E5%9C%A8%E7%8E%B0%E6%9C%89express%E5%BA%94%E7%94%A8%E4%B8%AD%E6%89%A9%E5%B1%95api%E8%B7%AF%E7%94%B1)
+- [class2api的由来：](#class2api%E7%9A%84%E7%94%B1%E6%9D%A5)
+- [业务静态类的编写约定：](#%E4%B8%9A%E5%8A%A1%E9%9D%99%E6%80%81%E7%B1%BB%E7%9A%84%E7%BC%96%E5%86%99%E7%BA%A6%E5%AE%9A)
+- [启动环境变量](#%E5%90%AF%E5%8A%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
+  - [创建全新独立的接口应用](#%E5%88%9B%E5%BB%BA%E5%85%A8%E6%96%B0%E7%8B%AC%E7%AB%8B%E7%9A%84%E6%8E%A5%E5%8F%A3%E5%BA%94%E7%94%A8)
+  - [在现有Express应用中扩展API路由](#%E5%9C%A8%E7%8E%B0%E6%9C%89express%E5%BA%94%E7%94%A8%E4%B8%AD%E6%89%A9%E5%B1%95api%E8%B7%AF%E7%94%B1)
   - [接口返回值的默认结构](#%E6%8E%A5%E5%8F%A3%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E9%BB%98%E8%AE%A4%E7%BB%93%E6%9E%84)
   - [接口返回值的结构自定义](#%E6%8E%A5%E5%8F%A3%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E7%BB%93%E6%9E%84%E8%87%AA%E5%AE%9A%E4%B9%89)
   - [自定义Appi路径](#%E8%87%AA%E5%AE%9A%E4%B9%89appi%E8%B7%AF%E5%BE%84)
   - [跨域配置](#%E8%B7%A8%E5%9F%9F%E9%85%8D%E7%BD%AE)
-    - [访问内置的Redis缓存实例](#%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%AE%E7%9A%84redis%E7%BC%93%E5%AD%98%E5%AE%9E%E4%BE%8B)
-    - [自定义错误常量对象](#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF%E5%B8%B8%E9%87%8F%E5%AF%B9%E8%B1%A1)
-    - [业务类的修饰器扩展](#%E4%B8%9A%E5%8A%A1%E7%B1%BB%E7%9A%84%E4%BF%AE%E9%A5%B0%E5%99%A8%E6%89%A9%E5%B1%95)
-    - [API方法自动缓存](#api%E6%96%B9%E6%B3%95%E8%87%AA%E5%8A%A8%E7%BC%93%E5%AD%98)
-    - [API方法的缓存清楚控制](#api%E6%96%B9%E6%B3%95%E7%9A%84%E7%BC%93%E5%AD%98%E6%B8%85%E6%A5%9A%E6%8E%A7%E5%88%B6)
-    - [API方法执行中断设置（开发调试用）](#api%E6%96%B9%E6%B3%95%E6%89%A7%E8%A1%8C%E4%B8%AD%E6%96%AD%E8%AE%BE%E7%BD%AE%E5%BC%80%E5%8F%91%E8%B0%83%E8%AF%95%E7%94%A8)
-    - [常用内置的预设错误（code值统一为负数）](#%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E7%9A%84%E9%A2%84%E8%AE%BE%E9%94%99%E8%AF%AFcode%E5%80%BC%E7%BB%9F%E4%B8%80%E4%B8%BA%E8%B4%9F%E6%95%B0)
-    - [sequelize辅助方法](#sequelize%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95)
-      - [sequelize表Model定义](#sequelize%E8%A1%A8model%E5%AE%9A%E4%B9%89)
-      - [重置初始化DB](#%E9%87%8D%E7%BD%AE%E5%88%9D%E5%A7%8B%E5%8C%96db)
-      - [sequelize模型Model加载器](#sequelize%E6%A8%A1%E5%9E%8Bmodel%E5%8A%A0%E8%BD%BD%E5%99%A8)
-      - [打印sequelize实例的方法列表](#%E6%89%93%E5%8D%B0sequelize%E5%AE%9E%E4%BE%8B%E7%9A%84%E6%96%B9%E6%B3%95%E5%88%97%E8%A1%A8)
-      - [sequelize内置函数的引用](#sequelize%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0%E7%9A%84%E5%BC%95%E7%94%A8)
-      - [执行自定义SQL语句](#%E6%89%A7%E8%A1%8C%E8%87%AA%E5%AE%9A%E4%B9%89sql%E8%AF%AD%E5%8F%A5)
-    - [权限访问控制相关](#%E6%9D%83%E9%99%90%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%9B%B8%E5%85%B3)
-      - [对API方法施加控制点](#%E5%AF%B9api%E6%96%B9%E6%B3%95%E6%96%BD%E5%8A%A0%E6%8E%A7%E5%88%B6%E7%82%B9)
-      - [后台管理jwtoken的身份查询](#%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86jwtoken%E7%9A%84%E8%BA%AB%E4%BB%BD%E6%9F%A5%E8%AF%A2)
-    - [测试辅助工具](#%E6%B5%8B%E8%AF%95%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7)
+  - [访问内置的Redis缓存实例](#%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%AE%E7%9A%84redis%E7%BC%93%E5%AD%98%E5%AE%9E%E4%BE%8B)
+  - [自定义错误常量对象](#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF%E5%B8%B8%E9%87%8F%E5%AF%B9%E8%B1%A1)
+  - [业务类的修饰器扩展](#%E4%B8%9A%E5%8A%A1%E7%B1%BB%E7%9A%84%E4%BF%AE%E9%A5%B0%E5%99%A8%E6%89%A9%E5%B1%95)
+  - [API方法自动缓存](#api%E6%96%B9%E6%B3%95%E8%87%AA%E5%8A%A8%E7%BC%93%E5%AD%98)
+  - [API方法的缓存清楚控制](#api%E6%96%B9%E6%B3%95%E7%9A%84%E7%BC%93%E5%AD%98%E6%B8%85%E6%A5%9A%E6%8E%A7%E5%88%B6)
+  - [API方法执行中断设置（开发调试用）](#api%E6%96%B9%E6%B3%95%E6%89%A7%E8%A1%8C%E4%B8%AD%E6%96%AD%E8%AE%BE%E7%BD%AE%E5%BC%80%E5%8F%91%E8%B0%83%E8%AF%95%E7%94%A8)
+  - [常用内置的预设错误（code值统一为负数）](#%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E7%9A%84%E9%A2%84%E8%AE%BE%E9%94%99%E8%AF%AFcode%E5%80%BC%E7%BB%9F%E4%B8%80%E4%B8%BA%E8%B4%9F%E6%95%B0)
+  - [sequelize辅助方法](#sequelize%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95)
+    - [sequelize表Model定义](#sequelize%E8%A1%A8model%E5%AE%9A%E4%B9%89)
+    - [重置初始化DB](#%E9%87%8D%E7%BD%AE%E5%88%9D%E5%A7%8B%E5%8C%96db)
+    - [sequelize模型Model加载器](#sequelize%E6%A8%A1%E5%9E%8Bmodel%E5%8A%A0%E8%BD%BD%E5%99%A8)
+    - [打印sequelize实例的方法列表](#%E6%89%93%E5%8D%B0sequelize%E5%AE%9E%E4%BE%8B%E7%9A%84%E6%96%B9%E6%B3%95%E5%88%97%E8%A1%A8)
+    - [sequelize内置函数的引用](#sequelize%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0%E7%9A%84%E5%BC%95%E7%94%A8)
+    - [执行自定义SQL语句](#%E6%89%A7%E8%A1%8C%E8%87%AA%E5%AE%9A%E4%B9%89sql%E8%AF%AD%E5%8F%A5)
+  - [权限访问控制相关](#%E6%9D%83%E9%99%90%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%9B%B8%E5%85%B3)
+    - [对API方法施加控制点](#%E5%AF%B9api%E6%96%B9%E6%B3%95%E6%96%BD%E5%8A%A0%E6%8E%A7%E5%88%B6%E7%82%B9)
+    - [后台管理jwtoken的身份查询](#%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86jwtoken%E7%9A%84%E8%BA%AB%E4%BB%BD%E6%9F%A5%E8%AF%A2)
+  - [测试辅助工具](#%E6%B5%8B%E8%AF%95%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# 概要
+## 概要
 - class2api帮把Javascript Class类的静态方法自动向外映射为API接口，创建独立的应用
 - 也可以整合到现有的Express应用中，挂载到指定到路由下 
 
 ---
 
-# 从脚手架快速创建项目
+## 从脚手架快速创建项目
 ```javascript
     //先全局安装class2api
     $ npm i class2api -g 
@@ -159,7 +159,7 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
 创建服务器(使用外部的Express，只返回router供绑定路由)，opts参数与createServer函数基本相同，除了自动忽略custom参数。可参考项目中的demo-src/server-router.js源码
 
 
-## 接口返回值的默认结构
+### 接口返回值的默认结构
 class2api对所有请求的返回数据结构，统一为：
 ```javascript
 {  
@@ -169,7 +169,7 @@ class2api对所有请求的返回数据结构，统一为：
 ```
 其中err代表内部异常或错误，凡是GKErrors和GKErrorWrap result抛出的错误都会捕捉err ，而result保存的是业务类静态方法的执行返回结果，且约定为必须为对象结构，不能是数字、字符串、布尔值等简单数据类型
 
-## 接口返回值的结构自定义
+### 接口返回值的结构自定义
 *特殊情况：如果你的系统有特殊原因，需要接口返回自定义的数据结构，可以使用以下方式来控制反转：
 ```javascript
     class ClassB {
@@ -187,7 +187,7 @@ class2api对所有请求的返回数据结构，统一为：
     }
 ```
 
-## 自定义Appi路径
+### 自定义Appi路径
 ```javascript
     //创建微服务对象
     createServer({
@@ -198,7 +198,7 @@ class2api对所有请求的返回数据结构，统一为：
     }) 
 ``` 
 
-## 跨域配置
+### 跨域配置
 ```javascript
     //创建微服务对象
     createServer({
