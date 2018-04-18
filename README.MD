@@ -84,8 +84,12 @@ $ class2api init
 ```
 
 最终：
-``` 
-$ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
+```javascript 
+ //curl请求
+ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
+ 
+ //运行单元测试，需全局安装mocha： $ npm i mocha -g
+ $ mocha test/test.run.js
 ```
      
 ## class2api的由来：
