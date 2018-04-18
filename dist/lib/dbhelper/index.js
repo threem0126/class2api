@@ -5,31 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.DBUtils = exports.DBModelLoader = exports.TableSetting = undefined;
 
-var _iterator = require('babel-runtime/core-js/symbol/iterator');
-
-var _iterator2 = _interopRequireDefault(_iterator);
-
-var _symbol = require('babel-runtime/core-js/symbol');
-
-var _symbol2 = _interopRequireDefault(_symbol);
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
-var _stringify = require('babel-runtime/core-js/json/stringify');
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
-
-var _typeof = typeof _symbol2.default === "function" && typeof _iterator2.default === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _sequelize = require('sequelize');
 
@@ -51,7 +31,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _promise2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _promise2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var _dbList = {};
 
@@ -99,7 +79,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
                             hasScope = false;
                             //先初始化非Scope的Model
 
-                            (0, _keys2.default)(_model_objects).forEach(function (modelName) {
+                            Object.keys(_model_objects).forEach(function (modelName) {
                                 var fun = _model_objects[modelName];
                                 if (!fun.scopeBaseModelName) {
                                     _model_objects[modelName] = fun.call();
@@ -110,7 +90,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
 
                             if (hasScope) {
                                 //再初始化Scope类型的Model
-                                (0, _keys2.default)(_model_objects).forEach(function (modelName) {
+                                Object.keys(_model_objects).forEach(function (modelName) {
                                     var fun = _model_objects[modelName];
                                     if (fun.scopeBaseModelName) {
                                         _model_objects[modelName] = fun.call(null, _model_objects[fun.scopeBaseModelName]);
@@ -119,7 +99,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
                             }
 
                             //补充初始化model的关联关系
-                            (0, _keys2.default)(_model_objects).forEach(function (modelName) {
+                            Object.keys(_model_objects).forEach(function (modelName) {
                                 if ('associate' in _model_objects[modelName]) {
                                     _model_objects[modelName].associate(_model_objects, _ass);
                                 }
@@ -337,7 +317,7 @@ var DBModelLoader = function DBModelLoader(option) {
         host = option.host,
         port = option.port;
 
-    var hashKey = (0, _util.hashcode)((0, _stringify2.default)({ database: database, host: host, port: port }));
+    var hashKey = (0, _util.hashcode)(JSON.stringify({ database: database, host: host, port: port }));
     if (!_dbList[hashKey]) {
         var loader = _inner_DBModelLoader(option);
         _dbList[hashKey] = loader;

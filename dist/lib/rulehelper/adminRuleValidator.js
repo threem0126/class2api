@@ -4,27 +4,11 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
-var _defineProperty = require('babel-runtime/core-js/object/define-property');
-
-var _defineProperty2 = _interopRequireDefault(_defineProperty);
-
-var _getOwnPropertyDescriptor = require('babel-runtime/core-js/object/get-own-property-descriptor');
-
-var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
-
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _stringify = require('babel-runtime/core-js/json/stringify');
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; (0, _defineProperty2.default)(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _dec, _dec2, _desc, _value, _class;
 
@@ -44,7 +28,7 @@ var _util = require('./../class2api/util');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _promise2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _promise2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -156,7 +140,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                     },
                                     withCredentials: 'true',
                                     json: true,
-                                    body: (0, _stringify2.default)({ nothing: 1 })
+                                    body: JSON.stringify({ nothing: 1 })
                                 });
 
                             case 5:
@@ -184,7 +168,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                 throw err;
 
                             case 17:
-                                throw _GKErrors_Inner.GKErrors._TOKEN_LOGIN_INVALID('jwtoken\u65E0\u6CD5\u8BC6\u522B\uFF1A' + (0, _stringify2.default)(err));
+                                throw _GKErrors_Inner.GKErrors._TOKEN_LOGIN_INVALID('jwtoken\u65E0\u6CD5\u8BC6\u522B\uFF1A' + JSON.stringify(err));
 
                             case 18:
                                 return _context.abrupt('return', result);
@@ -218,7 +202,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                 break;
 
                             case 33:
-                                throw _GKErrors_Inner.GKErrors._SERVER_ERROR('\u9A8C\u8BC1\u8EAB\u4EFD\u65F6\u9047\u5230\u5F02\u5E38' + (0, _stringify2.default)(_context.t0));
+                                throw _GKErrors_Inner.GKErrors._SERVER_ERROR('\u9A8C\u8BC1\u8EAB\u4EFD\u65F6\u9047\u5230\u5F02\u5E38' + JSON.stringify(_context.t0));
 
                             case 34:
                             case 'end':
@@ -268,7 +252,7 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
                                     },
                                     withCredentials: 'true',
                                     json: true,
-                                    body: (0, _stringify2.default)({ sysName: sysName, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath, apiInvokeParams: apiInvokeParams })
+                                    body: JSON.stringify({ sysName: sysName, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath, apiInvokeParams: apiInvokeParams })
                                 });
 
                             case 4:
@@ -335,5 +319,5 @@ var RuleValidator = (_dec = (0, _Decorators.cacheAble)({
     }]);
 
     return RuleValidator;
-}(), (_applyDecoratedDescriptor(_class, 'parseAdminAccountFromJWToken', [_dec], (0, _getOwnPropertyDescriptor2.default)(_class, 'parseAdminAccountFromJWToken'), _class), _applyDecoratedDescriptor(_class, '_ruleValidator_inner', [_dec2], (0, _getOwnPropertyDescriptor2.default)(_class, '_ruleValidator_inner'), _class)), _class));
+}(), (_applyDecoratedDescriptor(_class, 'parseAdminAccountFromJWToken', [_dec], Object.getOwnPropertyDescriptor(_class, 'parseAdminAccountFromJWToken'), _class), _applyDecoratedDescriptor(_class, '_ruleValidator_inner', [_dec2], Object.getOwnPropertyDescriptor(_class, '_ruleValidator_inner'), _class)), _class));
 exports.default = RuleValidator;

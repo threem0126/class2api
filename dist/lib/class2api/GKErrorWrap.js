@@ -3,23 +3,12 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.GKErrorWrap = undefined;
 
-var _assign = require("babel-runtime/core-js/object/assign");
-
-var _assign2 = _interopRequireDefault(_assign);
-
-var _stringify = require("babel-runtime/core-js/json/stringify");
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
-var _extends = _assign2.default || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 if (!JSON.stringifyline) {
     JSON.stringifyline = function (Obj) {
-        return (0, _stringify2.default)(Obj, null, 2);
+        return JSON.stringify(Obj, null, 2);
     };
 }
 

@@ -5,37 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CreateListenRouter = undefined;
 
-var _iterator2 = require('babel-runtime/core-js/symbol/iterator');
-
-var _iterator3 = _interopRequireDefault(_iterator2);
-
-var _symbol = require('babel-runtime/core-js/symbol');
-
-var _symbol2 = _interopRequireDefault(_symbol);
-
-var _assign = require('babel-runtime/core-js/object/assign');
-
-var _assign2 = _interopRequireDefault(_assign);
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
-var _getIterator2 = require('babel-runtime/core-js/get-iterator');
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _stringify = require('babel-runtime/core-js/json/stringify');
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _typeof = typeof _symbol2.default === "function" && typeof _iterator3.default === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _extends = _assign2.default || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _express = require('express');
 
@@ -49,7 +25,7 @@ var _url2 = _interopRequireDefault(_url);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _promise2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _promise2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 //import RateLimit from 'express-rate-limit'
 
@@ -382,7 +358,7 @@ var CreateListenRouter = exports.CreateListenRouter = function () {
                         _didIteratorError = false;
                         _iteratorError = undefined;
                         _context5.prev = 6;
-                        _iterator = (0, _getIterator3.default)(modelClasses);
+                        _iterator = modelClasses[Symbol.iterator]();
 
                     case 8:
                         if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
@@ -507,7 +483,7 @@ var CreateListenRouter = exports.CreateListenRouter = function () {
                                                 } else {
                                                     retObj = { err: 'API\u65B9\u6CD5\u672A\u5B9A\u4E49(' + req.path + ', \u8BF7\u786E\u8BA4\u7C7B\u662F\u5426\u5B58\u5728\u6216\u7C7B\u7684\u540D\u79F0\u662F\u5426\u6709\u53D8\u66F4\uFF01)', result: null };
 
-                                                    console.error((0, _stringify2.default)(retObj));
+                                                    console.error(JSON.stringify(retObj));
                                                     res.json(retObj);
                                                 }
 
@@ -520,7 +496,7 @@ var CreateListenRouter = exports.CreateListenRouter = function () {
                                                 _context4.t0 = _context4['catch'](0);
 
                                                 res.status = 404;
-                                                res.json({ err: '404\u5904\u7406\u9519\u8BEF(' + (0, _stringify2.default)(_context4.t0) + ')', result: null });
+                                                res.json({ err: '404\u5904\u7406\u9519\u8BEF(' + JSON.stringify(_context4.t0) + ')', result: null });
 
                                             case 13:
                                             case 'end':

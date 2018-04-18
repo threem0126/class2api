@@ -1,19 +1,19 @@
 {
   "tpl": {
     "base": {
-      "url": "https://github.com/threem0126/class2api_example_base.git",
+      "url": "https://github.com/threem0126/class2api_scaffold_base.git",
       "branch": "master"
     },
     "normal": {
-      "url": "https://github.com/threem0126/class2api_example_normal.git",
+      "url": "https://github.com/threem0126/class2api_scaffold_normal.git",
       "branch": "master"
     },
     "super": {
-      "url": "https://github.com/threem0126/class2api_example_super.git",
+      "url": "https://github.com/threem0126/class2api_scaffold_super.git",
       "branch": "master"
     },
     "admin": {
-      "url": "https://github.com/threem0126/class2api_example_admin.git",
+      "url": "https://github.com/threem0126/class2api_scaffold_admin.git",
       "branch": "master"
     }
   }

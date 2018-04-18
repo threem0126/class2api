@@ -5,10 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.__setGankaoWXAuthToken = exports.getRedisClient = exports.getting_redisConfig = exports.setting_redisConfig = exports.getGankaoWXAuthToken = undefined;
 
-var _stringify = require('babel-runtime/core-js/json/stringify');
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -139,7 +135,7 @@ var _init_redisClient = function _init_redisClient() {
                                 // 测试
 
                                 _context4.next = 4;
-                                return _redisClient.setAsync(key, (0, _stringify2.default)({ hello: "world" }), 'EX', 10);
+                                return _redisClient.setAsync(key, JSON.stringify({ hello: "world" }), 'EX', 10);
 
                             case 4:
                                 console.log('\u6D4B\u8BD5\uFF0C\u521B\u5EFA redis key:' + key);

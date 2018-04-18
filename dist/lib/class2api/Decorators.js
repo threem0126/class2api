@@ -5,37 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.crashAfterMe = exports.ipwhitelist = exports.clearCache = exports.cacheAble = exports.modelSetting = undefined;
 
-var _iterator = require('babel-runtime/core-js/symbol/iterator');
-
-var _iterator2 = _interopRequireDefault(_iterator);
-
-var _symbol = require('babel-runtime/core-js/symbol');
-
-var _symbol2 = _interopRequireDefault(_symbol);
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
-var _assign = require('babel-runtime/core-js/object/assign');
-
-var _assign2 = _interopRequireDefault(_assign);
-
-var _stringify = require('babel-runtime/core-js/json/stringify');
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _keys = require('babel-runtime/core-js/object/keys');
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _keys2 = _interopRequireDefault(_keys);
-
-var _typeof = typeof _symbol2.default === "function" && typeof _iterator2.default === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj; };
-
-var _extends = _assign2.default || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _redisClient = require('./redisClient');
 
@@ -43,7 +19,7 @@ var _util = require('./util');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _promise2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _promise2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var config = (0, _redisClient.getting_redisConfig)();
 var _config$cache_prefx = config.cache_prefx,
@@ -51,7 +27,7 @@ var _config$cache_prefx = config.cache_prefx,
     _config$defaultExpire = config.defaultExpireSecond,
     defaultExpireSecond = _config$defaultExpire === undefined ? 10 * 60 : _config$defaultExpire;
 var modelSetting = exports.modelSetting = function modelSetting(props) {
-    (0, _keys2.default)(props).map(function (key, value) {
+    Object.keys(props).map(function (key, value) {
         if (key.indexOf("__") !== 0) {
             throw '动态添加的静态属性名不符合约定格式（__****）';
         }
@@ -128,7 +104,7 @@ var ____cache = {
                                         switch (_context2.prev = _context2.next) {
                                             case 0:
                                                 _context2.next = 2;
-                                                return (0, _redisClient.getRedisClient)().setAsync(akey, (0, _stringify2.default)(avalue), 'EX', expireTimeSeconds || defaultExpireSecond);
+                                                return (0, _redisClient.getRedisClient)().setAsync(akey, JSON.stringify(avalue), 'EX', expireTimeSeconds || defaultExpireSecond);
 
                                             case 2:
                                             case 'end':
