@@ -247,8 +247,9 @@ return {
 - modelSetting(props)
 类修饰器，将传入的props对象赋值到 Class.__modelSetting 上，并传入beforeCall事件函数中，供beforeCall函数内部访问调用
 目前class2api内部约定的porps属性有：
-**__Auth**:Function，与业务类相关的身份验证函数，内部进行身份判断，并返回带有uID的用户信息对象。通常在beforeCall中执行调用完成身份验证
-**__ruleCategory**:{name//权限组名称,desc//权限组的备注描述}，
+    - **__Auth**:Function，与业务类相关的身份验证函数，内部进行身份判断，并返回带有uID的用户信息对象。通常在beforeCall中执行调用完成身份验证
+    - **__ruleCategory**:{name//权限组名称,desc//权限组的备注描述}
+
 ```javascript
     import {parseAdminAccountFromJWToken} from "class2api/rulehelper";
     @modelSetting({
@@ -269,7 +270,7 @@ return {
     }
 ```
 
-### API缓存机制
+### API方法缓存机制
 
 #### 启用缓存
 - cacheAble({cacheKeyGene:()=>{}})     
@@ -545,5 +546,11 @@ class2api内置的管理员身份校验函数，函数内将jwtoken参数会以h
 - $ process.env.NO_API_CACHE=1  强制关闭静态类的API调用缓存，使cacheAble、clearCache失效
 - $ process.env.SQL_PRINT=1     开启sequelize的SQL执行日志的打印
 - $ process.env.PRINT_API_RESULT=1     开启API方法执行的结果日志打印
+
+
+## 下一步完善：
+
+#### 权限控制点信息的自动采集与上传
+#### 业务类的方法注释，文档自动化
 
 
