@@ -1,12 +1,16 @@
+## 概要
+- class2api帮把Javascript Class类的静态方法自动向外映射为API接口，创建独立的应用
+- 也可以整合到现有的Express应用中，挂载到指定到路由下 
+---
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [概要](#%E6%A6%82%E8%A6%81)
 - [从脚手架快速创建项目](#%E4%BB%8E%E8%84%9A%E6%89%8B%E6%9E%B6%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE)
 - [class2api的由来：](#class2api%E7%9A%84%E7%94%B1%E6%9D%A5)
 - [业务静态类的编写约定：](#%E4%B8%9A%E5%8A%A1%E9%9D%99%E6%80%81%E7%B1%BB%E7%9A%84%E7%BC%96%E5%86%99%E7%BA%A6%E5%AE%9A)
-- [启动环境变量](#%E5%90%AF%E5%8A%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
+- [如何使用](#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8)
   - [创建全新独立的接口应用](#%E5%88%9B%E5%BB%BA%E5%85%A8%E6%96%B0%E7%8B%AC%E7%AB%8B%E7%9A%84%E6%8E%A5%E5%8F%A3%E5%BA%94%E7%94%A8)
   - [在现有Express应用中扩展API路由](#%E5%9C%A8%E7%8E%B0%E6%9C%89express%E5%BA%94%E7%94%A8%E4%B8%AD%E6%89%A9%E5%B1%95api%E8%B7%AF%E7%94%B1)
   - [接口返回值的默认结构](#%E6%8E%A5%E5%8F%A3%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E9%BB%98%E8%AE%A4%E7%BB%93%E6%9E%84)
@@ -16,9 +20,10 @@
   - [访问内置的Redis缓存实例](#%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%AE%E7%9A%84redis%E7%BC%93%E5%AD%98%E5%AE%9E%E4%BE%8B)
   - [自定义错误常量对象](#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF%E5%B8%B8%E9%87%8F%E5%AF%B9%E8%B1%A1)
   - [业务类的修饰器扩展](#%E4%B8%9A%E5%8A%A1%E7%B1%BB%E7%9A%84%E4%BF%AE%E9%A5%B0%E5%99%A8%E6%89%A9%E5%B1%95)
-  - [API方法自动缓存](#api%E6%96%B9%E6%B3%95%E8%87%AA%E5%8A%A8%E7%BC%93%E5%AD%98)
-  - [API方法的缓存清楚控制](#api%E6%96%B9%E6%B3%95%E7%9A%84%E7%BC%93%E5%AD%98%E6%B8%85%E6%A5%9A%E6%8E%A7%E5%88%B6)
-  - [API方法执行中断设置（开发调试用）](#api%E6%96%B9%E6%B3%95%E6%89%A7%E8%A1%8C%E4%B8%AD%E6%96%AD%E8%AE%BE%E7%BD%AE%E5%BC%80%E5%8F%91%E8%B0%83%E8%AF%95%E7%94%A8)
+  - [API缓存机制](#api%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6)
+    - [启用缓存](#%E5%90%AF%E7%94%A8%E7%BC%93%E5%AD%98)
+    - [清除缓存](#%E6%B8%85%E9%99%A4%E7%BC%93%E5%AD%98)
+  - [执行中断设置（开发调试用）](#%E6%89%A7%E8%A1%8C%E4%B8%AD%E6%96%AD%E8%AE%BE%E7%BD%AE%E5%BC%80%E5%8F%91%E8%B0%83%E8%AF%95%E7%94%A8)
   - [常用内置的预设错误（code值统一为负数）](#%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E7%9A%84%E9%A2%84%E8%AE%BE%E9%94%99%E8%AF%AFcode%E5%80%BC%E7%BB%9F%E4%B8%80%E4%B8%BA%E8%B4%9F%E6%95%B0)
   - [sequelize辅助方法](#sequelize%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95)
     - [sequelize表Model定义](#sequelize%E8%A1%A8model%E5%AE%9A%E4%B9%89)
@@ -31,14 +36,10 @@
     - [对API方法施加控制点](#%E5%AF%B9api%E6%96%B9%E6%B3%95%E6%96%BD%E5%8A%A0%E6%8E%A7%E5%88%B6%E7%82%B9)
     - [后台管理jwtoken的身份查询](#%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86jwtoken%E7%9A%84%E8%BA%AB%E4%BB%BD%E6%9F%A5%E8%AF%A2)
   - [测试辅助工具](#%E6%B5%8B%E8%AF%95%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7)
+  - [启动环境变量](#%E5%90%AF%E5%8A%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 概要
-- class2api帮把Javascript Class类的静态方法自动向外映射为API接口，创建独立的应用
-- 也可以整合到现有的Express应用中，挂载到指定到路由下 
-
----
 
 ## 从脚手架快速创建项目
 ```javascript
@@ -126,10 +127,7 @@ $ curl -d 'name=huangyong' 'http://127.0.0.1:3002/a/hello'
   </li></ul>
 </details></p> 
 
-## 启动环境变量  
-- $ process.env.NO_API_CACHE=1  强制关闭静态类的API调用缓存，使cacheAble、clearCache失效
-- $ process.env.SQL_PRINT=1     开启sequelize的SQL执行日志的打印
-- $ process.env.PRINT_API_RESULT=1     开启API方法执行的结果日志打印
+## 如何使用  
 
 ### 创建全新独立的接口应用
 - createServer(opts)
@@ -271,7 +269,9 @@ return {
     }
 ```
 
-### API方法自动缓存
+### API缓存机制
+
+#### 启用缓存
 - cacheAble({cacheKeyGene:()=>{}})     
 类静态方法修饰器,对修饰的API方法的调用结果进行缓存，缓存的key由cacheKeyGene函数运行时动态返回指定
 ```javascript
@@ -313,7 +313,7 @@ A：传入__nocache=1参数，组件内部即会判断并绕过缓存，示例�
         let {body} = await request.postAsync(options)
 ```
 
-### API方法的缓存清楚控制
+#### 清除缓存
 - clearCache({cacheKeyGene:()=>{}}) 
 类静态方法修饰器, 实现在API请求完成之后清空指定key的缓存，删除的key由cacheKeyGene函数运行时动态返回指定；如果需要清除多个key，可以用反转控制的方式，交给类静态方法内部来处理，当cacheKeyGene函数返回''空字符串，会开启反转控制模式，修饰器内部会在类静态方法的第一个调用参数（按约定，类静态方法使用第一个复合对象获取所有的参数）中增加__cacheManage属性，__cacheManage是一个轻量cache访问器，提供get(akey)、set(akey, avalue, expireTimeSeconds)、delete(akey)三个方法。
 ```javascript
@@ -350,7 +350,7 @@ A：传入__nocache=1参数，组件内部即会判断并绕过缓存，示例�
     
 ```
 
-### API方法执行中断设置（开发调试用）
+### 执行中断设置（开发调试用）
 - crashAfterMe(hintMsg)  修饰器,运行完类方法就人为抛出异常中断程序，调试用，生产环境下自动失效
 
 ### 常用内置的预设错误（code值统一为负数）
@@ -541,5 +541,9 @@ class2api内置的管理员身份校验函数，函数内将jwtoken参数会以h
     })
    
 ```
+### 启动环境变量  
+- $ process.env.NO_API_CACHE=1  强制关闭静态类的API调用缓存，使cacheAble、clearCache失效
+- $ process.env.SQL_PRINT=1     开启sequelize的SQL执行日志的打印
+- $ process.env.PRINT_API_RESULT=1     开启API方法执行的结果日志打印
 
 
