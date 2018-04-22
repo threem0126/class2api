@@ -4,10 +4,11 @@
  * @param Obj
  */
 export const dumpModelFuns = (Obj)=> {
-    console.dir('dump functions of model:');
+    console.dir('dump functions of model:' + Obj.name);
     for (let key in Obj) {
         if (typeof Obj[key] === "function") {
-            console.dir(key);
+            if (key.indexOf("get") !== -1 || key.indexOf("add") !== -1 || key.indexOf("set") !== -1 || key.indexOf("count") !== -1 || key.indexOf("has") !== -1 || key.indexOf("remove") !== -1 || key.indexOf("create") !== -1)
+                console.dir(`----->  ${key}`);
         }
     }
 }
