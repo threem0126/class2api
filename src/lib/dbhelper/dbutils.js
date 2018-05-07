@@ -3,12 +3,21 @@
  *
  * @param Obj
  */
-export const dumpModelFuns = (Obj)=> {
-    console.dir('dump functions of model:' + Obj.name);
+export const dumpModelFuns = (Obj,printAll)=> {
+    console.dir('dump functions of model:' + Obj.property.name);
     for (let key in Obj) {
         if (typeof Obj[key] === "function") {
-            if (key.indexOf("get") !== -1 || key.indexOf("add") !== -1 || key.indexOf("set") !== -1 || key.indexOf("count") !== -1 || key.indexOf("has") !== -1 || key.indexOf("remove") !== -1 || key.indexOf("create") !== -1)
+            if (printAll === true) {
                 console.dir(`----->  ${key}`);
+            } else {
+                if (key === "getDataValue" || key === "setDataValue" || key === "get" || key === "set" || key === "setAttributes" || key === "_setInclude" || key === "setValidators") {
+                    continue
+                }
+                if (key.indexOf("get") === 0 || key.indexOf("add") === 0 || key.indexOf("set") === 0 || key.indexOf("count") === 0 || key.indexOf("has") === 0 || key.indexOf("remove") === 0 || key.indexOf("create") === 0) {
+                    console.dir(`----->  ${key}`);
+                }
+            }
         }
     }
 }
+

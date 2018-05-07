@@ -85,7 +85,16 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
                 target.__modelSetting().__ruleCategory : {name: '无名', desc: '-'}
             let apiInvokeParams = ''
             let {req:req_noused, res:res_noused, ___frontpageURL:___frontpageURL_noused,..._apiInvokeParams} = arguments[0] || {}
+
+            let {headers, cookies} = req_noused
+            let frontReq = {}
+
             try{
+                frontReq = {
+                    ___ip: req_noused.headers['x-forwarded-for'] || req_noused.connection.remoteAddress || req_noused.socket.remoteAddress || req_noused.connection.socket.remoteAddress,
+                    headers,
+                    cookies
+                }
                 apiInvokeParams = JSON.stringify(_apiInvokeParams)
             }catch (err) {
                 apiInvokeParams = 'call params stringify error'
@@ -100,7 +109,8 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
                 ruleName: `${ruleName}`,
                 ruleDesc,
                 codePath: `${target.name}.${name}`,
-                apiInvokeParams
+                apiInvokeParams,
+                frontReq
             });
             let {canAccess, resean} = result
             if (!canAccess) {
