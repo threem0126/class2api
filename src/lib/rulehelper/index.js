@@ -21,11 +21,19 @@ let _ruleValidator_custom;
  * @param codePath
  * @returns {Promise.<*>}
  */
-const ruleValidator = async ({jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath, apiInvokeParams})=> {
-    let params = {jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath,apiInvokeParams,frontReq}
+const ruleValidator = async ({jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath, apiInvokeParams,frontReq})=> {
+    let params = {jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath, apiInvokeParams, frontReq}
     if (_ruleValidator_custom) {
         //调用外部的自定义验证函数
-        return await _ruleValidator_custom({jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath,frontReq})
+        return await _ruleValidator_custom({
+            jwtoken,
+            categoryName,
+            categoryDesc,
+            ruleName,
+            ruleDesc,
+            codePath,
+            frontReq
+        })
     } else {
         //使用内置的权限验证函数，向class2api.config中配置的权限中心发起请求
         return await RuleValidator._ruleValidator_inner({...params, sysName})

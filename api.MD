@@ -1,37 +1,53 @@
 # hello测试方法 #- 接口：undefined- post参数：```json{
   "name": "haungyong"
-}```- 请求结果：```json"{\"err\":\"API方法未定义(/a/hello, 请确认类是否存在或类的名称是否有变更！)\",\"result\":null}"```
+}```- 请求结果：```json"{\"err\":null,\"result\":{\"message\":\"this is a message from Api: got name [haungyong]\"}}"```
 # hello测试方法 #- 接口：undefined- post参数：```json{
   "name": "haungyong"
 }```- 请求结果：```json{
-  "err": "API方法未定义(/a/hello, 请确认类是否存在或类的名称是否有变更！)",
-  "result": null
+  "err": null,
+  "result": {
+    "message": "this is a message from Api: got name [haungyong]"
+  }
 }```
 # 方法getArticle #- 接口：undefined- post参数：```json{
   "name": "haungyong"
 }```- 请求结果：```json{
-  "err": "API方法未定义(/gkmodela/getArticle, 请确认类是否存在或类的名称是否有变更！)",
-  "result": null
+  "err": null,
+  "result": {
+    "message": "getArticle.haungyong，from user. 12345678",
+    "__fromCache": true
+  }
 }```
 # 以别名方式请求 #- 接口：undefined- post参数：```json{
-  "name": 0.0027308572427835465
+  "name": 0.34269726220365726
 }```- 请求结果：```json{
-  "err": "API方法未定义(/a2/getArticle, 请确认类是否存在或类的名称是否有变更！)",
-  "result": null
+  "err": null,
+  "result": {
+    "message": "getArticle.0.34269726220365726，from user. 12345678"
+  }
 }```
 # 以别名方式请求 #- 接口：undefined- post参数：```json{}```- 请求结果：```json{
-  "err": "API方法未定义(/a2/customResponseResultStruck, 请确认类是否存在或类的名称是否有变更！)",
-  "result": null
+  "data": {
+    "name": "huangyong"
+  },
+  "errorCode": 123
 }```
 # 编辑文章 #- 接口：undefined- post参数：```json{
-  "aID": 0.09226445732821609
+  "aID": 0.3733534067651929
 }```- 请求结果：```json{
-  "err": "API方法未定义(/admin/editArticle, 请确认类是否存在或类的名称是否有变更！)",
+  "err": {
+    "_gankao": 1,
+    "code": -6,
+    "message": "无访问权限（{\n  \"resean\": \"访问被拒绝（功能：[文章系统/编辑文章]，代码:[GKAdmin_ModelA.editArticle]，原因：未授权）\"\n}）",
+    "more": "{\n  \"resean\": \"访问被拒绝（功能：[文章系统/编辑文章]，代码:[GKAdmin_ModelA.editArticle]，原因：未授权）\"\n}"
+  },
   "result": null
 }```
 # 删除文章 #- 接口：undefined- post参数：```json{
-  "aID": 0.4769113812833381
+  "aID": 0.22083280404537464
 }```- 请求结果：```json{
-  "err": "API方法未定义(/admin/deleteArticle, 请确认类是否存在或类的名称是否有变更！)",
-  "result": null
+  "err": null,
+  "result": {
+    "success": true
+  }
 }```

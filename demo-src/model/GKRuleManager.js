@@ -3,6 +3,8 @@
  * 后台管理权限验证的框架参考： https://lcpublic.s3.cn-north-1.amazonaws.com.cn/acf201ab-16da-44fb-aea1-017bb1285b07?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAOYYVHPTPAKZAWURQ%2F20180416%2Fcn-north-1%2Fs3%2Faws4_request&X-Amz-Date=20180416T072806Z&X-Amz-Expires=3600&X-Amz-Signature=d50e9a048aeafd8c9d4f9fc8660c3dbec65819610b21fc130ff046115075c886&X-Amz-SignedHeaders=host
  */
 import {GKSUCCESS} from "/class2api";
+import {GKErrors} from "../../src/lib/class2api/GKErrors_Inner";
+import {keys} from 'lodash'
 
 class GKRuleManager {
     constructor() {
@@ -31,9 +33,13 @@ class GKRuleManager {
      * @param codePath      权限点对应类静态方法的路径
      * @returns {Promise.<*>}   是否允许访问的对象结果
      */
-    static async validate({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath}) {
+    static async validate({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath, frontReq}) {
         //...
+        if(!frontReq || keys(frontReq).length === 0) {
+            throw GKErrors._PARAMS_VALUE_EXPECT(`参数不符合预期${frontReq}`)
+        }
         console.log(`validate: ...`)
+        console.log(frontReq)
         console.log({sysName, jwtoken, categoryName,categoryDesc, ruleName, ruleDesc, codePath})
 
         //TODO:这里替换为具体的权限表判断逻辑

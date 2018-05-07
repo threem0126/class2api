@@ -69,7 +69,7 @@ var ruleValidator = function () {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        params = { jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath, apiInvokeParams: apiInvokeParams };
+                        params = { jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath, apiInvokeParams: apiInvokeParams, frontReq: frontReq };
 
                         if (!_ruleValidator_custom) {
                             _context.next = 7;
@@ -77,7 +77,7 @@ var ruleValidator = function () {
                         }
 
                         _context.next = 4;
-                        return _ruleValidator_custom({ jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath });
+                        return _ruleValidator_custom({ jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath, frontReq: frontReq });
 
                     case 4:
                         return _context.abrupt('return', _context.sent);
