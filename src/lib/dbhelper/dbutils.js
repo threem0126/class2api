@@ -10,12 +10,12 @@ export const ModelPreview = ()=> {
     return {
         Print: function (sequelizeObj, className) {
             console.dir(`========【${className}】========`)
-            DBUtils.dumpModelFuns(sequelizeObj)
+            dumpModelFuns(sequelizeObj)
             console.dir('')
             console.dir(sequelizeObj.get({plain: true}))
             console.dir('')
             console.dir('')
-            Functions[className] = DBUtils.dumpModelFunsJSON(sequelizeObj)
+            Functions[className] = dumpModelFunsJSON(sequelizeObj)
         },
         Report: function () {
             return Functions

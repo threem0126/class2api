@@ -17,12 +17,12 @@ var ModelPreview = exports.ModelPreview = function ModelPreview() {
     return {
         Print: function Print(sequelizeObj, className) {
             console.dir('========\u3010' + className + '\u3011========');
-            DBUtils.dumpModelFuns(sequelizeObj);
+            dumpModelFuns(sequelizeObj);
             console.dir('');
             console.dir(sequelizeObj.get({ plain: true }));
             console.dir('');
             console.dir('');
-            Functions[className] = DBUtils.dumpModelFunsJSON(sequelizeObj);
+            Functions[className] = dumpModelFunsJSON(sequelizeObj);
         },
         Report: function Report() {
             return Functions;
