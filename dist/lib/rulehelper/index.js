@@ -63,7 +63,8 @@ var ruleValidator = function () {
             ruleName = _ref3.ruleName,
             ruleDesc = _ref3.ruleDesc,
             codePath = _ref3.codePath,
-            apiInvokeParams = _ref3.apiInvokeParams;
+            apiInvokeParams = _ref3.apiInvokeParams,
+            frontReq = _ref3.frontReq;
         var params;
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
@@ -77,7 +78,15 @@ var ruleValidator = function () {
                         }
 
                         _context.next = 4;
-                        return _ruleValidator_custom({ jwtoken: jwtoken, categoryName: categoryName, categoryDesc: categoryDesc, ruleName: ruleName, ruleDesc: ruleDesc, codePath: codePath, frontReq: frontReq });
+                        return _ruleValidator_custom({
+                            jwtoken: jwtoken,
+                            categoryName: categoryName,
+                            categoryDesc: categoryDesc,
+                            ruleName: ruleName,
+                            ruleDesc: ruleDesc,
+                            codePath: codePath,
+                            frontReq: frontReq
+                        });
 
                     case 4:
                         return _context.abrupt('return', _context.sent);
