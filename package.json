@@ -4,10 +4,9 @@
   "description": "the lib for mapping your javascript class to api service.",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
-    "start:src": "NODE_ENV=development MODEL=src node demo-src/index.js",
-    "start:srcpro": "NODE_ENV=development MODEL=srcpro node demo-src/index.js",
-    "start:srcrouter": "NODE_ENV=development MODEL=srcrouter node demo-src/index.js",
-    "test": "NODE_ENV=development npm test",
+    "go:src": "NODE_ENV=development MODEL=src node demo-src/index.js",
+    "go:srcpro": "NODE_ENV=development MODEL=srcpro node demo-src/index.js",
+    "go:srcrouter": "NODE_ENV=development MODEL=srcrouter node demo-src/index.js",
     "build": "babel src -d dist ",
     "upload": "npm publish --registry=http://registry.npmjs.org"
   },

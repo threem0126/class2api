@@ -3,9 +3,32 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.dumpModelFunsJSON = exports.dumpModelFuns = undefined;
+exports.dumpModelFunsJSON = exports.dumpModelFuns = exports.ModelPreview = undefined;
 
 var _lodash = require('lodash');
+
+/**
+ * 预览模型的信息
+ * @returns {{Print: Print, Report: Report}}
+ * @constructor
+ */
+var ModelPreview = exports.ModelPreview = function ModelPreview() {
+    var Functions = {};
+    return {
+        Print: function Print(sequelizeObj, className) {
+            console.dir('========\u3010' + className + '\u3011========');
+            DBUtils.dumpModelFuns(sequelizeObj);
+            console.dir('');
+            console.dir(sequelizeObj.get({ plain: true }));
+            console.dir('');
+            console.dir('');
+            Functions[className] = DBUtils.dumpModelFunsJSON(sequelizeObj);
+        },
+        Report: function Report() {
+            return Functions;
+        }
+    };
+};
 
 /**
  * 方便查看sequelize对象上对于关联对象的所有操作方法名称
