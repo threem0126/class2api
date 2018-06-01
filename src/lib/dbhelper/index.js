@@ -21,11 +21,11 @@ const _inner_DBModelLoader = (option)=> {
 
 //region 初始化sequelize对象
     const _INIT = async ()=> {
-        let {database, user, password, host, port} = _config_option
+        let {database, user, password, host, port, timezone} = _config_option
         sequelize = new Sequelize(database, user, password, {
             host: host,
             port: port,
-            timezone: "+08:00",
+            timezone: timezone||"+08:00",
             pool: {
                 max: 5,
                 min: 0,
@@ -147,7 +147,7 @@ const DBModelLoader = (option)=> {
     if(!option || typeof option !=="object"){
         throw GKErrors._SERVER_ERROR(`DBModelLoader调用缺少参数或参数不是{key/value}对象`)
     }
-    let {database, host, port} = option
+    let {database, host, port, timezone} = option
     let hashKey = hashcode(JSON.stringify({database, host, port}))
     if (!_dbList[hashKey]) {
         let loader = _inner_DBModelLoader(option)

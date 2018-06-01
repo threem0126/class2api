@@ -51,17 +51,17 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
     //region 初始化sequelize对象
     var _INIT = function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-            var database, user, password, host, port, hasScope;
+            var database, user, password, host, port, timezone, hasScope;
             return _regenerator2.default.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
                         case 0:
-                            database = _config_option.database, user = _config_option.user, password = _config_option.password, host = _config_option.host, port = _config_option.port;
+                            database = _config_option.database, user = _config_option.user, password = _config_option.password, host = _config_option.host, port = _config_option.port, timezone = _config_option.timezone;
 
                             sequelize = new _sequelize2.default(database, user, password, {
                                 host: host,
                                 port: port,
-                                timezone: "+08:00",
+                                timezone: timezone || "+08:00",
                                 pool: {
                                     max: 5,
                                     min: 0,
@@ -315,7 +315,8 @@ var DBModelLoader = function DBModelLoader(option) {
     }
     var database = option.database,
         host = option.host,
-        port = option.port;
+        port = option.port,
+        timezone = option.timezone;
 
     var hashKey = (0, _util.hashcode)(JSON.stringify({ database: database, host: host, port: port }));
     if (!_dbList[hashKey]) {
