@@ -544,8 +544,7 @@ class2api内置的管理员身份校验函数，函数内将jwtoken参数会以h
             let {err, result} = response
             let {message} = result
             message.lastIndexOf('haungyong').should.be.above(-1)
-        }) 
-    
+        })  
     })
    
 ```
@@ -553,6 +552,9 @@ class2api内置的管理员身份校验函数，函数内将jwtoken参数会以h
 - $ process.env.NO_API_CACHE=1  强制关闭静态类的API调用缓存，使cacheAble、clearCache失效
 - $ process.env.SQL_PRINT=1     开启sequelize的SQL执行日志的打印
 - $ process.env.PRINT_API_RESULT=1     开启API方法执行的结果日志打印
+- $ process.env.StopOnAnyException=1    在发生任何Error时，暂停进程，包括Gankao自定义错误
+- $ process.env.PRINT_API_CACHE=1    打印API缓存相关的调试信息
+
 
 
 ## 下一步TODO：

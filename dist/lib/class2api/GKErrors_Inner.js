@@ -19,6 +19,6 @@ var GKErrors = exports.GKErrors = {
     _NOT_SERVICE: (0, _GKErrorWrap.GKErrorWrap)(-5, '\u529F\u80FD\u5373\u5C06\u5B9E\u73B0'),
     _PARAMS_VALUE_EXPECT: (0, _GKErrorWrap.GKErrorWrap)(-4, '\u53C2\u6570\u4E0D\u7B26\u5408\u9884\u671F'),
     _NO_RESULT: (0, _GKErrorWrap.GKErrorWrap)(-3, '\u65E0\u5339\u914D\u7ED3\u679C'),
-    _SERVER_ERROR: (0, _GKErrorWrap.GKErrorWrap)(-2, '\u670D\u52A1\u53D1\u751F\u5F02\u5E38'),
+    _SERVER_ERROR: (0, _GKErrorWrap.GKErrorWrap)(-2, '\u6E29\u99A8\u63D0\u793A\uFF1A'),
     _NOT_PARAMS: (0, _GKErrorWrap.GKErrorWrap)(-1, '\u7F3A\u5C11\u53C2\u6570')
 };

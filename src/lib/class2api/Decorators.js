@@ -35,49 +35,55 @@ let ____cache = {
         return avalue
     },
     set: async (akey, avalue, expireTimeSeconds) => {
-        console.log(`set cachekey .......${akey}...`)
+        PrintCacheLog(`set cachekey .......${akey}...`)
         akey = redis_cache_key_prefx + akey
         delayRun(async () => {
             await getRedisClient().setAsync(akey, JSON.stringify(avalue), 'EX', expireTimeSeconds || defaultExpireSecond)
        }, 0, (err) => {
-            console.log(`redis缓存[${akey}]建立失败：${err}`)
+            PrintCacheLog(`redis缓存[${akey}]建立失败：${err}`)
         })
     },
     delete: async (akey) => {
         akey = redis_cache_key_prefx + akey
         delayRun(async () => {
             await getRedisClient().delAsync(akey)
-            console.log(`delete cachekey .......${akey}...`)
+            PrintCacheLog(`delete cachekey .......${akey}...`)
         }, 0, (err) => {
-            console.log(`redis缓存[${akey}]删除失败：${err}`)
+            PrintCacheLog(`redis缓存[${akey}]删除失败：${err}`)
         })
+    }
+}
+
+const PrintCacheLog = (msg)=> {
+    if (process.env.PRINT_API_CACHE === '1') {
+        console.log(msg)
     }
 }
 
 /**
  * 在被修饰的方法运行前后执行，首先判断是否存在相同入参的调用缓存，如果没有则在运行结束后，将要运行结果缓存。缓存的key由默认参数属性cacheKeyGene的返回值决定。
  * 默认缓存时间60秒
- *
  * @param cacheKeyGene
+ * @param getExpireTimeSeconds
  * @returns {Function}
  */
-export const cacheAble = ({cacheKeyGene}) => {
+export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
     return function (target, name, descriptor) {
         //修饰器的报错，级别更高，直接抛出终止程序
-        if(!cacheKeyGene) {
+        if (!cacheKeyGene) {
             setTimeout(() => {
                 throw `在类静态方法 ${target.name}.${name} 上调用cacheAble修饰器时未指定有效的cacheKeyGene参数`
             })
         }
         let oldValue = descriptor.value;
         descriptor.value = async function () {
-            if(process.env.NO_API_CACHE==='1') {
-                console.log(`[${target.name}.${name}] force skip cache by process.env.NO_API_CACHE ...`)
+            if (process.env.NO_API_CACHE === '1') {
+                PrintCacheLog(`[${target.name}.${name}] force skip cache by process.env.NO_API_CACHE ...`)
                 return await oldValue(...arguments);
             }
             let {__nocache} = arguments[0]
-            if(__nocache){
-                console.log(`[${target.name}.${name}] force skip cache ........ ${target.name}.${name}`)
+            if (__nocache) {
+                PrintCacheLog(`[${target.name}.${name}] force skip cache ........ ${target.name}.${name}`)
                 return await oldValue(...arguments);
             }
 
@@ -85,7 +91,7 @@ export const cacheAble = ({cacheKeyGene}) => {
             if (cacheKeyGene) {
                 let [firstParam] = arguments
                 key = cacheKeyGene(firstParam)
-                if(typeof key !=="string") {
+                if (typeof key !== "string") {
                     //if (process.env.NODE_ENV !== 'production') {
                     setTimeout(() => {
                         throw (`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)
@@ -93,13 +99,13 @@ export const cacheAble = ({cacheKeyGene}) => {
                     //}
                 }
                 //返回空字符串时，忽略
-                if(key) {
+                if (key) {
                     let Obj = await ____cache.get(key)
                     if (Obj) {
                         let result = (typeof Obj === "object") ? {...Obj} : Obj
                         if (typeof result === "object") {
                             //if (process.env.NODE_ENV !== 'production') {
-                                console.log(`[${target.name}.${name}] hit cachekey .......${key}...`)
+                            PrintCacheLog(`[${target.name}.${name}] hit cachekey .......${key}...`)
                             //}
                             result.__fromCache = true
                         }
@@ -108,11 +114,14 @@ export const cacheAble = ({cacheKeyGene}) => {
                 }
             }
             //if(process.env.NODE_ENV !=='production') {
-                console.log(`[${target.name}.${name}] miss cachekey .......${key}...`)
+            PrintCacheLog(`[${target.name}.${name}] miss cachekey .......${key}...`)
             //}
             let result = await oldValue(...arguments);
             if (cacheKeyGene && key) {
-                await ____cache.set(key, result)
+                let expireTimeSeconds = null
+                if (getExpireTimeSeconds && typeof getExpireTimeSeconds === "function")
+                    expireTimeSeconds = getExpireTimeSeconds()
+                await ____cache.set(key, result, expireTimeSeconds)
             }
             return result
         };
@@ -131,7 +140,7 @@ export const clearCache = ({cacheKeyGene}) => {
         let oldValue = descriptor.value;
         descriptor.value = async function () {
             if(process.env.NO_API_CACHE==='1') {
-                console.log(`force skip cache by process.env.NO_API_CACHE ...`)
+                PrintCacheLog(`force skip cache by process.env.NO_API_CACHE ...`)
                 return await oldValue(...arguments);
             }
             let key = ''
@@ -140,7 +149,7 @@ export const clearCache = ({cacheKeyGene}) => {
                 key = cacheKeyGene(firstParam)
                 if(typeof key !=="string") {
                     //if (process.env.NODE_ENV !== 'production') {
-                    console.log(`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)
+                    PrintCacheLog(`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)
                     //}
                 }else if (key === "") {
                     //返回的key为空字符串，说明key无法提前确定，需要交给方法内部来调用清空

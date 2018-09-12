@@ -259,7 +259,7 @@ var _bindRouter = function () {
                                                 if (process.env.NODE_ENV !== "production") {
                                                     //region 让错误直接抛出，并终止程序。不需要时可以整体注释掉
                                                     console.dir('\u8FD9\u91CC\uFF1A\u9664\u4E86\u7A0B\u5E8F\u903B\u8F91\u7EA7\u522B\u7684Exception\u9519\u8BEF\uFF0C\u5728\u975E\u6B63\u5F0F\u73AF\u5883\u4F1A\u7EC8\u6B62\u7A0B\u5E8F\uFF0C\u4FBF\u4E8E\u8C03\u8BD5\u6392\u67E5\u3002\u4E0D\u9700\u8981\u65F6\u53EF\u4EE5\u627E\u5230\u6211\u7684\u4F4D\u7F6E\u5E76\u6CE8\u91CA\u6389');
-                                                    if (!_context2.t4._gankao) {
+                                                    if (!_context2.t4._gankao || process.env.StopOnAnyException == '1') {
                                                         //通过timeout排除错误，会导致程序终止
                                                         setTimeout(function () {
                                                             throw _context2.t4;

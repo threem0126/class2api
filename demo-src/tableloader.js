@@ -18,7 +18,6 @@ export const DataModel_MainDB = {
     DemoUser: myDBModelLoader_MainDB.define(DemoUser),
 }
 
-
 //绑定模型关系时，可能需要定义的别名
 export const ass = {
     subComment: "subComment",

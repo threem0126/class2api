@@ -25,11 +25,11 @@ var GKErrorWrap = exports.GKErrorWrap = function GKErrorWrap(errCode, errMessage
         if (more) {
             moreStr = typeof more === "string" ? more : JSON.stringifyline(_extends({}, more));
         }
-        return {
-            _gankao: 1,
-            code: errCode,
-            message: errMessage + "\uFF08" + moreStr + "\uFF09",
-            more: moreStr
-        };
+        var ret = new Error();
+        ret._gankao = 1;
+        ret.code = errCode;
+        ret.message = errMessage + "\uFF08" + moreStr + "\uFF09";
+        ret.more = moreStr;
+        return ret;
     };
 };

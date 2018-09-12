@@ -95,7 +95,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             if (process.env.NODE_ENV !== "production") {
                 //region 让错误直接抛出，并终止程序。不需要时可以整体注释掉
                 console.dir(`这里：除了程序逻辑级别的Exception错误，在非正式环境会终止程序，便于调试排查。不需要时可以找到我的位置并注释掉`);
-                if (!err._gankao) {
+                if (!err._gankao || process.env.StopOnAnyException=='1') {
                     //通过timeout排除错误，会导致程序终止
                     setTimeout(() => {
                         throw err;

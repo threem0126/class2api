@@ -19,11 +19,11 @@ export const GKErrorWrap = (errCode, errMessage)=> {
         if (more) {
             moreStr = ((typeof more === "string") ? more : JSON.stringifyline({...more}))
         }
-        return {
-            _gankao: 1,
-            code: errCode,
-            message: `${errMessage}（${moreStr}）`,
-            more: moreStr
-        }
+        let ret = new Error()
+        ret._gankao = 1;
+        ret.code = errCode;
+        ret.message = `${errMessage}（${moreStr}）`;
+        ret.more =moreStr;
+        return ret
     }
 }

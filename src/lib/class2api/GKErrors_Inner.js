@@ -12,6 +12,6 @@ export const GKErrors = {
     _NOT_SERVICE: GKErrorWrap(-5, `功能即将实现`),
     _PARAMS_VALUE_EXPECT: GKErrorWrap(-4, `参数不符合预期`),
     _NO_RESULT: GKErrorWrap(-3, `无匹配结果`),
-    _SERVER_ERROR: GKErrorWrap(-2, `服务发生异常`),
+    _SERVER_ERROR: GKErrorWrap(-2, `温馨提示：`),
     _NOT_PARAMS: GKErrorWrap(-1, `缺少参数`)
 }

@@ -147,11 +147,11 @@ var _create_server = function () {
                         _server.use(_bodyParser2.default.json()); // for parsing application/json
                         _server.use(_bodyParser2.default.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
                         _server.use(_bodyParser2.default.json({ limit: "5000kb" }));
-                        _server.use((0, _hpp2.default)());
-                        _server.use(_helmet2.default.xssFilter());
-                        _server.use(_helmet2.default.frameguard("deny"));
-                        _server.use(_helmet2.default.ieNoOpen());
-                        _server.use(_helmet2.default.noSniff());
+                        // _server.use(hpp());
+                        // _server.use(helmet.xssFilter());
+                        // _server.use(helmet.frameguard("deny"));
+                        // _server.use(helmet.ieNoOpen());
+                        // _server.use(helmet.noSniff());
                         _server.use((0, _cookieParser2.default)());
                         _server.use((0, _compression2.default)());
                         _server.use(_log4js2.default.connectLogger(logger, { level: _log4js2.default.levels.INFO, format: ':method :url' }));
@@ -212,17 +212,17 @@ var _create_server = function () {
                         }
 
                         if (!(typeof custom === "function")) {
-                            _context.next = 35;
+                            _context.next = 30;
                             break;
                         }
 
-                        _context.next = 34;
+                        _context.next = 29;
                         return custom(_server);
 
-                    case 34:
+                    case 29:
                         _server = _context.sent;
 
-                    case 35:
+                    case 30:
 
                         _server.use(apiroot, _router);
 
@@ -234,7 +234,7 @@ var _create_server = function () {
 
                         return _context.abrupt("return", _server);
 
-                    case 38:
+                    case 33:
                     case "end":
                         return _context.stop();
                 }

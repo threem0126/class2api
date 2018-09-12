@@ -3,6 +3,8 @@ import ClassA from './ClassA'
 
 let port = 3002;
 
+
+
 //创建微服务对象
 createServer(ClassA).then((server)=>{
     server.listen(3002, "0.0.0.0", (err)=>{

@@ -12,41 +12,23 @@
 # 方法getArticle #- 接口：undefined- post参数：```json{
   "name": "haungyong"
 }```- 请求结果：```json{
-  "err": null,
-  "result": {
-    "message": "getArticle.haungyong，from user. 12345678"
-  }
-}```
-# 以别名方式请求 #- 接口：undefined- post参数：```json{
-  "name": 0.7330002284716906
-}```- 请求结果：```json{
-  "err": null,
-  "result": {
-    "message": "getArticle.0.7330002284716906，from user. 12345678"
-  }
-}```
-# 以别名方式请求 #- 接口：undefined- post参数：```json{}```- 请求结果：```json{
-  "data": {
-    "name": "huangyong"
-  },
-  "errorCode": 123
-}```
-# 编辑文章 #- 接口：undefined- post参数：```json{
-  "aID": 0.15800694214206557
-}```- 请求结果：```json{
   "err": {
-    "_gankao": 1,
-    "code": -6,
-    "message": "无访问权限（{\n  \"resean\": \"访问被拒绝（功能：[文章系统/编辑文章]，代码:[GKAdmin_ModelA.editArticle]，原因：未授权）\"\n}）",
-    "more": "{\n  \"resean\": \"访问被拒绝（功能：[文章系统/编辑文章]，代码:[GKAdmin_ModelA.editArticle]，原因：未授权）\"\n}"
+    "name": "SequelizeAccessDeniedError",
+    "message": "ER_ACCESS_DENIED_ERROR: Access denied for user 'root'@'localhost' (using password: NO)",
+    "parent": {
+      "code": "ER_ACCESS_DENIED_ERROR",
+      "errno": 1045,
+      "sqlMessage": "Access denied for user 'root'@'localhost' (using password: NO)",
+      "sqlState": "28000",
+      "fatal": true
+    },
+    "original": {
+      "code": "ER_ACCESS_DENIED_ERROR",
+      "errno": 1045,
+      "sqlMessage": "Access denied for user 'root'@'localhost' (using password: NO)",
+      "sqlState": "28000",
+      "fatal": true
+    }
   },
   "result": null
-}```
-# 删除文章 #- 接口：undefined- post参数：```json{
-  "aID": 0.7136623184757371
-}```- 请求结果：```json{
-  "err": null,
-  "result": {
-    "success": true
-  }
 }```

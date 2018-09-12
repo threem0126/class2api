@@ -96,7 +96,7 @@ var ____cache = {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
                         case 0:
-                            console.log('set cachekey .......' + akey + '...');
+                            PrintCacheLog('set cachekey .......' + akey + '...');
                             akey = redis_cache_key_prefx + akey;
                             (0, _util.delayRun)(_asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
                                 return _regenerator2.default.wrap(function _callee2$(_context2) {
@@ -113,7 +113,7 @@ var ____cache = {
                                     }
                                 }, _callee2, undefined);
                             })), 0, function (err) {
-                                console.log('redis\u7F13\u5B58[' + akey + ']\u5EFA\u7ACB\u5931\u8D25\uFF1A' + err);
+                                PrintCacheLog('redis\u7F13\u5B58[' + akey + ']\u5EFA\u7ACB\u5931\u8D25\uFF1A' + err);
                             });
 
                         case 3:
@@ -144,7 +144,7 @@ var ____cache = {
                                                 return (0, _redisClient.getRedisClient)().delAsync(akey);
 
                                             case 2:
-                                                console.log('delete cachekey .......' + akey + '...');
+                                                PrintCacheLog('delete cachekey .......' + akey + '...');
 
                                             case 3:
                                             case 'end':
@@ -153,7 +153,7 @@ var ____cache = {
                                     }
                                 }, _callee4, undefined);
                             })), 0, function (err) {
-                                console.log('redis\u7F13\u5B58[' + akey + ']\u5220\u9664\u5931\u8D25\uFF1A' + err);
+                                PrintCacheLog('redis\u7F13\u5B58[' + akey + ']\u5220\u9664\u5931\u8D25\uFF1A' + err);
                             });
 
                         case 2:
@@ -168,16 +168,24 @@ var ____cache = {
             return _ref4.apply(this, arguments);
         };
     }()
+};
 
-    /**
-     * 在被修饰的方法运行前后执行，首先判断是否存在相同入参的调用缓存，如果没有则在运行结束后，将要运行结果缓存。缓存的key由默认参数属性cacheKeyGene的返回值决定。
-     * 默认缓存时间60秒
-     *
-     * @param cacheKeyGene
-     * @returns {Function}
-     */
-};var cacheAble = exports.cacheAble = function cacheAble(_ref6) {
-    var cacheKeyGene = _ref6.cacheKeyGene;
+var PrintCacheLog = function PrintCacheLog(msg) {
+    if (process.env.PRINT_API_CACHE === '1') {
+        console.log(msg);
+    }
+};
+
+/**
+ * 在被修饰的方法运行前后执行，首先判断是否存在相同入参的调用缓存，如果没有则在运行结束后，将要运行结果缓存。缓存的key由默认参数属性cacheKeyGene的返回值决定。
+ * 默认缓存时间60秒
+ * @param cacheKeyGene
+ * @param getExpireTimeSeconds
+ * @returns {Function}
+ */
+var cacheAble = exports.cacheAble = function cacheAble(_ref6) {
+    var cacheKeyGene = _ref6.cacheKeyGene,
+        getExpireTimeSeconds = _ref6.getExpireTimeSeconds;
 
     return function (target, name, descriptor) {
         //修饰器的报错，级别更高，直接抛出终止程序
@@ -195,6 +203,7 @@ var ____cache = {
                 Obj,
                 _result,
                 result,
+                expireTimeSeconds,
                 _args6 = arguments;
 
             return _regenerator2.default.wrap(function _callee6$(_context6) {
@@ -206,7 +215,7 @@ var ____cache = {
                                 break;
                             }
 
-                            console.log('[' + target.name + '.' + name + '] force skip cache by process.env.NO_API_CACHE ...');
+                            PrintCacheLog('[' + target.name + '.' + name + '] force skip cache by process.env.NO_API_CACHE ...');
                             _context6.next = 4;
                             return oldValue.apply(undefined, _args6);
 
@@ -221,7 +230,7 @@ var ____cache = {
                                 break;
                             }
 
-                            console.log('[' + target.name + '.' + name + '] force skip cache ........ ' + target.name + '.' + name);
+                            PrintCacheLog('[' + target.name + '.' + name + '] force skip cache ........ ' + target.name + '.' + name);
                             _context6.next = 10;
                             return oldValue.apply(undefined, _args6);
 
@@ -268,7 +277,7 @@ var ____cache = {
 
                             if ((typeof _result === 'undefined' ? 'undefined' : _typeof(_result)) === "object") {
                                 //if (process.env.NODE_ENV !== 'production') {
-                                console.log('[' + target.name + '.' + name + '] hit cachekey .......' + key + '...');
+                                PrintCacheLog('[' + target.name + '.' + name + '] hit cachekey .......' + key + '...');
                                 //}
                                 _result.__fromCache = true;
                             }
@@ -276,7 +285,7 @@ var ____cache = {
 
                         case 24:
                             //if(process.env.NODE_ENV !=='production') {
-                            console.log('[' + target.name + '.' + name + '] miss cachekey .......' + key + '...');
+                            PrintCacheLog('[' + target.name + '.' + name + '] miss cachekey .......' + key + '...');
                             //}
                             _context6.next = 27;
                             return oldValue.apply(undefined, _args6);
@@ -285,17 +294,20 @@ var ____cache = {
                             result = _context6.sent;
 
                             if (!(cacheKeyGene && key)) {
-                                _context6.next = 31;
+                                _context6.next = 33;
                                 break;
                             }
 
-                            _context6.next = 31;
-                            return ____cache.set(key, result);
+                            expireTimeSeconds = null;
 
-                        case 31:
+                            if (getExpireTimeSeconds && typeof getExpireTimeSeconds === "function") expireTimeSeconds = getExpireTimeSeconds();
+                            _context6.next = 33;
+                            return ____cache.set(key, result, expireTimeSeconds);
+
+                        case 33:
                             return _context6.abrupt('return', result);
 
-                        case 32:
+                        case 34:
                         case 'end':
                             return _context6.stop();
                     }
@@ -332,7 +344,7 @@ var clearCache = exports.clearCache = function clearCache(_ref8) {
                                 break;
                             }
 
-                            console.log('force skip cache by process.env.NO_API_CACHE ...');
+                            PrintCacheLog('force skip cache by process.env.NO_API_CACHE ...');
                             _context7.next = 4;
                             return oldValue.apply(undefined, _args7);
 
@@ -357,7 +369,7 @@ var clearCache = exports.clearCache = function clearCache(_ref8) {
                             }
 
                             //if (process.env.NODE_ENV !== 'production') {
-                            console.log('[' + target.name + '.' + name + '] \u7F13\u5B58\u4FEE\u9970\u5668\u7684cacheKeyGene\u51FD\u6570\u5FC5\u9700\u8FD4\u56DE\u5B57\u7B26\u4E32\u7ED3\u679C\uFF0C\u76EE\u524D\u662F ' + key + '...');
+                            PrintCacheLog('[' + target.name + '.' + name + '] \u7F13\u5B58\u4FEE\u9970\u5668\u7684cacheKeyGene\u51FD\u6570\u5FC5\u9700\u8FD4\u56DE\u5B57\u7B26\u4E32\u7ED3\u679C\uFF0C\u76EE\u524D\u662F ' + key + '...');
                             //}
                             _context7.next = 19;
                             break;
