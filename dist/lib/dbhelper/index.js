@@ -131,13 +131,13 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
     }();
 
     var createTransaction = function () {
-        var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
+        var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2(option) {
             return _regenerator2.default.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
                         case 0:
                             _context2.next = 2;
-                            return sequelize.transaction();
+                            return sequelize.transaction(option);
 
                         case 2:
                             return _context2.abrupt('return', _context2.sent);
@@ -150,7 +150,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
             }, _callee2, undefined);
         }));
 
-        return function createTransaction() {
+        return function createTransaction(_x) {
             return _ref2.apply(this, arguments);
         };
     }();
@@ -175,7 +175,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
             }, _callee3, undefined);
         }));
 
-        return function excuteSQL(_x, _x2) {
+        return function excuteSQL(_x2, _x3) {
             return _ref3.apply(this, arguments);
         };
     }();
@@ -300,7 +300,7 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
                 }, _callee5, undefined);
             }));
 
-            return function INIT(_x3) {
+            return function INIT(_x4) {
                 return _ref5.apply(this, arguments);
             };
         }(),

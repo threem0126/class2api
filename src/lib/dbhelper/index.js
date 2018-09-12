@@ -78,8 +78,8 @@ const _inner_DBModelLoader = (option)=> {
         _model_objects.__where = where
     }
 
-    const createTransaction = async () => {
-        return await sequelize.transaction()
+    const createTransaction = async (option) => {
+        return await sequelize.transaction(option)
     }
 
     const excuteSQL = async (sql, options) => {
