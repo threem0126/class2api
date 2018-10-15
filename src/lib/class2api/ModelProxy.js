@@ -63,7 +63,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             if (fn_beforeCall && typeof fn_beforeCall === 'function') {//如果有要对传入参数做验证，则在fn_beforeCall中处理
                 let modelSetting = _BusinessModel.__modelSetting ? _BusinessModel.__modelSetting() : {};
                 let apipath = `${ _BusinessModel.name }.${ req.path }`
-                paramsMerged = await fn_beforeCall({apipath, req, params, modelSetting});
+                paramsMerged = await fn_beforeCall({apipath, req, res, params, modelSetting});
             }
             //合并入req对象
             if (req.method === 'GET') {
