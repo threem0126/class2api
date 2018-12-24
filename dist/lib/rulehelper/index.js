@@ -164,6 +164,10 @@ var accessRule = function accessRule(_ref5) {
                 throw '\u5728\u7C7B\u9759\u6001\u65B9\u6CD5 ' + target.name + '.' + name + ' \u4E0A\u6743\u9650\u63A7\u5236\u5668\u7684ruleName\u53C2\u6570\u672A\u5B9A\u4E49';
             });
         }
+        //兼容babel 7的变化
+        name = name || target.key;
+        descriptor = descriptor || target.descriptor;
+
         var oldValue = descriptor.value;
         descriptor.value = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
             var jwtoken,

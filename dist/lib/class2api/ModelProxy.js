@@ -174,7 +174,7 @@ var _bindRouter = function () {
                                                 modelSetting = _BusinessModel.__modelSetting ? _BusinessModel.__modelSetting() : {};
                                                 apipath = _BusinessModel.name + '.' + req.path;
                                                 _context2.next = 17;
-                                                return fn_beforeCall({ apipath: apipath, req: req, params: params, modelSetting: modelSetting });
+                                                return fn_beforeCall({ apipath: apipath, req: req, res: res, params: params, modelSetting: modelSetting });
 
                                             case 17:
                                                 paramsMerged = _context2.sent;

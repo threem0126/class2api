@@ -69,6 +69,9 @@ const PrintCacheLog = (msg)=> {
  */
 export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
     return function (target, name, descriptor) {
+        //兼容babel 7的变化
+        name = name || target.key
+        descriptor = descriptor || target.descriptor
         //修饰器的报错，级别更高，直接抛出终止程序
         if (!cacheKeyGene) {
             setTimeout(() => {
@@ -102,7 +105,7 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
                 if (key) {
                     let Obj = await ____cache.get(key)
                     if (Obj) {
-                        let result = (typeof Obj === "object") ? {...Obj} : Obj
+                        let result = JSON.parse(Obj)
                         if (typeof result === "object") {
                             //if (process.env.NODE_ENV !== 'production') {
                             PrintCacheLog(`[${target.name}.${name}] hit cachekey .......${key}...`)
@@ -121,7 +124,7 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
                 let expireTimeSeconds = null
                 if (getExpireTimeSeconds && typeof getExpireTimeSeconds === "function")
                     expireTimeSeconds = getExpireTimeSeconds()
-                await ____cache.set(key, result, expireTimeSeconds)
+                await ____cache.set(key, JSON.stringify(result), expireTimeSeconds)
             }
             return result
         };
@@ -137,6 +140,9 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
  */
 export const clearCache = ({cacheKeyGene}) => {
     return function (target, name, descriptor) {
+        //兼容babel 7的变化
+        name = name || target.key
+        descriptor = descriptor || target.descriptor
         let oldValue = descriptor.value;
         descriptor.value = async function () {
             if(process.env.NO_API_CACHE==='1') {
@@ -181,6 +187,10 @@ export const ipwhitelist = () => {
         if(!descriptor){
             throw 'ipwhitelist不支持修饰类'
         }
+        //兼容babel 7的变化
+        name = name || target.key
+        descriptor = descriptor || target.descriptor
+
         let oldValue = descriptor.value;
         descriptor.value = async function () {
             let {req} = arguments.length > 0 ? (typeof arguments[0] === "object" ? arguments[0] : {}) : {}
@@ -213,6 +223,9 @@ export const crashAfterMe = (hintMsg)=> {
         if (!descriptor) {
             throw 'crashAfterMe只支持修饰类方法本身，不支持修饰类'
         }
+        //兼容babel 7的变化
+        name = name || target.key
+        descriptor = descriptor || target.descriptor
         if (process.env.NODE_ENV !== 'production') {
             let oldValue = descriptor.value;
             descriptor.value = async function () {

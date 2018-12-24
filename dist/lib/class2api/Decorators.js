@@ -188,6 +188,9 @@ var cacheAble = exports.cacheAble = function cacheAble(_ref6) {
         getExpireTimeSeconds = _ref6.getExpireTimeSeconds;
 
     return function (target, name, descriptor) {
+        //兼容babel 7的变化
+        name = name || target.key;
+        descriptor = descriptor || target.descriptor;
         //修饰器的报错，级别更高，直接抛出终止程序
         if (!cacheKeyGene) {
             setTimeout(function () {
@@ -273,7 +276,7 @@ var cacheAble = exports.cacheAble = function cacheAble(_ref6) {
                                 break;
                             }
 
-                            _result = (typeof Obj === 'undefined' ? 'undefined' : _typeof(Obj)) === "object" ? _extends({}, Obj) : Obj;
+                            _result = JSON.parse(Obj);
 
                             if ((typeof _result === 'undefined' ? 'undefined' : _typeof(_result)) === "object") {
                                 //if (process.env.NODE_ENV !== 'production') {
@@ -302,7 +305,7 @@ var cacheAble = exports.cacheAble = function cacheAble(_ref6) {
 
                             if (getExpireTimeSeconds && typeof getExpireTimeSeconds === "function") expireTimeSeconds = getExpireTimeSeconds();
                             _context6.next = 33;
-                            return ____cache.set(key, result, expireTimeSeconds);
+                            return ____cache.set(key, JSON.stringify(result), expireTimeSeconds);
 
                         case 33:
                             return _context6.abrupt('return', result);
@@ -328,6 +331,9 @@ var clearCache = exports.clearCache = function clearCache(_ref8) {
     var cacheKeyGene = _ref8.cacheKeyGene;
 
     return function (target, name, descriptor) {
+        //兼容babel 7的变化
+        name = name || target.key;
+        descriptor = descriptor || target.descriptor;
         var oldValue = descriptor.value;
         descriptor.value = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee7() {
             var key,
@@ -429,6 +435,10 @@ var ipwhitelist = exports.ipwhitelist = function ipwhitelist() {
         if (!descriptor) {
             throw 'ipwhitelist不支持修饰类';
         }
+        //兼容babel 7的变化
+        name = name || target.key;
+        descriptor = descriptor || target.descriptor;
+
         var oldValue = descriptor.value;
         descriptor.value = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee8() {
             var _ref11,
@@ -481,6 +491,9 @@ var crashAfterMe = exports.crashAfterMe = function crashAfterMe(hintMsg) {
         if (!descriptor) {
             throw 'crashAfterMe只支持修饰类方法本身，不支持修饰类';
         }
+        //兼容babel 7的变化
+        name = name || target.key;
+        descriptor = descriptor || target.descriptor;
         if (process.env.NODE_ENV !== 'production') {
             var oldValue = descriptor.value;
             descriptor.value = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee9() {

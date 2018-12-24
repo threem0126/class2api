@@ -63,7 +63,7 @@ var setting_redisConfig = exports.setting_redisConfig = function setting_redisCo
     (function () {
         if (!_redisConfig) {
             _redisConfig = redisConfig;
-            console.log('class2api \u5185\u7F6Eredis\u914D\u7F6E\u521D\u59CB\u5316\u6210\u529F\uFF01');
+            console.log('class2api \u5185\u7F6Eredis\u914D\u7F6Econfig\u521D\u59CB\u5316\u6210\u529F\uFF01');
         }
         var _ = getRedisClient();
     })();
@@ -313,9 +313,10 @@ var _init_redisClient = function _init_redisClient() {
                     while (1) {
                         switch (_context10.prev = _context10.next) {
                             case 0:
-                                console.log('\u94FE\u63A5Redis\u670D\u52A1\u5668 on ' + _redisConfig.host + ':' + _redisConfig.port + ' ... ...connecting ...');
-                                //
                                 _redisConfig3 = _redisConfig, password = _redisConfig3.password;
+
+                                console.log('\u94FE\u63A5Redis\u670D\u52A1\u5668 on ' + _redisConfig.host + ':' + _redisConfig.port + ' with password ' + (password ? "*****" : "none") + ' ... ...connecting ...');
+                                //
 
                                 if (!password) {
                                     _context10.next = 6;

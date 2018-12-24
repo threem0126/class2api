@@ -22,7 +22,7 @@ export const setting_redisConfig = (redisConfig)=> {
     (() => {
         if(!_redisConfig){
             _redisConfig = redisConfig
-            console.log(`class2api 内置redis配置初始化成功！`)
+            console.log(`class2api 内置redis配置config初始化成功！`)
         }
         let _ = getRedisClient()
     })();
@@ -90,9 +90,9 @@ const _init_redisClient = ()=> {
         }
 
         _redisClient.on("connect", async (err) => {
-            console.log(`链接Redis服务器 on ${_redisConfig.host}:${_redisConfig.port} ... ...connecting ...`);
-            //
             let {password} = _redisConfig
+            console.log(`链接Redis服务器 on ${_redisConfig.host}:${_redisConfig.port} with password ${ password?"*****":"none" } ... ...connecting ...`);
+            //
             if (password) {
                 _redisClient.auth(password, async (err, result) => {
                     await onAuthDone()

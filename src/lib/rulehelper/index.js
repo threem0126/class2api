@@ -67,6 +67,10 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
                 throw `在类静态方法 ${target.name}.${name} 上权限控制器的ruleName参数未定义`
             })
         }
+        //兼容babel 7的变化
+        name = name || target.key
+        descriptor = descriptor || target.descriptor
+
         let oldValue = descriptor.value;
         descriptor.value = async function () {
             if (!target.__modelSetting || typeof target.__modelSetting !== "function" || !(target.__modelSetting().__ruleCategory)) {
