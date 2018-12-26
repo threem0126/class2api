@@ -23,6 +23,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var _redisClient = void 0;
 var _redisConfig = void 0;
+var _redisClient_inited = false;
 
 /**
  *
@@ -129,33 +130,34 @@ var _init_redisClient = function _init_redisClient() {
                     while (1) {
                         switch (_context4.prev = _context4.next) {
                             case 0:
+                                _redisClient_inited = true;
                                 console.log('\u94FE\u63A5Redis\u670D\u52A1\u5668 on ' + _redisConfig.host + ':' + _redisConfig.port + ' ... ...\u6210\u529F!');
                                 //  this key will expires after 10 seconds
                                 key = '__test_redis';
                                 // 测试
 
-                                _context4.next = 4;
+                                _context4.next = 5;
                                 return _redisClient.setAsync(key, JSON.stringify({ hello: "world" }), 'EX', 10);
 
-                            case 4:
+                            case 5:
                                 console.log('\u6D4B\u8BD5\uFF0C\u521B\u5EFA redis key:' + key);
-                                _context4.next = 7;
+                                _context4.next = 8;
                                 return _redisClient.getAsync(key);
 
-                            case 7:
+                            case 8:
                                 avalue = _context4.sent;
 
                                 console.log('\u6D4B\u8BD5\uFF0C\u8BFB\u53D6 redis key:' + key + ',value:' + avalue);
-                                _context4.next = 11;
+                                _context4.next = 12;
                                 return _redisClient.delAsync(key);
 
-                            case 11:
+                            case 12:
                                 deleted = _context4.sent;
 
                                 console.log('\u6D4B\u8BD5\uFF0C\u5220\u9664\u4E86redis key:' + key + ',' + deleted);
                                 resolve(_redisClient);
 
-                            case 14:
+                            case 15:
                             case 'end':
                                 return _context4.stop();
                         }
@@ -366,45 +368,48 @@ var _init_redisClient = function _init_redisClient() {
     });
 };
 
-var getRedisClient = exports.getRedisClient = function getRedisClient() {
-    if (_redisClient) return _redisClient;
-
-    if (!_redisConfig) {
-        throw 'redis\u914D\u7F6E\u4FE1\u606F\u5C1A\u672A\u8BBE\u7F6E\uFF08\u8BF7\u8C03\u7528setting_redisConfig\uFF09';
-    }
-
-    _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee11() {
-        return _regenerator2.default.wrap(function _callee11$(_context11) {
-            while (1) {
-                switch (_context11.prev = _context11.next) {
-                    case 0:
-                        _context11.next = 2;
-                        return _init_redisClient();
-
-                    case 2:
-                    case 'end':
-                        return _context11.stop();
-                }
-            }
-        }, _callee11, undefined);
-    }))();
-
-    return _redisClient;
-};
-
-/***
- * 微信授权网关的保留方法，其他应用只可读取，严禁调用更新
- */
-var __setGankaoWXAuthToken = exports.__setGankaoWXAuthToken = function () {
-    var _ref12 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee12(gkwxauthtoken, wxuserinfo) {
+var getRedisClient = exports.getRedisClient = function () {
+    var _ref11 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee12() {
         return _regenerator2.default.wrap(function _callee12$(_context12) {
             while (1) {
                 switch (_context12.prev = _context12.next) {
                     case 0:
-                        _context12.next = 2;
-                        return _redisClient.setAsyncOrig(gkwxauthtoken, wxuserinfo);
+                        if (!_redisClient) {
+                            _context12.next = 2;
+                            break;
+                        }
+
+                        return _context12.abrupt('return', _redisClient);
 
                     case 2:
+                        if (_redisConfig) {
+                            _context12.next = 4;
+                            break;
+                        }
+
+                        throw 'redis\u914D\u7F6E\u4FE1\u606F\u5C1A\u672A\u8BBE\u7F6E\uFF08\u8BF7\u8C03\u7528setting_redisConfig\uFF09';
+
+                    case 4:
+
+                        _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee11() {
+                            return _regenerator2.default.wrap(function _callee11$(_context11) {
+                                while (1) {
+                                    switch (_context11.prev = _context11.next) {
+                                        case 0:
+                                            _context11.next = 2;
+                                            return _init_redisClient();
+
+                                        case 2:
+                                        case 'end':
+                                            return _context11.stop();
+                                    }
+                                }
+                            }, _callee11, undefined);
+                        }))();
+
+                        return _context12.abrupt('return', _redisClient);
+
+                    case 6:
                     case 'end':
                         return _context12.stop();
                 }
@@ -412,7 +417,32 @@ var __setGankaoWXAuthToken = exports.__setGankaoWXAuthToken = function () {
         }, _callee12, undefined);
     }));
 
+    return function getRedisClient() {
+        return _ref11.apply(this, arguments);
+    };
+}();
+
+/***
+ * 微信授权网关的保留方法，其他应用只可读取，严禁调用更新
+ */
+var __setGankaoWXAuthToken = exports.__setGankaoWXAuthToken = function () {
+    var _ref13 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee13(gkwxauthtoken, wxuserinfo) {
+        return _regenerator2.default.wrap(function _callee13$(_context13) {
+            while (1) {
+                switch (_context13.prev = _context13.next) {
+                    case 0:
+                        _context13.next = 2;
+                        return _redisClient.setAsyncOrig(gkwxauthtoken, wxuserinfo);
+
+                    case 2:
+                    case 'end':
+                        return _context13.stop();
+                }
+            }
+        }, _callee13, undefined);
+    }));
+
     return function __setGankaoWXAuthToken(_x6, _x7) {
-        return _ref12.apply(this, arguments);
+        return _ref13.apply(this, arguments);
     };
 }();
