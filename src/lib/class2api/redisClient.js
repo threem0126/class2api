@@ -3,6 +3,7 @@ import Promise from 'bluebird';
 
 let _redisClient;
 let _redisConfig;
+let _redisClient_inited = false;
 
 /**
  *
@@ -47,6 +48,7 @@ const _init_redisClient = ()=> {
         });
 
         let onAuthDone = async () => {
+            _redisClient_inited = true
             console.log(`链接Redis服务器 on ${_redisConfig.host}:${_redisConfig.port} ... ...成功!`);
             //  this key will expires after 10 seconds
             const key = '__test_redis'
@@ -105,12 +107,12 @@ const _init_redisClient = ()=> {
 }
 
 export const getRedisClient = ()=> {
+    if (!_redisClient_inited) {
+        throw  `redis配置信息尚未设置（请调用setting_redisConfig）,或等待redis内完成password验证`
+    }
+
     if (_redisClient)
         return _redisClient;
-
-    if (!_redisConfig) {
-        throw  `redis配置信息尚未设置（请调用setting_redisConfig）`
-    }
 
     (async () => {
         await _init_redisClient()
