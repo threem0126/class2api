@@ -6,6 +6,7 @@ import helmet from "helmet";
 import hpp from "hpp";
 import bodyParser from "body-parser";
 import compression from "compression";
+import {MultiProccessTaskThrottle} from './taskThrottle'
 //import connectRedis from "connect-redis";
 import loggerCreator from "./logger.js";
 import log4js from 'log4js';
@@ -245,7 +246,14 @@ export {
     /**
      * 通过模块来全局配置权限验证函数
      */
-        setting_CustomRuleValidator
+        setting_CustomRuleValidator,
+
+
+    /**
+     * cluster多线程环境下的定时任务执行器，内部带有互斥的锁机制，确保同一时间不会并发处理
+     * 内部依赖于redis来存储锁状态，需提前调用setting_redisConfig进行配置redis链接信息
+     */
+        MultiProccessTaskThrottle
 }
 
 

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.setting_CustomRuleValidator = exports.accessRule = exports.crashAfterMe = exports.clearCache = exports.cacheAble = exports.modelSetting = exports.GKErrorWrap = exports.getRedisClient = exports.setting_redisConfig = exports.getGankaoWXAuthToken = exports.GKSUCCESS = exports.createServerInRouter = exports.createServer = undefined;
+exports.MultiProccessTaskThrottle = exports.setting_CustomRuleValidator = exports.accessRule = exports.crashAfterMe = exports.clearCache = exports.cacheAble = exports.modelSetting = exports.GKErrorWrap = exports.getRedisClient = exports.setting_redisConfig = exports.getGankaoWXAuthToken = exports.GKSUCCESS = exports.createServerInRouter = exports.createServer = undefined;
 
 var _regenerator = require("babel-runtime/regenerator");
 
@@ -34,6 +34,8 @@ var _bodyParser2 = _interopRequireDefault(_bodyParser);
 var _compression = require("compression");
 
 var _compression2 = _interopRequireDefault(_compression);
+
+var _taskThrottle = require("./taskThrottle");
 
 var _logger = require("./logger.js");
 
@@ -387,3 +389,4 @@ exports.clearCache = _Decorators.clearCache;
 exports.crashAfterMe = _Decorators.crashAfterMe;
 exports.accessRule = _Decorators.accessRule;
 exports.setting_CustomRuleValidator = _index.setting_CustomRuleValidator;
+exports.MultiProccessTaskThrottle = _taskThrottle.MultiProccessTaskThrottle;

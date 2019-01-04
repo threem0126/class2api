@@ -1,4 +1,8 @@
-
+/**
+ * 从express的request中获取请求方的IP地址
+ * @param req
+ * @returns {*}
+ */
 export const getClientIp = (req) => {
     try {
         return req.headers['x-forwarded-for'] ||
@@ -10,6 +14,11 @@ export const getClientIp = (req) => {
     }
 }
 
+/**
+ * 产生指定长度的随机乱码字符串
+ * @param len
+ * @returns {string}
+ */
 export const getNonceStr = (len = 16) => {
     let seed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     let str = ""
@@ -25,21 +34,36 @@ export const getNonceStr = (len = 16) => {
  * @returns {boolean}
  */
 export const checkPhoneFormat = (phone)=> {
-    return (/^1[34578]\d{9}$/.test(phone))
+    return (/^1[1234567890]\d{9}$/.test(phone))
 }
 
+/**
+ * 等待指定毫秒时间后再继续执行
+ * @param ms
+ * @returns {Promise}
+ */
 export const sleep = (ms)=>{
     return new Promise((resolve, reject) => {
         setTimeout(_ => resolve(ms), ms);
     });
 }
 
+/**
+ * 主动制造一个奔溃，让程序马上停止下来，内部时setTime机制，所以不受外围的try-catch的限制
+ * @param title
+ */
 export const crash = (title)=>{
     setTimeout(()=>{
         throw title||'主动crash'
     },20)
 }
 
+/**
+ * 延迟指定时间执行函数，并捕获错误
+ * @param fun
+ * @param ms
+ * @param errerhandle
+ */
 export const delayRun = (fun, ms, errerhandle)=> {
     setTimeout(async () => {
         try {
@@ -55,6 +79,11 @@ export const delayRun = (fun, ms, errerhandle)=> {
     }, ms||0);
 }
 
+/**
+ * 获取给定字符串的hashcode值
+ * @param str
+ * @returns {number}
+ */
 export const hashcode = (str) => {
     var hash = 0, i, chr, len;
     if (str.length === 0) return hash;
@@ -65,5 +94,3 @@ export const hashcode = (str) => {
     }
     return hash;
 }
-
-
