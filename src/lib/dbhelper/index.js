@@ -3,6 +3,7 @@ import * as DBUtils from './dbutils';
 import {hashcode} from './../class2api/util'
 import * as TableSetting from './tablesetting'
 import {GKErrors} from "../class2api/GKErrors_Inner";
+import {throws} from "should";
 
 let _dbList = {}
 
@@ -21,20 +22,27 @@ const _inner_DBModelLoader = (option)=> {
 
 //region 初始化sequelize对象
     const _INIT = async ()=> {
-        let {database, user, password, host, port, timezone} = _config_option
+        let {database, user, password, host='localhost', port, timezone, dialect='mysql',encrypt, pool={}, benchmark=(process.env.SQL_PRINT === '1'), logging, ...otherOptions} = _config_option
         sequelize = new Sequelize(database, user, password, {
             host: host,
-            port: port,
-            timezone: timezone||"+08:00",
+            port: port||(
+                dialect==="mysql"?3306:
+                    dialect==='mssql'?1433:
+                        dialect==='postgres'?5432:0
+            ),
+            timezone: timezone || "+08:00",
             pool: {
                 max: 5,
                 min: 0,
-                idle: 10000
+                idle: 10000,
+                ...pool //覆盖默认配置
             },
-            dialect: 'mysql',
-            benchmark: (process.env.SQL_PRINT === '1'),
-            logging: process.env.SQL_PRINT === '1' ?
-                ((...params) => console.log(...params)) : null
+            dialect,
+            encrypt,
+            benchmark,
+            logging: logging||(process.env.SQL_PRINT === '1' ?
+                ((...params) => console.log(...params)) : null),
+            ...otherOptions
         });
 
         let hasScope =false

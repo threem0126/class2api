@@ -11,6 +11,8 @@ var _regenerator2 = _interopRequireDefault(_regenerator);
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _sequelize = require('sequelize');
 
 var _sequelize2 = _interopRequireDefault(_sequelize);
@@ -30,6 +32,8 @@ var _GKErrors_Inner = require('../class2api/GKErrors_Inner');
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
@@ -51,30 +55,32 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
     //region 初始化sequelize对象
     var _INIT = function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-            var database, user, password, host, port, timezone, hasScope;
+            var database, user, password, _config_option$host, host, _config_option$port, port, timezone, _config_option$dialec, dialect, encrypt, _config_option$pool, pool, _config_option$benchm, benchmark, logging, otherOptions, hasScope;
+
             return _regenerator2.default.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
                         case 0:
-                            database = _config_option.database, user = _config_option.user, password = _config_option.password, host = _config_option.host, port = _config_option.port, timezone = _config_option.timezone;
+                            database = _config_option.database, user = _config_option.user, password = _config_option.password, _config_option$host = _config_option.host, host = _config_option$host === undefined ? 'localhost' : _config_option$host, _config_option$port = _config_option.port, port = _config_option$port === undefined ? 3306 : _config_option$port, timezone = _config_option.timezone, _config_option$dialec = _config_option.dialect, dialect = _config_option$dialec === undefined ? 'mysql' : _config_option$dialec, encrypt = _config_option.encrypt, _config_option$pool = _config_option.pool, pool = _config_option$pool === undefined ? {} : _config_option$pool, _config_option$benchm = _config_option.benchmark, benchmark = _config_option$benchm === undefined ? process.env.SQL_PRINT === '1' : _config_option$benchm, logging = _config_option.logging, otherOptions = _objectWithoutProperties(_config_option, ['database', 'user', 'password', 'host', 'port', 'timezone', 'dialect', 'encrypt', 'pool', 'benchmark', 'logging']);
 
-                            sequelize = new _sequelize2.default(database, user, password, {
+                            sequelize = new _sequelize2.default(database, user, password, _extends({
                                 host: host,
                                 port: port,
                                 timezone: timezone || "+08:00",
-                                pool: {
+                                pool: _extends({
                                     max: 5,
                                     min: 0,
                                     idle: 10000
-                                },
-                                dialect: 'mysql',
-                                benchmark: process.env.SQL_PRINT === '1',
-                                logging: process.env.SQL_PRINT === '1' ? function () {
+                                }, pool),
+                                dialect: dialect,
+                                encrypt: encrypt,
+                                benchmark: benchmark,
+                                logging: logging || (process.env.SQL_PRINT === '1' ? function () {
                                     var _console;
 
                                     return (_console = console).log.apply(_console, arguments);
-                                } : null
-                            });
+                                } : null)
+                            }, otherOptions));
 
                             hasScope = false;
                             //先初始化非Scope的Model
