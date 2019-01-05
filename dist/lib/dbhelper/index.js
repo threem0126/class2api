@@ -29,6 +29,8 @@ var TableSetting = _interopRequireWildcard(_tablesetting);
 
 var _GKErrors_Inner = require('../class2api/GKErrors_Inner');
 
+var _should = require('should');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -55,17 +57,17 @@ var _inner_DBModelLoader = function _inner_DBModelLoader(option) {
     //region 初始化sequelize对象
     var _INIT = function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-            var database, user, password, _config_option$host, host, _config_option$port, port, timezone, _config_option$dialec, dialect, encrypt, _config_option$pool, pool, _config_option$benchm, benchmark, logging, otherOptions, hasScope;
+            var database, user, password, _config_option$host, host, port, timezone, _config_option$dialec, dialect, encrypt, _config_option$pool, pool, _config_option$benchm, benchmark, logging, otherOptions, hasScope;
 
             return _regenerator2.default.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
                         case 0:
-                            database = _config_option.database, user = _config_option.user, password = _config_option.password, _config_option$host = _config_option.host, host = _config_option$host === undefined ? 'localhost' : _config_option$host, _config_option$port = _config_option.port, port = _config_option$port === undefined ? 3306 : _config_option$port, timezone = _config_option.timezone, _config_option$dialec = _config_option.dialect, dialect = _config_option$dialec === undefined ? 'mysql' : _config_option$dialec, encrypt = _config_option.encrypt, _config_option$pool = _config_option.pool, pool = _config_option$pool === undefined ? {} : _config_option$pool, _config_option$benchm = _config_option.benchmark, benchmark = _config_option$benchm === undefined ? process.env.SQL_PRINT === '1' : _config_option$benchm, logging = _config_option.logging, otherOptions = _objectWithoutProperties(_config_option, ['database', 'user', 'password', 'host', 'port', 'timezone', 'dialect', 'encrypt', 'pool', 'benchmark', 'logging']);
+                            database = _config_option.database, user = _config_option.user, password = _config_option.password, _config_option$host = _config_option.host, host = _config_option$host === undefined ? 'localhost' : _config_option$host, port = _config_option.port, timezone = _config_option.timezone, _config_option$dialec = _config_option.dialect, dialect = _config_option$dialec === undefined ? 'mysql' : _config_option$dialec, encrypt = _config_option.encrypt, _config_option$pool = _config_option.pool, pool = _config_option$pool === undefined ? {} : _config_option$pool, _config_option$benchm = _config_option.benchmark, benchmark = _config_option$benchm === undefined ? process.env.SQL_PRINT === '1' : _config_option$benchm, logging = _config_option.logging, otherOptions = _objectWithoutProperties(_config_option, ['database', 'user', 'password', 'host', 'port', 'timezone', 'dialect', 'encrypt', 'pool', 'benchmark', 'logging']);
 
                             sequelize = new _sequelize2.default(database, user, password, _extends({
                                 host: host,
-                                port: port,
+                                port: port || (dialect === "mysql" ? 3306 : dialect === 'mssql' ? 1433 : dialect === 'postgres' ? 5432 : 0),
                                 timezone: timezone || "+08:00",
                                 pool: _extends({
                                     max: 5,

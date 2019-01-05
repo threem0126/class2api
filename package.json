@@ -1,7 +1,7 @@
 {
   "name": "class2api",
-  "version": "3.2.5",
-  "description": "the lib for mapping your javascript class to api service.",
+  "version": "3.2.6",
+  "description": "the lib for mapping your javascript class to api service. support map Class's static methods merge into graphQL resolver",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
     "go:src": "NODE_ENV=development MODEL=src node demo-src/index.js",
@@ -26,6 +26,7 @@
     "command",
     "testhelper.js",
     "rulehelper.js",
+    "graphqlhelper.js",
     "dbhelper.js",
     "gkerrors.js",
     "util.js",
