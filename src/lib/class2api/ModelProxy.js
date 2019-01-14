@@ -80,11 +80,19 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
 
             //如果是对象（非简单数据类型），则必须包含key／value结构
             if (typeof result !== "object" || keys(result).length === 0) {
-                throw `非简单数据类型的接口返回值必须包含key／value结构，接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，不符合规范!`;
+                throw `接口返回值必须包含key／value结构（因此也不能为null值），接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，请适配调整以符合规范!`;
             }
             let {__redirected} = result
             if (__redirected)
                 return
+
+            if(!result) {
+                let msg = `接口返回值必须包含key／value结构（因此也不能为null值），接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，请适配调整以符合规范!`
+                console.error(msg)
+                if (process.env.NODE_ENV !== "production") {
+                    throw msg;
+                }
+            }
 
             let retData = {err: null, result: result}
             res.json(await resWrap({req, res, result: retData}));

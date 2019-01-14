@@ -110,7 +110,8 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
                             //if (process.env.NODE_ENV !== 'production') {
                             PrintCacheLog(`[${target.name}.${name}] hit cachekey .......${key}...`)
                             //}
-                            result.__fromCache = true
+                            if (result !== null)
+                                result.__fromCache = true
                         }
                         return result
                     }
@@ -124,7 +125,8 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
                 let expireTimeSeconds = null
                 if (getExpireTimeSeconds && typeof getExpireTimeSeconds === "function")
                     expireTimeSeconds = getExpireTimeSeconds()
-                await ____cache.set(key, JSON.stringify(result), expireTimeSeconds)
+                if (result !== null)
+                    await ____cache.set(key, JSON.stringify(result), expireTimeSeconds)
             }
             return result
         };
