@@ -282,7 +282,7 @@ var cacheAble = exports.cacheAble = function cacheAble(_ref6) {
                                 //if (process.env.NODE_ENV !== 'production') {
                                 PrintCacheLog('[' + target.name + '.' + name + '] hit cachekey .......' + key + '...');
                                 //}
-                                _result.__fromCache = true;
+                                if (_result !== null) _result.__fromCache = true;
                             }
                             return _context6.abrupt('return', _result);
 
@@ -297,20 +297,26 @@ var cacheAble = exports.cacheAble = function cacheAble(_ref6) {
                             result = _context6.sent;
 
                             if (!(cacheKeyGene && key)) {
-                                _context6.next = 33;
+                                _context6.next = 34;
                                 break;
                             }
 
                             expireTimeSeconds = null;
 
                             if (getExpireTimeSeconds && typeof getExpireTimeSeconds === "function") expireTimeSeconds = getExpireTimeSeconds();
-                            _context6.next = 33;
+
+                            if (!(result !== null)) {
+                                _context6.next = 34;
+                                break;
+                            }
+
+                            _context6.next = 34;
                             return ____cache.set(key, JSON.stringify(result), expireTimeSeconds);
 
-                        case 33:
+                        case 34:
                             return _context6.abrupt('return', result);
 
-                        case 34:
+                        case 35:
                         case 'end':
                             return _context6.stop();
                     }
