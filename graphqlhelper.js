@@ -1,1 +1,1 @@
-module.exports = require('./dist/lib/class2api/graphqlhelper.js')
+module.exports = require('./dist/lib/graphqlhelper/index')

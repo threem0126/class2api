@@ -32,7 +32,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
         }
     }
     let resWrap = async ({req, result}) => {
-        return fn_afterCall ?await fn_afterCall({req, result}) : result
+        return fn_afterCall ? await fn_afterCall({req, result}) : result
     }
     let result;
     let _BusinessModel = BusinessModel;
@@ -53,7 +53,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
                 throw `api请求中的body和query都为空，没有提交内容传入!`;
             }
             //queryObj是对早期传值方式的兼容（早期会将所有参数包裹在queryObj属性里）
-            let source = req.method==='POST'?req.body:req.query
+            let source = req.method === 'POST' ? req.body : req.query
             let {queryObj = source} = source;
             let params = queryObj;
             let paramsMerged = null;
@@ -62,7 +62,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
 
             if (fn_beforeCall && typeof fn_beforeCall === 'function') {//如果有要对传入参数做验证，则在fn_beforeCall中处理
                 let modelSetting = _BusinessModel.__modelSetting ? _BusinessModel.__modelSetting() : {};
-                let apipath = `${ _BusinessModel.name }.${ req.path }`
+                let apipath = `${_BusinessModel.name}.${req.path}`
                 paramsMerged = await fn_beforeCall({apipath, req, res, params, modelSetting});
             }
             //合并入req对象
@@ -83,11 +83,11 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
                 throw `非简单数据类型的接口返回值必须包含key／value结构，接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，不符合规范!`;
             }
             let {__redirected} = result
-            if(__redirected)
+            if (__redirected)
                 return
 
             let retData = {err: null, result: result}
-            res.json(await resWrap({req, res, result:retData}));
+            res.json(await resWrap({req, res, result: retData}));
             if (process.env.NODE_ENV !== "production" && process.env.PRINT_API_RESULT === "1") {
                 console.log(`api call result from(${req.originalUrl}):${JSON.stringifyline(retData)}`);
             }
@@ -95,7 +95,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             if (process.env.NODE_ENV !== "production") {
                 //region 让错误直接抛出，并终止程序。不需要时可以整体注释掉
                 console.dir(`这里：除了程序逻辑级别的Exception错误，在非正式环境会终止程序，便于调试排查。不需要时可以找到我的位置并注释掉`);
-                if (!err._gankao || process.env.StopOnAnyException=='1') {
+                if (!err._gankao || process.env.StopOnAnyException == '1') {
                     //通过timeout排除错误，会导致程序终止
                     setTimeout(() => {
                         throw err;
@@ -104,11 +104,23 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
                     //程序逻辑级别的Exception，输出到控制台即可
                 }
                 console.error(err);
+                if (process.env.NODE_ENV !== "production") {
+                    console.error(err.stack);
+                }
                 //endregion
             } else {
                 console.error(err);
             }
-            res.json(await resWrap({req, res, result: {err: err, result: null}}));
+            if (process.env.NODE_ENV !== "production") {
+                //非生产环境下，多输出详细的错误栈
+                res.json(await resWrap({
+                    req,
+                    res,
+                    result: {err: {message: err.message, stack: err.stack}, result: null}
+                }));
+            } else {
+                res.json(await resWrap({req, res, result: {err: {message: err.message}, result: null}}));
+            }
         }
     });
     return router

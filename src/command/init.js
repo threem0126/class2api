@@ -6,6 +6,7 @@ const config = require('../../templates.json')
 const chalk = require('chalk')
 const inquirer = require('inquirer')
 const Promise = require('bluebird')
+const _ = require('lodash')
 const path = require('path')
 const fs = require('fs')
 
@@ -76,9 +77,7 @@ module.exports = () => {
                     //
                     try {
                         const mysql = require('mysql')
-                        let mysql_pool = mysql.createPool({
-                            ...sql
-                        });
+                        let mysql_pool = mysql.createPool(sql);
                         Promise.promisifyAll(mysql_pool)
                         let {affectedRows} = yield mysql_pool.queryAsync(`CREATE DATABASE IF NOT EXISTS ${database}`);
 
@@ -87,7 +86,7 @@ module.exports = () => {
                         tableSql = tableSql.replace('{databaseName}', database)
                         yield mysql_pool.queryAsync(tableSql);
                         //
-                        let options = {...sql, database, projectName}
+                        let options = _.merge(sql,{database, projectName})
                         updateConfig(options, path.join(process.cwd(), projectName, 'src','config', 'development.config.js'))
                         updateConfig(options, path.join(process.cwd(), projectName, 'src','config', 'test.config.js'))
                         updateConfig(options, path.join(process.cwd(), projectName, 'src','config', 'production.config.js'))

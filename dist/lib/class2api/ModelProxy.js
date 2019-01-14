@@ -249,7 +249,7 @@ var _bindRouter = function () {
                                                 if (process.env.NODE_ENV !== "production" && process.env.PRINT_API_RESULT === "1") {
                                                     console.log('api call result from(' + req.originalUrl + '):' + JSON.stringifyline(retData));
                                                 }
-                                                _context2.next = 56;
+                                                _context2.next = 64;
                                                 break;
 
                                             case 48:
@@ -268,20 +268,46 @@ var _bindRouter = function () {
                                                         //程序逻辑级别的Exception，输出到控制台即可
                                                     }
                                                     console.error(_context2.t4);
+                                                    if (process.env.NODE_ENV !== "production") {
+                                                        console.error(_context2.t4.stack);
+                                                    }
                                                     //endregion
                                                 } else {
                                                     console.error(_context2.t4);
                                                 }
-                                                _context2.t5 = res;
-                                                _context2.next = 54;
-                                                return resWrap({ req: req, res: res, result: { err: _context2.t4, result: null } });
 
-                                            case 54:
+                                                if (!(process.env.NODE_ENV !== "production")) {
+                                                    _context2.next = 59;
+                                                    break;
+                                                }
+
+                                                _context2.t5 = res;
+                                                _context2.next = 55;
+                                                return resWrap({
+                                                    req: req,
+                                                    res: res,
+                                                    result: { err: { message: _context2.t4.message, stack: _context2.t4.stack }, result: null }
+                                                });
+
+                                            case 55:
                                                 _context2.t6 = _context2.sent;
 
                                                 _context2.t5.json.call(_context2.t5, _context2.t6);
 
-                                            case 56:
+                                                _context2.next = 64;
+                                                break;
+
+                                            case 59:
+                                                _context2.t7 = res;
+                                                _context2.next = 62;
+                                                return resWrap({ req: req, res: res, result: { err: { message: _context2.t4.message }, result: null } });
+
+                                            case 62:
+                                                _context2.t8 = _context2.sent;
+
+                                                _context2.t7.json.call(_context2.t7, _context2.t8);
+
+                                            case 64:
                                             case 'end':
                                                 return _context2.stop();
                                         }

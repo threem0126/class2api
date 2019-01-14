@@ -1,6 +1,6 @@
 {
   "name": "class2api",
-  "version": "3.2.6",
+  "version": "3.3.1",
   "description": "the lib for mapping your javascript class to api service. support map Class's static methods merge into graphQL resolver",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
@@ -32,9 +32,6 @@
     "util.js",
     "templates.json"
   ],
-  "bin": {
-    "class2api": "dist/bin/class2api.js"
-  },
   "license": "ISC",
   "dependencies": {
     "babel-runtime": "^6.5.0",
