@@ -92,8 +92,7 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
 
             let key = ''
             if (cacheKeyGene) {
-                let [firstParam] = arguments
-                key = cacheKeyGene(firstParam)
+                key = cacheKeyGene(...arguments)
                 if (typeof key !== "string") {
                     //if (process.env.NODE_ENV !== 'production') {
                     setTimeout(() => {
@@ -153,8 +152,7 @@ export const clearCache = ({cacheKeyGene}) => {
             }
             let key = ''
             if (typeof cacheKeyGene === "function") {
-                let [firstParam] = arguments
-                key = cacheKeyGene(firstParam)
+                key = cacheKeyGene(...arguments)
                 if(typeof key !=="string") {
                     //if (process.env.NODE_ENV !== 'production') {
                     PrintCacheLog(`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)

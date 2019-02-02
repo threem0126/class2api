@@ -15,6 +15,7 @@ const _inner_DBModelLoader = (option)=> {
     let col
     let literal
     let where
+    let _defaultError
 
 //依赖外部数据的初始化
     let _model_objects = {}
@@ -22,76 +23,100 @@ const _inner_DBModelLoader = (option)=> {
 
 //region 初始化sequelize对象
     const _INIT = async ()=> {
-        let {database, user, password, host='localhost', port, timezone, dialect='mysql',encrypt, pool={}, benchmark=(process.env.SQL_PRINT === '1'), logging, ...otherOptions} = _config_option
-        sequelize = new Sequelize(database, user, password, {
-            host: host,
-            port: port||(
-                dialect==="mysql"?3306:
-                    dialect==='mssql'?1433:
-                        dialect==='postgres'?5432:0
-            ),
-            timezone: timezone || "+08:00",
-            pool: {
-                max: 5,
-                min: 0,
-                idle: 10000,
-                ...pool //覆盖默认配置
-            },
-            dialect,
-            encrypt,
-            benchmark,
-            logging: logging||(process.env.SQL_PRINT === '1' ?
-                ((...params) => console.log(...params)) : null),
-            ...otherOptions
-        });
+        try {
+            let {database, user, password, host = 'localhost', port, timezone, dialect = 'mysql', encrypt, pool = {}, benchmark = (process.env.SQL_PRINT === '1'), logging, ...otherOptions} = _config_option
+            sequelize = new Sequelize(database, user, password, {
+                host: host,
+                port: port || (
+                    dialect === "mysql" ? 3306 :
+                        dialect === 'mssql' ? 1433 :
+                            dialect === 'postgres' ? 5432 : 0
+                ),
+                timezone: timezone || "+08:00",
+                pool: {
+                    max: 5,
+                    min: 0,
+                    idle: 10000,
+                    ...pool //覆盖默认配置
+                },
+                dialect,
+                encrypt,
+                benchmark,
+                logging: logging || (process.env.SQL_PRINT === '1' ?
+                    ((...params) => console.log(...params)) : null),
+                ...otherOptions
+            });
 
-        let hasScope =false
-        //先初始化非Scope的Model
-        Object.keys(_model_objects).forEach(function (modelName) {
-            let fun = _model_objects[modelName]
-            if(!fun.scopeBaseModelName) {
-                _model_objects[modelName] = fun.call()
-            }else{
-                hasScope = true
-            }
-        });
-
-        if(hasScope) {
-            //再初始化Scope类型的Model
+            let hasScope = false
+            //先初始化非Scope的Model
             Object.keys(_model_objects).forEach(function (modelName) {
                 let fun = _model_objects[modelName]
-                if (fun.scopeBaseModelName) {
-                    _model_objects[modelName] = fun.call(null, _model_objects[fun.scopeBaseModelName])
+                if (!fun.scopeBaseModelName) {
+                    _model_objects[modelName] = fun.call()
+                } else {
+                    hasScope = true
                 }
             });
-        }
 
-        //补充初始化model的关联关系
-        Object.keys(_model_objects).forEach(function (modelName) {
-            if ('associate' in _model_objects[modelName]) {
-                _model_objects[modelName].associate(_model_objects, _ass);
+            if (hasScope) {
+                //再初始化Scope类型的Model
+                Object.keys(_model_objects).forEach(function (modelName) {
+                    let fun = _model_objects[modelName]
+                    if (fun.scopeBaseModelName) {
+                        _model_objects[modelName] = fun.call(null, _model_objects[fun.scopeBaseModelName])
+                    }
+                });
             }
-        });
-        fn = Sequelize.fn
-        col = Sequelize.col
-        literal = Sequelize.literal
-        where = Sequelize.where
-        //
-        _model_objects.__resetDB = ResetDB
-        _model_objects.__createTransaction = createTransaction
-        _model_objects.__excuteSQL = excuteSQL
-        _model_objects.__fn = fn
-        _model_objects.__col = col
-        _model_objects.__literal = literal
-        _model_objects.__where = where
+
+            //补充初始化model的关联关系
+            Object.keys(_model_objects).forEach(function (modelName) {
+                if ('associate' in _model_objects[modelName]) {
+                    _model_objects[modelName].associate(_model_objects, _ass);
+                }
+            });
+            fn = Sequelize.fn
+            col = Sequelize.col
+            literal = Sequelize.literal
+            where = Sequelize.where
+            //
+            _model_objects.__resetDB = ResetDB
+            _model_objects.__createTransaction = createTransaction
+            _model_objects.__excuteSQL = excuteSQL
+            _model_objects.__fn = fn
+            _model_objects.__col = col
+            _model_objects.__literal = literal
+            _model_objects.__where = where
+        } catch (e) {
+            if (process.env.NODE_ENV === "production" && _defaultError) {
+                throw _defaultError
+            } else {
+                throw e
+            }
+        }
     }
 
     const createTransaction = async (option) => {
-        return await sequelize.transaction(option)
+        try {
+            return await sequelize.transaction(option)
+        } catch (e) {
+            if (process.env.NODE_ENV === "production" && _defaultError) {
+                throw _defaultError
+            } else {
+                throw e
+            }
+        }
     }
 
     const excuteSQL = async (sql, options) => {
-        return await sequelize.query(sql, options || {});
+        try {
+            return await sequelize.query(sql, options || {});
+        } catch (e) {
+            if (process.env.NODE_ENV === "production" && _defaultError) {
+                throw _defaultError
+            } else {
+                throw e
+            }
+        }
     }
 
     const ResetDB = async () => {
@@ -136,12 +161,13 @@ const _inner_DBModelLoader = (option)=> {
             fun.scopeBaseModelName = baseModelName
             return fun
         },
-        INIT: async ({model, ass}) => {
+        INIT: async ({model, ass, defautError}) => {
             if (!model)
                 throw `DBModelLoader.INIT() 未提供model参数`
             if (!ass)
                 throw `DBModelLoader.INIT() 未提供ass参数`
 
+            _defaultError = defautError
             _model_objects = model
             _ass = ass
             await _INIT(option)
