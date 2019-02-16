@@ -72,19 +72,6 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
                 result = await _BusinessModel[methodName]({...(paramsMerged || params), req});
             }
 
-            //res输出操作的反转控制，如果API内部在res对象上扩展定义了_custom函数，则跳用它。并结束res操作，交由API函数内部控制
-            if (typeof res._custom === "function") {
-                await res._custom()
-                try {
-                    //补刀操作，以防外围应用没有结束res
-                    res.end();
-                } catch (e) {
-                    //..
-                }
-                //提前结束
-                return;
-            }
-
             //反转控制，如果返回的结果时函数，则取值后直接作为返回结构，这里主要是为了兼容一些特殊的返回数据结构
             if (typeof result === "function") {
                 res.json(await resWrap({req, res, result: result()}))
@@ -95,8 +82,8 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             if (typeof result !== "object" || keys(result).length === 0) {
                 throw `接口返回值必须包含key／value结构（因此也不能为null值），接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，请适配调整以符合规范!`;
             }
-            let {__redirected} = result
-            if (__redirected)
+            let {__redirected, __customResp} = result
+            if (__redirected || __customResp)
                 return
 
             if(!result) {

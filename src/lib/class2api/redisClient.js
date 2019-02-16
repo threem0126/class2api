@@ -1,5 +1,6 @@
 import redis from 'redis';
 import Promise from 'bluebird';
+import {GKErrors} from "./GKErrors_Inner";
 
 let _redisClient;
 let _redisConfig;
@@ -35,8 +36,10 @@ export const getting_redisConfig = async ()=>{
 
 const _init_redisClient = ()=> {
     return new Promise((resolve, reject) => {
-
         const {cache_prefx: redis_cache_key_prefx} = _redisConfig;
+        if(!redis_cache_key_prefx)
+            throw GKErrors._SERVER_ERROR(`class2api的getRedisClient初始化时报错，未设定redis_cache_key_prefx值`);
+
         _redisClient = redis.createClient({
             host: _redisConfig.host,
             port: _redisConfig.port
@@ -86,6 +89,19 @@ const _init_redisClient = ()=> {
                 params[0] = redis_cache_key_prefx + params[0];
                 return await _redisClient.expireAsyncOrig(...params)
             }
+            // Object.keys(_redisClient).forEach(function (modelName) {
+            //     if(modelName.indexOf("Async")!==-1 && typeof _redisClient[`${modelName}Orig`] ==="function" && _redisClient[`${modelName}Orig`].length>0) {
+            //         console.log(`${modelName} ------------------- ${typeof _redisClient[modelName]}`);
+            //         _redisClient[`${modelName}Orig`] = _redisClient[modelName];
+            //         _redisClient[modelName] = async (...params) => {
+            //             let _newModelName = `${modelName}Orig`
+            //             if (typeof params[0] === "string") {
+            //                 params[0] = redis_cache_key_prefx + params[0];
+            //             }
+            //             return await _redisClient[_newModelName](...params)
+            //         }
+            //     }
+            // });
         } catch (err) {
             console.error(`_redisClient异步Promise化遇到错误：${err}`)
             reject(err)
