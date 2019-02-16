@@ -66,42 +66,42 @@ const _init_redisClient = ()=> {
         }
         Promise.promisifyAll(_redisClient);
         try {
-            _redisClient.getAsyncOrig = _redisClient.getAsync;
-            _redisClient.getAsync = async (...params) => {
-                params[0] = redis_cache_key_prefx + params[0];
-                return await _redisClient.getAsyncOrig(...params)
-            }
-            //
-            _redisClient.setAsyncOrig = _redisClient.setAsync;
-            _redisClient.setAsync = async (...params) => {
-                params[0] = redis_cache_key_prefx + params[0];
-                return await _redisClient.setAsyncOrig(...params)
-            }
-            //
-            _redisClient.delAsyncOrig = _redisClient.delAsync;
-            _redisClient.delAsync = async (...params) => {
-                params[0] = redis_cache_key_prefx + params[0];
-                return await _redisClient.delAsyncOrig(...params)
-            }
-            //
-            _redisClient.expireAsyncOrig = _redisClient.expireAsync;
-            _redisClient.expireAsync = async (...params) => {
-                params[0] = redis_cache_key_prefx + params[0];
-                return await _redisClient.expireAsyncOrig(...params)
-            }
-            // Object.keys(_redisClient).forEach(function (modelName) {
-            //     if(modelName.indexOf("Async")!==-1 && typeof _redisClient[`${modelName}Orig`] ==="function" && _redisClient[`${modelName}Orig`].length>0) {
-            //         console.log(`${modelName} ------------------- ${typeof _redisClient[modelName]}`);
-            //         _redisClient[`${modelName}Orig`] = _redisClient[modelName];
-            //         _redisClient[modelName] = async (...params) => {
-            //             let _newModelName = `${modelName}Orig`
-            //             if (typeof params[0] === "string") {
-            //                 params[0] = redis_cache_key_prefx + params[0];
-            //             }
-            //             return await _redisClient[_newModelName](...params)
-            //         }
-            //     }
-            // });
+            // _redisClient.getAsyncOrig = _redisClient.getAsync;
+            // _redisClient.getAsync = async (...params) => {
+            //     params[0] = redis_cache_key_prefx + params[0];
+            //     return await _redisClient.getAsyncOrig(...params)
+            // }
+            // //
+            // _redisClient.setAsyncOrig = _redisClient.setAsync;
+            // _redisClient.setAsync = async (...params) => {
+            //     params[0] = redis_cache_key_prefx + params[0];
+            //     return await _redisClient.setAsyncOrig(...params)
+            // }
+            // //
+            // _redisClient.delAsyncOrig = _redisClient.delAsync;
+            // _redisClient.delAsync = async (...params) => {
+            //     params[0] = redis_cache_key_prefx + params[0];
+            //     return await _redisClient.delAsyncOrig(...params)
+            // }
+            // //
+            // _redisClient.expireAsyncOrig = _redisClient.expireAsync;
+            // _redisClient.expireAsync = async (...params) => {
+            //     params[0] = redis_cache_key_prefx + params[0];
+            //     return await _redisClient.expireAsyncOrig(...params)
+            // }
+            Object.keys(_redisClient).forEach(function (modelName) {
+                if(modelName.indexOf("Async")!==-1 && typeof _redisClient[modelName] ==="function" && _redisClient[modelName].length>0) {
+                    console.log(`${modelName} ------------------- ${typeof _redisClient[modelName]}`);
+                    _redisClient[`${modelName}Orig`] = _redisClient[modelName];
+                    _redisClient[modelName] = async (...params) => {
+                        let _newModelName = `${modelName}Orig`
+                        if (typeof params[0] === "string") {
+                            params[0] = redis_cache_key_prefx + params[0];
+                        }
+                        return await _redisClient[_newModelName](...params)
+                    }
+                }
+            });
         } catch (err) {
             console.error(`_redisClient异步Promise化遇到错误：${err}`)
             reject(err)
