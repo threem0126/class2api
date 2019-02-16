@@ -192,6 +192,20 @@ class2api对所有请求的返回数据结构，统一为：
     }
 ```
 
+### 接管res输出操作（谨慎使用）
+```javascript
+    class ClassB {
+        constructor() {
+            throw '静态业务功能类无法实例化'
+        }
+        static async customResponseResultStruck() {
+            //TODO:.....res.write(fileStream) 
+            //class2api内部约定，如API方法返回__customResp标记，则框架终止res操作，由方法内部自行控制res操作
+            return {__customResp:true}
+        }
+    } 
+```
+
 ### 自定义Appi路径
 ```javascript
     //创建微服务对象

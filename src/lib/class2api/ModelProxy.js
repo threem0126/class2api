@@ -82,6 +82,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             if (typeof result !== "object" || keys(result).length === 0) {
                 throw `接口返回值必须包含key／value结构（因此也不能为null值），接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，请适配调整以符合规范!`;
             }
+            //API方法内部做了重定向，或者自操作res输出
             let {__redirected, __customResp} = result
             if (__redirected || __customResp)
                 return
