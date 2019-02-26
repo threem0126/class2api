@@ -102,17 +102,23 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
                 }
                 //返回空字符串时，忽略
                 if (key) {
-                    let Obj = await ____cache.get(key)
-                    if (Obj) {
-                        let result = JSON.parse(Obj)
-                        if (typeof result === "object") {
-                            //if (process.env.NODE_ENV !== 'production') {
-                            PrintCacheLog(`[${target.name}.${name}] hit cachekey .......${key}...`)
-                            //}
-                            if (result !== null)
-                                result.__fromCache = true
+                    let result = await ____cache.get(key)
+                    if (result) {
+                        let aSkip = false
+                        if (typeof result === "string") {
+                            try {
+                                result = JSON.parse(result)
+                            } catch (e) {
+                                aSkip=true;
+                            }
                         }
-                        return result
+                        if(!aSkip) {
+                            if (process.env.NODE_ENV !== 'production') {
+                                PrintCacheLog(`[${target.name}.${name}] hit cachekey .......${key}...`)
+                            }
+                            result.__fromCache = true
+                            return result
+                        }
                     }
                 }
             }
@@ -146,18 +152,18 @@ export const clearCache = ({cacheKeyGene}) => {
         descriptor = descriptor || target.descriptor
         let oldValue = descriptor.value;
         descriptor.value = async function () {
-            if(process.env.NO_API_CACHE==='1') {
+            if (process.env.NO_API_CACHE === '1') {
                 PrintCacheLog(`force skip cache by process.env.NO_API_CACHE ...`)
                 return await oldValue(...arguments);
             }
             let key = ''
             if (typeof cacheKeyGene === "function") {
                 key = cacheKeyGene(...arguments)
-                if(typeof key !=="string") {
+                if (typeof key !== "string") {
                     //if (process.env.NODE_ENV !== 'production') {
                     PrintCacheLog(`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)
                     //}
-                }else if (key === "") {
+                } else if (key === "") {
                     //返回的key为空字符串，说明key无法提前确定，需要交给方法内部来调用清空
                     arguments[0].__cacheManage = () => {
                         return ____cache

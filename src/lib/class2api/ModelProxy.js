@@ -47,7 +47,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             let pathItems = req.path.split("/");
             let methodName = pathItems[1] ? pathItems[1] : null;
             if (!_BusinessModel[methodName]) {
-                throw `api请求的地址(${req.originalUrl})中对应的类不存在${methodName}方法,请确认映射的类是否正确!`;
+                throw `api请求的地址(${req.originalUrl})中对应的类(${_BusinessModel.name})不存在${methodName}方法,请确认映射的类是否正确!`;
             }
             if (!req.body && !res.query) {
                 throw `api请求中的body和query都为空，没有提交内容传入!`;

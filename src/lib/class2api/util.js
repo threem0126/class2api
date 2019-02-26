@@ -62,7 +62,7 @@ export const delayRun = (fun, ms, errerhandle)=> {
  * @returns {number}
  */
 export const hashcode = (str) => {
-    var hash = 0, i, chr, len;
+    let hash = 0, i, chr, len;
     if (str.length === 0) return hash;
     for (i = 0, len = str.length; i < len; i++) {
         chr = str.charCodeAt(i);

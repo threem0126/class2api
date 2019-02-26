@@ -1,4 +1,5 @@
 import redis from 'redis';
+import moment from 'moment'
 import Promise from 'bluebird';
 import {GKErrors} from "./GKErrors_Inner";
 
@@ -62,36 +63,20 @@ const _init_redisClient = ()=> {
             console.log(`测试，读取 redis key:${key},value:${avalue}`)
             let deleted = await _redisClient.delAsync(key)
             console.log(`测试，删除了redis key:${key},${deleted}`)
+            //添加列表（列表不存在，则自动新建）
+            await _redisClient.rpushAsync(key, JSON.stringify({send: moment().format(), time: 1}))
+            //设置一定时间后过期失效
+            await _redisClient.expireAsync(key, 3)
+            //读取列表值
+            console.log(`测试，存储并读取列表类型，redis key:${key},value:`+ await _redisClient.lrangeAsync("test", 0, -1))
+            await _redisClient.delAsync('test')
+            //
             resolve(_redisClient)
         }
         Promise.promisifyAll(_redisClient);
         try {
-            // _redisClient.getAsyncOrig = _redisClient.getAsync;
-            // _redisClient.getAsync = async (...params) => {
-            //     params[0] = redis_cache_key_prefx + params[0];
-            //     return await _redisClient.getAsyncOrig(...params)
-            // }
-            // //
-            // _redisClient.setAsyncOrig = _redisClient.setAsync;
-            // _redisClient.setAsync = async (...params) => {
-            //     params[0] = redis_cache_key_prefx + params[0];
-            //     return await _redisClient.setAsyncOrig(...params)
-            // }
-            // //
-            // _redisClient.delAsyncOrig = _redisClient.delAsync;
-            // _redisClient.delAsync = async (...params) => {
-            //     params[0] = redis_cache_key_prefx + params[0];
-            //     return await _redisClient.delAsyncOrig(...params)
-            // }
-            // //
-            // _redisClient.expireAsyncOrig = _redisClient.expireAsync;
-            // _redisClient.expireAsync = async (...params) => {
-            //     params[0] = redis_cache_key_prefx + params[0];
-            //     return await _redisClient.expireAsyncOrig(...params)
-            // }
             Object.keys(_redisClient).forEach(function (modelName) {
                 if(modelName.indexOf("Async")!==-1 && typeof _redisClient[modelName] ==="function" && _redisClient[modelName].length>0) {
-                    console.log(`${modelName} ------------------- ${typeof _redisClient[modelName]}`);
                     _redisClient[`${modelName}Orig`] = _redisClient[modelName];
                     _redisClient[modelName] = async (...params) => {
                         let _newModelName = `${modelName}Orig`

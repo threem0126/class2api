@@ -4,6 +4,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import hpp from "hpp";
+import url from 'url'
 import bodyParser from "body-parser";
 import compression from "compression";
 import {MultiProccessTaskThrottle} from './taskThrottle'
@@ -116,7 +117,21 @@ const _create_server = async (model, options)=> {
         cros_headers = cros_headers.map(item => item.toLowerCase())
         let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
         _server.use(function (req, res, next) {
-            res.header("Access-Control-Allow-Origin", (cros_origin.length === 0) ? "*" : cros_origin.join(','));
+            let Origins = '';
+            if (cros_origin.length > 0) {
+                Origins = cros_origin.join(',')
+            } else {
+                //Access-Control-Allow-Origin值动态响应，不再笼统的输出"*"
+                let referer = req.get('referer' || "")
+                if (referer) {
+                    let urlObj = url.parse(referer);
+                    //针对赶考网下的域名做跨域授权
+                    if (urlObj.hostname.indexOf(".gankao.com")) {
+                        Origins = urlObj.hostname + ":" + urlObj.port
+                    }
+                }
+            }
+            res.header("Access-Control-Allow-Origin", Origins);
             res.header("Access-Control-Allow-Credentials", "true");
             res.header("Access-Control-Allow-Methods", "HEAD,OPTIONS,POST");
             res.header("Access-Control-Allow-Headers", " " + [...allow_Header, ...cros_headers].join(", "));
