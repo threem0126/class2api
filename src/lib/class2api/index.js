@@ -123,17 +123,17 @@ const _create_server = async (model, options)=> {
             } else {
                 //Access-Control-Allow-Origin值动态响应，不再笼统的输出"*"
                 //仅限，针对赶考网下的域名做跨域授权，避免'*'带来的安全隐患
+                //客户端，ApiProxy组件默认已配置跨域请求，用superagent和fetch的，需要单独配置withCredentials
                 let referer = req.get('referer' || "")
                 if (referer) {
                     let urlObj = url.parse(referer);
+                    if (urlObj.hostname.indexOf(".gankao.com")) {
+                        Origins = urlObj.protocol + '//' + urlObj.hostname + ((urlObj.port) ? `:${urlObj.port}` : '')
+                    }
                     // 'http://local.gankao.com:3000'
                     // {"protocol":"http:","slashes":true,"auth":null,"host":"local.gankao.com:3000","port":"3000","hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"http://local.gankao.com:3000/"}
                     // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com:80","port":"80","hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com:80/"}
                     // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com","port":null,"hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com/"}
-
-                    if (urlObj.hostname.indexOf(".gankao.com")) {
-                        Origins = urlObj.protocol + '//' + urlObj.hostname + ((urlObj.port) ? `:${urlObj.port}` : '')
-                    }
                 }
             }
             res.header("Access-Control-Allow-Origin", Origins);
