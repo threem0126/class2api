@@ -132,7 +132,7 @@ const _create_server = async (model, options)=> {
                     // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com","port":null,"hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com/"}
 
                     if (urlObj.hostname.indexOf(".gankao.com")) {
-                        Origins = urlObj.protocol + '//' + urlObj.hostname + (urlObj.port) ? `:${urlObj.port}` : ''
+                        Origins = urlObj.protocol + '//' + urlObj.hostname + ((urlObj.port) ? `:${urlObj.port}` : '')
                     }
                 }
             }
