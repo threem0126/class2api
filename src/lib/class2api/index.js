@@ -18,6 +18,7 @@ import {GKErrorWrap} from './GKErrorWrap'
 import {setting_CustomRuleValidator} from '../rulehelper/index'
 
 const logger = loggerCreator();
+let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
 let _server;
 let _router;
 
@@ -115,7 +116,7 @@ const _create_server = async (model, options)=> {
         //设置跨域访问
         cros_origin = cros_origin.map(item => item.toLowerCase())
         cros_headers = cros_headers.map(item => item.toLowerCase())
-        let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
+        //注意下方还有一个独立Export的工具函数responsiveCrosOriginForGankaoDomain，维护时需同步修改
         _server.use(function (req, res, next) {
             let Origins = '';
             if (cros_origin.length > 0) {
@@ -184,6 +185,40 @@ export const createServer = async (options)=> {
     if (!_server)
         _server  = await _create_server('server', options)
     return _server
+}
+
+/**
+ * class2api内部对Options跨域预请求的动态响应，独立版本
+ * @param req
+ * @param res
+ * @param next
+ */
+const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next) {
+    //注意上面还有内置路由中的相同代码处理
+    let Origins = ''
+    //Access-Control-Allow-Origin值动态响应，不再笼统的输出"*"
+    //仅限，针对赶考网下的域名做跨域授权，避免'*'带来的安全隐患
+    //客户端，ApiProxy组件默认已配置跨域请求，用superagent和fetch的，需要单独配置withCredentials
+    let referer = req.get('referer' || "")
+    if (referer) {
+        let urlObj = url.parse(referer);
+        if (urlObj.hostname.indexOf(".gankao.com")) {
+            Origins = urlObj.protocol + '//' + urlObj.hostname + ((urlObj.port) ? `:${urlObj.port}` : '')
+        }
+        // 'http://local.gankao.com:3000'
+        // {"protocol":"http:","slashes":true,"auth":null,"host":"local.gankao.com:3000","port":"3000","hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"http://local.gankao.com:3000/"}
+        // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com:80","port":"80","hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com:80/"}
+        // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com","port":null,"hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com/"}
+    }
+    res.header("Access-Control-Allow-Origin", Origins);
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "HEAD,OPTIONS,POST");
+    res.header("Access-Control-Allow-Headers", " " + allow_Header.join(", "));
+    if ('OPTIONS' === req.method) {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
 }
 
 /**
@@ -273,8 +308,8 @@ export {
      * cluster多线程环境下的定时任务执行器，内部带有互斥的锁机制，确保同一时间不会并发处理
      * 内部依赖于redis来存储锁状态，需提前调用setting_redisConfig进行配置redis链接信息
      */
-        MultiProccessTaskThrottle
+        MultiProccessTaskThrottle,
+
+    responsiveCrosOriginForGankaoDomainMiddleWare
+
 }
-
-
-

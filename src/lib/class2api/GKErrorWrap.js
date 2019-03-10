@@ -11,7 +11,7 @@ let errCodes = {}
  错误信息生成器，高阶函数
  */
 export const GKErrorWrap = (errCode, errMessage)=> {
-    if(errCodes[errCode])
+    if (errCodes[errCode])
         throw `错误码被重复定义(${errCode},${errCodes[errCode]})`
     errCodes[errCode] = errMessage
     return (more) => {
@@ -22,8 +22,8 @@ export const GKErrorWrap = (errCode, errMessage)=> {
         let ret = new Error()
         ret._gankao = 1;
         ret.code = errCode;
-        ret.message = `${errMessage}（${moreStr}）`;
-        ret.more =moreStr;
+        ret.message = `${errMessage} ${moreStr ? `(${moreStr})` : ''}`;
+        ret.more = moreStr;
         return ret
     }
 }
