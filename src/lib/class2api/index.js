@@ -18,7 +18,7 @@ import {GKErrorWrap} from './GKErrorWrap'
 import {setting_CustomRuleValidator} from '../rulehelper/index'
 
 const logger = loggerCreator();
-let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
+let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'gkauthorization', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
 let _server;
 let _router;
 
