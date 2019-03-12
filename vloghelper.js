@@ -1,0 +1,1 @@
+module.exports = require('./dist/lib/vloghelper/index.js')

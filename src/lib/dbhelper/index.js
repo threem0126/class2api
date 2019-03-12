@@ -3,7 +3,6 @@ import * as DBUtils from './dbutils';
 import {hashcode} from './../class2api/util'
 import * as TableSetting from './tablesetting'
 import {GKErrors} from "../class2api/GKErrors_Inner";
-import {throws} from "should";
 
 let _dbList = {}
 
