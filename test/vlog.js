@@ -1,4 +1,4 @@
-import {vlog_setting, vlogSend} from './index.js'
+import {vlog_setting, vlogSend} from '../src/lib/vloghelper/index.js'
 
 vlog_setting({apiUrl:"http://vlog.api.gankao.com/gktag/savevLog"});
 
