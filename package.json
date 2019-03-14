@@ -1,6 +1,6 @@
 {
   "name": "class2api",
-  "version": "3.3.24",
+  "version": "3.3.25",
   "description": "the lib for mapping your javascript class to api service. support map Class's static methods merge into graphQL resolver",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
@@ -30,7 +30,8 @@
     "dbhelper.js",
     "gkerrors.js",
     "util.js",
-    "templates.json"
+    "templates.json",
+    "vloghelper.js"
   ],
   "license": "ISC",
   "dependencies": {
