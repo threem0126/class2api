@@ -4,6 +4,7 @@ import uuidv4 from 'uuid/v4';
 
 let workerProcess;
 let _apiUrl = '';
+let _debugTrace = false;
 
 const start = () => {
     workerProcess = fork(VlogWorker);
@@ -14,13 +15,16 @@ const start = () => {
     });
 }
 
-const vlog_setting = ({apiUrl})=> {
+const vlog_setting = ({apiUrl,debugTrace=false})=> {
     _apiUrl = apiUrl
+    _debugTrace = debugTrace
     start();
 }
 
 const vlogSend = async ({isProduction=1, sysName, sourceHeaders, userIdentifier, action, targetType, time=new Date(), targetID,  targetOwnerIdentifier, extraInfo, _resendTimes=0}) => {
-    console.log('vlogSend...')
+    if(_debugTrace){
+        console.log('vlogSend...')
+    }
     // if (!_apiUrl) {
     //     throw new Error(`TransferVLog中的apiUrl尚未配置，请调用vlog_setting设置`)
     // }
@@ -46,6 +50,7 @@ const vlogSend = async ({isProduction=1, sysName, sourceHeaders, userIdentifier,
         throw new Error(`TransferVLog的日志发送send调用，缺少 sourceHeaders 参数`)
     }
     workerProcess.send({
+        _debugTrace,
         _uuid:uuidv4(),
         _apiUrl,
         isProduction,
@@ -58,6 +63,7 @@ const vlogSend = async ({isProduction=1, sysName, sourceHeaders, userIdentifier,
         targetOwnerIdentifier,
         extraInfo,
         sourceHeaders,
+        _resendTimes
     });
 }
 

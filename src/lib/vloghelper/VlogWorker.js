@@ -9,10 +9,12 @@ let filelist = []
 //每间隔1秒重新发送一次
 const _timer = setInterval(async()=> {
     if (filelist.length > 0) {
-        //统计超过3次重发的量，给予控制台输出提示
-        let needResends = filter(filelist, item => item._resendTimes < 3);
-        if (filelist.length > needResends.length) {
-            console.error(`TransferVLog 内部重发次数超过3次的日志，被丢弃 ${filelist.length - needResends.length} 个.`);
+        if (filelist[0]._debugTrace) {
+            //统计超过3次重发的量，给予控制台输出提示
+            let needResends = filter(filelist, item => item._resendTimes < 3);
+            if (filelist.length > needResends.length) {
+                console.error(`TransferVLog 内部重发次数超过3次的日志，被丢弃 ${filelist.length - needResends.length} 个.`);
+            }
         }
         for (let i = 0; i < (Math.min(20, filelist.length)); i++) {
             let item = filelist.shift()
@@ -31,23 +33,9 @@ const _timer = setInterval(async()=> {
 
 const doSend = async (data)=> {
     setImmediate(async () => {
-        let {_uuid, _apiUrl, isProduction = 1, sysName, sourceHeaders, userIdentifier, action, targetType, time, targetID, targetOwnerIdentifier, extraInfo, _resendTimes = 0} = data;
+        let {_debugTrace, _apiUrl, ...postData} = data;
         try {
             //发送流水
-            let postData = {
-                _uuid,
-                isProduction,
-                sysName,
-                userIdentifier,
-                action,
-                targetType,
-                targetID,
-                targetOwnerIdentifier,
-                time,
-                sourceHeaders,
-                extraInfo,
-                _resendTimes
-            }
             request
                 .post(_apiUrl)
                 .withCredentials()
@@ -55,36 +43,35 @@ const doSend = async (data)=> {
                 .set('Content-Type', 'application/json')
                 .send(postData)
                 .retry(2)//superagent内部先发送两次
-                .then((res)=>{
-                    if(res.status===200){
-                        console.log('send ok!')
-                    }else{
-                        postData._resendTimes++;
-                        filelist.push(postData);
+                .then((res) => {
+                    if (res.status === 200) {
+                        if (_debugTrace) {
+                            console.log('send ok!')
+                            console.log(JSON.stringify(postData))
+                            console.log(res.text)
+                        }
+                    } else {
+                        //注意加入list的是data，而不是postData
+                        data._resendTimes++;
+                        filelist.push(data);
                     }
                 }, (err) => {
-                    console.log('err ... ... ... ...!'+ postData._resendTimes)
-                    postData._resendTimes++;
-                    filelist.push(postData);
+                    if (_debugTrace) {
+                        console.error('err ... ... ... ...!' + postData)
+                        console.error(err)
+                    }
+                    //注意加入list的是data，而不是postData
+                    data._resendTimes++;
+                    filelist.push(data);
                 })
         } catch (ex) {
-            console.error(`TransferVLog中错误：`)
-            console.error(ex)
-            filelist.push({
-                 _uuid,
-                _apiUrl,
-                isProduction,
-                sysName,
-                userIdentifier,
-                action,
-                targetType,
-                targetID,
-                time,
-                targetOwnerIdentifier,
-                extraInfo,
-                sourceHeaders,
-                _resendTimes: _resendTimes + 1
-            });
+            if (_debugTrace) {
+                console.error(`TransferVLog中错误：`)
+                console.error(ex)
+            }
+            //注意加入list的是data，而不是postData
+            data._resendTimes++;
+            filelist.push(data);
         }
     });
 }

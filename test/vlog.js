@@ -1,6 +1,6 @@
 import {vlog_setting, vlogSend} from '../src/lib/vloghelper/index.js'
 
-vlog_setting({apiUrl:"http://vlog.api.gankao.com/gktag/savevLog"});
+vlog_setting({apiUrl:"http://vlog.api.gankao.com/gktag/savevLog", debugTrace:true});
 
 let tCount = 0;
 const TestSend =()=> {
