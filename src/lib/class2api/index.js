@@ -312,4 +312,4 @@ export {
      */
         responsiveCrosOriginForGankaoDomainMiddleWare,
 
-」
+}
