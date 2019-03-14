@@ -13,7 +13,7 @@ import loggerCreator from "./logger.js";
 import log4js from 'log4js';
 import * as ModelProxy  from './ModelProxy';
 import {modelSetting, cacheAble, clearCache, crashAfterMe, accessRule}  from './Decorators';
-import {getGankaoWXAuthToken, setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
+import {setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 import {GKErrorWrap} from './GKErrorWrap'
 import {setting_CustomRuleValidator} from '../rulehelper/index'
 
@@ -249,10 +249,7 @@ export const GKSUCCESS = (ps) => {
 }
 
 export {
-    /**
-     * 赶考网的临时辅助函数，用来获得存储在redis中的自定义token
-     */
-        getGankaoWXAuthToken,
+
     /**
      * 预设内置Redis对象的连接参数
      *      redis: {
@@ -310,6 +307,9 @@ export {
      */
         MultiProccessTaskThrottle,
 
-    responsiveCrosOriginForGankaoDomainMiddleWare,
+    /**
+     * class2api内部对Options跨域预请求的动态响应，只要来自gankao.com主域的请求，都会自动输出为refer请求的域名，独立版本
+     */
+        responsiveCrosOriginForGankaoDomainMiddleWare,
 
-}
+」

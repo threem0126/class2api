@@ -7,19 +7,6 @@ let _redisClient;
 let _redisConfig;
 let _redisClient_inited = false;
 
-/**
- *
- * @param gkwxauthtoken
- * @returns {Promise.<*>}
- */
-export const getGankaoWXAuthToken = async (gkwxauthtoken)=> {
-    if (!_redisClient) {
-        setTimeout(function () {
-            throw '_redisClient对象尚未初始化，请先引用 redisClient.js '
-        })
-    }
-    return await _redisClient.getAsyncOrig(gkwxauthtoken)
-}
 
 export const setting_redisConfig = (redisConfig)=> {
     (() => {
