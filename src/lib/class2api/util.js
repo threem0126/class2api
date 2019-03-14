@@ -1,3 +1,18 @@
+import md5 from 'md5'
+
+/**
+ * 获得对象的MD5签名，按排序的key-value拼接字符串计算，value中的对象做JSON.stringify处理
+ * @param param
+ * @param secret
+ * @returns {string}
+ */
+export const getSignParamsInMD5 = ({param,secret})=> {
+    const querystring = Object.keys(param).filter(function (key) {
+        return param[key] !== undefined && param[key] !== '' && ['pfx', 'partner_key', 'sign', 'key'].indexOf(key) < 0;
+    }).sort().map((key) => key + '=' + JSON.stringify(param[key])).join("&") + "&key=" + secret;
+    return md5(querystring).toUpperCase();
+}
+
 /**
  * 从express的request中获取请求方的IP地址
  * @param req

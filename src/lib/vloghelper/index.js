@@ -1,10 +1,13 @@
 let VlogWorker = __dirname + '/VlogWorker.js';
 const {fork} = require('child_process');
 import uuidv4 from 'uuid/v4';
+import {signParams} from './../class2api/util'
 
 let workerProcess;
 let _apiUrl = '';
 let _debugTrace = false;
+let _secret;
+let _sysName;
 
 const start = () => {
     workerProcess = fork(VlogWorker);
@@ -15,9 +18,11 @@ const start = () => {
     });
 }
 
-const vlog_setting = ({apiUrl,debugTrace=false})=> {
+const vlog_setting = ({apiUrl,debugTrace=false,sysName,secret})=> {
     _apiUrl = apiUrl
     _debugTrace = debugTrace
+    _sysName = sysName
+    _secret = secret;
     start();
 }
 
@@ -39,11 +44,14 @@ const vlogSend = async ({isProduction=1, sysName, sourceHeaders, userIdentifier,
     if (!_apiUrl) {
         throw new Error(`TransferVLog中的apiUrl尚未配置，请先调用vlog_setting设置`)
     }
+    if (!_secret) {
+        throw new Error(`TransferVLog中的secret尚未配置，请先调用vlog_setting设置`)
+    }
     // if (_apiUrl.indexOf("gankao.com") !== -1) {
     //     throw new Error(`TransferVLog中的apiUrl请配置为云服务的IP，以减少DNS解析开销`)
     // }
-    if (!sysName || typeof sysName !== "string") {
-        throw new Error(`TransferVLog的日志发送send调用，缺少sysName参数 或参数不是字符串类型`)
+    if (!_sysName ) {
+        throw new Error(`TransferVLog中的sysName尚未配置，请先调用vlog_setting设置`)
     }
     if (!userIdentifier || typeof userIdentifier !== "string") {
         throw new Error(`TransferVLog的日志发送send调用，缺少 userIdentifier 参数 或参数不是字符串类型`)
@@ -71,10 +79,12 @@ const vlogSend = async ({isProduction=1, sysName, sourceHeaders, userIdentifier,
     }
     workerProcess.send({
         _debugTrace,
-        _uuid: uuidv4(),
         _apiUrl,
+        _secret,
+        //
+        _uuid: uuidv4(),
         isProduction: (isProduction === 1 || isProduction === '1' || isProduction === true) ? 1 : 0,
-        sysName,
+        sysName:_sysName,
         userIdentifier,
         action,
         targetType,

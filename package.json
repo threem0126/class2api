@@ -53,6 +53,7 @@
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.11",
     "log4js": "^1.1.1",
+    "md5": "^2.2.1",
     "module-resolver": "^1.0.0",
     "moment": "^2.23.0",
     "mysql": "^2.15.0",

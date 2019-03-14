@@ -1,12 +1,12 @@
 import request from 'superagent'
 import Promise from 'bluebird';
 import {filter} from 'lodash';
+import {getSignParamsInMD5} from "../class2api/util";
 
 Promise.promisifyAll(request);
 
 let filelist = []
-//
-//每间隔1秒重新发送一次
+//每间隔1秒重新发送队列，队列中的数据被处理3次后依然未成功发送出去的，暂时被被丢弃
 const _timer = setInterval(async()=> {
     if (filelist.length > 0) {
         if (filelist[0]._debugTrace) {
@@ -33,7 +33,10 @@ const _timer = setInterval(async()=> {
 
 const doSend = async (data)=> {
     setImmediate(async () => {
-        let {_debugTrace, _apiUrl, ...postData} = data;
+        let {_debugTrace, _apiUrl, _secret, ...postData} = data;
+        if(!postData._sign){
+            postData._sign = getSignParamsInMD5({param:postData,secret:_secret})
+        }
         try {
             //发送流水
             request

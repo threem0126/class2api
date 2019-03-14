@@ -310,6 +310,6 @@ export {
      */
         MultiProccessTaskThrottle,
 
-    responsiveCrosOriginForGankaoDomainMiddleWare
+    responsiveCrosOriginForGankaoDomainMiddleWare,
 
 }
