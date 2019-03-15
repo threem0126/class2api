@@ -84,7 +84,7 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
                 PrintCacheLog(`[${target.name}.${name}] force skip cache by process.env.NO_API_CACHE ...`)
                 return await oldValue(...arguments);
             }
-            let {__nocache} = arguments[0]
+            let {__nocache} = arguments[0]||{}
             if (__nocache) {
                 PrintCacheLog(`[${target.name}.${name}] force skip cache ........ ${target.name}.${name}`)
                 return await oldValue(...arguments);
@@ -109,14 +109,16 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
                             try {
                                 result = JSON.parse(result)
                             } catch (e) {
-                                aSkip=true;
+                                aSkip = true;
                             }
                         }
-                        if(!aSkip) {
+                        if (!aSkip) {
                             if (process.env.NODE_ENV !== 'production') {
                                 PrintCacheLog(`[${target.name}.${name}] hit cachekey .......${key}...`)
                             }
-                            result.__fromCache = true
+                            if (typeof result === "object") {
+                                result.__fromCache = true
+                            }
                             return result
                         }
                     }
