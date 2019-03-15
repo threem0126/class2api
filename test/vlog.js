@@ -3,7 +3,7 @@ import moment from 'moment';
 
 vlog_setting({
     apiUrl: "http://vlog.api.gankao.com/gktag/savevLog",
-    sysName: 'lubo',
+    sysName: 'zhuli',
     secret: '@kj&hy%z',
     debugTrace: true,
 });

@@ -1,7 +1,6 @@
 let VlogWorker = __dirname + '/VlogWorker.js';
 const {fork} = require('child_process');
 import uuidv4 from 'uuid/v4';
-import {signParams} from './../class2api/util'
 
 let workerProcess;
 let _apiUrl = '';
