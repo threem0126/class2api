@@ -22,7 +22,13 @@ export const GKErrorWrap = (errCode, errMessage)=> {
         let ret = new Error()
         ret._gankao = 1;
         ret.code = errCode;
-        ret.message = `${errMessage} ${moreStr ? `(${moreStr})` : ''}`;
+        if (!moreStr) {
+            ret.message = errMessage;
+        } else if (!errMessage) {
+            ret.message = moreStr;
+        } else {
+            ret.message = `${errMessage} (${moreStr})`;
+        }
         ret.more = moreStr;
         return ret
     }
