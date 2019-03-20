@@ -1,17 +1,10 @@
-import path from 'path';
 import {cacheAble} from './../class2api/Decorators'
 import {GKErrors} from '../class2api/GKErrors_Inner'
 import fetch from 'isomorphic-fetch';
 import {hashcode} from './../class2api/util';
+import getConfig from './loadConfig.js'
 
-let class2api_config ;
-try{
-    let {config} = require(path.join(process.cwd(), 'class2api.config.js'));
-    class2api_config = config
-}catch(err){
-    //..
-}
-let {sysName, admin_rule_center} = class2api_config||{};
+let {name:sysName, admin_rule_center} = getConfig();
 
 class RuleValidator {
     constructor() {
@@ -54,7 +47,9 @@ class RuleValidator {
                     throw GKErrors._TOKEN_LOGIN_INVALID(`jwtoken无法识别：${ JSON.stringify(err) }`)
                 }
             }
-            return result
+            //剔除密码
+            let {password, ...restResult} = result||{};
+            return restResult
         } catch (e) {
             //权限认证出错
             let {_gankao} = e

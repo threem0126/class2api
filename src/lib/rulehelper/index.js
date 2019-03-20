@@ -1,17 +1,12 @@
-import path from 'path';
 import {GKErrors} from "../class2api/GKErrors_Inner";
-import RuleValidator from './adminRuleValidator'
+import RuleValidator from './adminRuleValidator';
+import getConfig from './loadConfig.js'
+import md5 from 'md5'
+import fetch from "isomorphic-fetch";
 
-let class2api_config ;
-try{
-    let {config} = require(path.join(process.cwd(), 'class2api.config.js'));
-    class2api_config = config
-}catch(err){
-    //..
-};
-let {name:sysName='-', admin_rule_center} = class2api_config||{}
+let {name:sysName, admin_rule_center} = getConfig();
+
 let _ruleValidator_custom;
-
 /**
  * 权证验证起
  * @param jwtoken
@@ -26,6 +21,7 @@ const ruleValidator = async ({jwtoken, categoryName, categoryDesc, ruleName, rul
     if (_ruleValidator_custom) {
         //调用外部的自定义验证函数
         return await _ruleValidator_custom({
+            sysName,
             jwtoken,
             categoryName,
             categoryDesc,
@@ -79,41 +75,58 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
                     throw `类 ${target.name} 的modelSetting修饰器中没有指定__ruleCategory属性（权限组信息）`
                 })
             }
-            if (arguments.length === 0 || typeof arguments[0] !== "object") {
-                //修饰器的报错，级别更高，直接用setTimeout抛出异常，以终止程序运行
-                setTimeout(() => {
-                    throw `在类静态方法 ${target.name}.${name} 上缺少身份参数，无法验证权限`
-                })
+            let jwtoken;
+            let expressReq;
+            let apiModel = 'api'; //传统class2api，还是prisma-graphQL接口API
+            //取值位置1：传统API方法的入参
+            //取值位置2：graphQL版API方法的入参
+            //两个位置同时取
+            let [apiParams0_Or_graphQLparent={}, graphQlparams, ctx={}, info_nouse] = arguments
+            let {req} = apiParams0_Or_graphQLparent
+            expressReq = req
+            if(!expressReq){
+                let {request} = ctx
+                expressReq = request
+                if(expressReq)
+                    apiModel = 'graphQL'
             }
-            let jwtoken
-            try {
-                jwtoken = arguments[0]['req'].headers['jwtoken']
-                if (!jwtoken)
-                    throw GKErrors._NOT_ACCESS_PERMISSION(`身份未明，您没有访问${target.name}.${name}对应API接口的权限`)
-            } catch (err) {
-                throw GKErrors._NOT_ACCESS_PERMISSION(`身份无法识别，在API对应的静态方法上未读取到req请求对象的headers['jwtoken']`)
-            }
-            let {name: categoryName, desc: categoryDesc} = target.__modelSetting ?
-                target.__modelSetting().__ruleCategory : {name: '无名', desc: '-'}
+            if(!expressReq)
+                throw GKErrors._NOT_ACCESS_PERMISSION(`身份无法识别，在API对应的静态方法(${target.name}.${name})的入参中未读取到请求头对象的cookie.jwtoken或headers['jwtoken']，请咨询class2api的维护人员`)
+
+            jwtoken = expressReq.cookies.jwtoken || expressReq.headers['jwtoken'] || ""
+            if (!jwtoken)
+                throw GKErrors._NOT_ACCESS_PERMISSION(`身份未明，您没有访问${target.name}.${name}对应API接口的权限`)
+
+            //采集请求的日志信息
             let apiInvokeParams = ''
-            let {req:req_noused, res:res_noused, ___frontpageURL:___frontpageURL_noused,..._apiInvokeParams} = arguments[0] || {}
-
-            let {headers, cookies} = req_noused
-            let frontReq = {}
-
-            try{
-                frontReq = {
-                    ___ip: req_noused.headers['x-forwarded-for'] || req_noused.connection.remoteAddress || req_noused.socket.remoteAddress || req_noused.connection.socket.remoteAddress,
-                    headers,
-                    cookies
-                }
-                apiInvokeParams = JSON.stringify(_apiInvokeParams)
-            }catch (err) {
-                apiInvokeParams = 'call params stringify error'
+            let {headers, cookies} = expressReq
+            let frontReq = {
+                ___ip: expressReq.headers['x-forwarded-for'] || expressReq.connection.remoteAddress || expressReq.socket.remoteAddress || expressReq.connection.socket.remoteAddress || '',
+                headers,
+                cookies
             }
+            if(apiModel==="api"){
+                //剔除传统API请求参数中多余的（由框架注入的杂质信息），剩余属性为调用的真实入参
+                let {req:req_noused, res:res_noused, __cacheManage, ___frontpageURL:___frontpageURL_noused,..._apiInvokeParams} = apiParams0_Or_graphQLparent
+                try{
+                    apiInvokeParams = JSON.stringify(_apiInvokeParams)
+                }catch (err) {
+                    apiInvokeParams = 'call params stringify error'
+                }
+            }else {
+                try {
+                    apiInvokeParams = JSON.stringify(graphQlparams)
+                } catch (err) {
+                    apiInvokeParams = 'call params stringify error（graphQL）'
+                }
+            }
+            //长度过长，截取前505位
             if(apiInvokeParams.length>505) {
                 apiInvokeParams = apiInvokeParams.substr(0, 500) + '[...]'
             }
+
+            let {name: categoryName, desc: categoryDesc} = target.__modelSetting ?
+                target.__modelSetting().__ruleCategory : {name: '无名', desc: '-'}
             let {err, result} = await ruleValidator({
                 jwtoken,
                 categoryName,
@@ -147,7 +160,31 @@ export const parseAdminAccountFromJWToken = async ({jwtoken})=> {
     return await RuleValidator.parseAdminAccountFromJWToken({jwtoken})
 }
 
-
-
-
-
+export const uploadupdateCertList = async ({ruleCategory,ruleNameList, salt})=> {
+    if (!ruleNameList) throw GKErrors._NOT_PARAMS(`ruleNameList`)
+    if (!ruleCategory) throw GKErrors._NOT_PARAMS(`ruleCategory`)
+    //验证签名
+    let timestamp = new Date().getTime()
+    const rawString = JSON.stringify({
+        ruleNameList, ruleCategory, from: name, timestamp
+    })
+    const sign = md5(`${salt}-${rawString}-${process.env.NODE_ENV}`)
+    try {
+        let res = await fetch(admin_rule_center.register, {
+            method: 'post',
+            rejectUnauthorized: false,
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            withCredentials: 'true',
+            json: true,
+            body: JSON.stringify({ruleNameList, ruleCategory, from: name, timestamp, sign})
+        });
+        let {err, result} = await res.json();
+        return {err, result}
+    } catch (e) {
+        console.error(`权限点注册遇到错误`)
+        console.error(e.stack)
+    }
+}

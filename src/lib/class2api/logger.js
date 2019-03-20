@@ -1,12 +1,5 @@
 import log4js from 'log4js';
 import cluster from 'cluster';
-import fs from "fs";
-import path from "path";
-//LogFile.trace('This is a Log4js-Test');
-//LogFile.debug('We Write Logs with log4js');
-//LogFile.info('You can find logs-files in the log-dir');
-//LogFile.warn('log-dir is a configuration-item in the log4js.json');
-//LogFile.error('In This Test log-dir is : \'./logs/log_test/\'');
 
 /**
  * 多进程的日志配置

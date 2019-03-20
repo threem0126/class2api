@@ -2,7 +2,6 @@ import express from 'express';
 import {keys} from 'lodash';
 import url from 'url'
 import { Router } from 'express';
-//import RateLimit from 'express-rate-limit'
 
 const router = new Router();
 const _config_endpoint = {};
