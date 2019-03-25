@@ -80,6 +80,7 @@ const vlogSend = async ({isProduction=1, sysName, sourceHeaders, userIdentifier,
         _debugTrace,
         _apiUrl,
         _secret,
+        _resendTimes: 0,
         //
         _uuid: uuidv4(),
         isProduction: (isProduction === 1 || isProduction === '1' || isProduction === true) ? 1 : 0,
@@ -91,8 +92,7 @@ const vlogSend = async ({isProduction=1, sysName, sourceHeaders, userIdentifier,
         time,
         targetOwnerIdentifier,
         extraInfo,
-        sourceHeaders,
-        _resendTimes: 0
+        sourceHeaders
     });
 }
 

@@ -33,9 +33,9 @@ const _timer = setInterval(async()=> {
 
 const doSend = async (data)=> {
     setImmediate(async () => {
-        let {_debugTrace, _apiUrl, _secret, ...postData} = data;
-        if(!postData._sign){
-            postData._sign = getSignParamsInMD5({param:postData,secret:_secret})
+        let {_debugTrace, _apiUrl, _secret,_resendTimes, ...postData} = data;
+        if(!postData.sign){
+            postData.sign = getSignParamsInMD5({param:postData,secret:_secret})
         }
         try {
             //发送流水
@@ -44,24 +44,31 @@ const doSend = async (data)=> {
                 .withCredentials()
                 .set('Accept', 'application/json, text/plain, */*')
                 .set('Content-Type', 'application/json')
-                .send(postData)
+                .send({postData})
                 .retry(2)//superagent内部先发送两次
                 .then((res) => {
                     if (res.status === 200) {
                         if (_debugTrace) {
-                            console.log('send ok!')
                             console.log(JSON.stringify(postData))
-                            console.log(res.text)
+                            try {
+                                let {err, result} = res.body
+                                if (err) {
+                                    console.error(`res business error  ... ${err}..!`)
+                                    console.error(res.body)
+                                }else{
+                                    console.log('send ok!')
+                                }
+                            }
                         }
                     } else {
                         //注意加入list的是data，而不是postData
+                        console.error(`res net error  ... ${res.status}..!`+ postData)
                         data._resendTimes++;
                         filelist.push(data);
                     }
                 }, (err) => {
                     if (_debugTrace) {
-                        console.error('err ... ... ... ...!' + postData)
-                        console.error(err)
+                        console.error(`res error  ... ${err}..!` + postData)
                     }
                     //注意加入list的是data，而不是postData
                     data._resendTimes++;

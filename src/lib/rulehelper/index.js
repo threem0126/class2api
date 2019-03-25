@@ -101,7 +101,7 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
             let apiInvokeParams = ''
             let {headers, cookies} = expressReq
             let frontReq = {
-                ___ip: expressReq.headers['x-forwarded-for'] || expressReq.connection.remoteAddress || expressReq.socket.remoteAddress || expressReq.connection.socket.remoteAddress || '',
+                ___ip: expressReq.headers['x-forwarded-for'] || (expressReq.connection && expressReq.connection.remoteAddress) || (expressReq.socket && expressReq.socket.remoteAddress) || (expressReq.connection.socket && expressReq.connection.socket.remoteAddress) || '',
                 headers,
                 cookies
             }
