@@ -58,6 +58,9 @@ const doSend = async (data)=> {
                                 }else{
                                     console.log('send ok!')
                                 }
+                            }catch (err) {
+                                console.error(`res parse error  ... ${err}..!`)
+                                console.error(res.body)
                             }
                         }
                     } else {
