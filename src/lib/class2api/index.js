@@ -183,6 +183,9 @@ export const createServer = async (options)=> {
     return _server
 }
 
+const responsiveCrosOriginForGankaoDomainMiddleWareFun =()=>{
+
+}
 /**
  * class2api内部对Options跨域预请求的动态响应，独立版本
  * @param req

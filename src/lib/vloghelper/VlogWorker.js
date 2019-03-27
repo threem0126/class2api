@@ -107,3 +107,5 @@ const doSend = async (data)=> {
 process.on('message', data => {
     doSend(data).then()
 });
+
+export const doSendVlog = doSend

@@ -177,8 +177,11 @@ const _inner_DBModelLoader = (option)=> {
 
 //内部带放重复创建的功能，相同的mysql配置，确保只创建一份sequelize对象
 const DBModelLoader = (option)=> {
-    if(!option || typeof option !=="object"){
-        throw GKErrors._SERVER_ERROR(`DBModelLoader调用缺少参数或参数不是{key/value}对象`)
+    if (!option) {
+        throw GKErrors._SERVER_ERROR(`DBModelLoader初始化函数未传入option参数`)
+    }
+    if (typeof option !== "object") {
+        throw GKErrors._SERVER_ERROR(`DBModelLoader初始化函数传入的option参数无效（期望是一个对象对象`)
     }
     let {database, host, port, timezone} = option
     let hashKey = hashcode(JSON.stringify({database, host, port}))

@@ -1,6 +1,7 @@
 let VlogWorker = __dirname + '/VlogWorker.js';
 const {fork} = require('child_process');
 import uuidv4 from 'uuid/v4';
+import {doSendVlog} from 'VlogWorker.js'
 
 let workerProcess;
 let _apiUrl = '';
@@ -76,7 +77,9 @@ const vlogSend = async ({isProduction=1, sysName, sourceHeaders, userIdentifier,
     if (_debugTrace) {
         console.log('vlogSend... ')
     }
-    workerProcess.send({
+
+    // workerProcess.send({
+   await doSendVlog({
         _debugTrace,
         _apiUrl,
         _secret,
