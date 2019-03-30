@@ -239,7 +239,7 @@ export const crashAfterMe = (hintMsg)=> {
             descriptor.value = async function () {
                 let ret = await oldValue(...arguments);
                 setTimeout(() => {
-                    throw `${hintMsg || '调试用的中断'} by crashAfterMe decorator！ 非production环境（${process.env.NODE_ENV}）`
+                    throw `${hintMsg || '调试用的中断'} by  crashAfterMe decorator！ 非production环境（${process.env.NODE_ENV}）`
                 }, 5)
                 return ret
             };
