@@ -8,7 +8,7 @@ import {MultiProccessTaskThrottle} from './taskThrottle'
 import loggerCreator from "./logger.js";
 import log4js from 'log4js';
 import * as ModelProxy  from './ModelProxy';
-import {modelSetting, cacheAble, clearCache, crashAfterMe, accessRule}  from './Decorators';
+import {modelSetting, cacheAble, clearCache, crashAfterMe, getCacheManage}  from './Decorators';
 import {setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 import {GKErrorWrap} from './GKErrorWrap'
 import {setting_CustomRuleValidator} from '../rulehelper/index'
@@ -289,10 +289,7 @@ export {
      */
         crashAfterMe,
 
-    /**
-     * 类静态修饰器，
-     */
-        accessRule,
+    getCacheManage,
 
     /**
      * 通过模块来全局配置权限验证函数

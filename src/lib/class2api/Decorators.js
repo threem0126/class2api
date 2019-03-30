@@ -248,3 +248,6 @@ export const crashAfterMe = (hintMsg)=> {
     }
 }
 
+export const getCacheManage =()=> {
+    return ____cache;
+}
