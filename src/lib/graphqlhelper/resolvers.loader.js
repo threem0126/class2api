@@ -66,7 +66,7 @@ export const isQuery = function (target, name, descriptor){
         let result = await oldValue(...arguments,ctx);
         //执行后的拦截
         if (__afterGraphQLCall && typeof __afterGraphQLCall === 'function') {//如果有要对传入参数做验证，则在fn_beforeCall中处理
-            result = await __afterGraphQLCall({apipath:name, req:request, result});
+            result = await __afterGraphQLCall({apipath:name, req:request, result, params, ctx});
         }
         return result
     };
