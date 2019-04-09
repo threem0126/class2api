@@ -2,6 +2,7 @@ console.dir("Nice to meet U, I will help You to map Class to API interface ...."
 import express from "express";
 import cookieParser from "cookie-parser";
 import url from 'url'
+import {filter} from 'lodash'
 import bodyParser from "body-parser";
 import compression from "compression";
 import {MultiProccessTaskThrottle} from './taskThrottle'
@@ -17,6 +18,12 @@ const logger = loggerCreator();
 let allow_Header = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'gkauthorization', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
 let _server;
 let _router;
+
+let trustCrosDomain = [
+    'gankao.com',
+    'gygaokao.com',
+    'gankao100.com'
+]
 
 const _create_server = async (model, options)=> {
 
@@ -114,7 +121,7 @@ const _create_server = async (model, options)=> {
         cros_headers = cros_headers.map(item => item.toLowerCase())
         //注意下方还有一个独立Export的工具函数responsiveCrosOriginForGankaoDomain，维护时需同步修改
         _server.use(function (req, res, next) {
-            let Origins = '';
+            let Origins = '*';
             if (cros_origin.length > 0) {
                 Origins = cros_origin.join(',')
             } else {
@@ -124,7 +131,8 @@ const _create_server = async (model, options)=> {
                 let referer = req.get('referer' || "")
                 if (referer) {
                     let urlObj = url.parse(referer);
-                    if (urlObj.hostname.indexOf(".gankao.com")) {
+                    //请求域名存在于trustCrosDomain白名单中
+                    if (filter(trustCrosDomain, item => urlObj.hostname.indexOf(item) !== -1).length > 0) {
                         Origins = urlObj.protocol + '//' + urlObj.hostname + ((urlObj.port) ? `:${urlObj.port}` : '')
                     }
                     // 'http://local.gankao.com:3000'

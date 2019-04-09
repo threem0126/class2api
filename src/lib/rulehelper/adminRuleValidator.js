@@ -25,7 +25,9 @@ class RuleValidator {
     static async parseAdminAccountFromJWToken({jwtoken}) {
         if (!jwtoken)
             throw GKErrors._TOKEN_LOGIN_INVALID(`标记身份验证的jwtoken未提供`)
-        console.log(`parseAdminAccountFromJWToken jwtoken = ${jwtoken}`);
+        if (process.env.PRODUCTION_TYPE !== "production") {
+            console.log(`parseAdminAccountFromJWToken jwtoken = ${jwtoken}`);
+        }
 
         let res = await fetch(admin_rule_center.auth, {
             method: 'post',
@@ -47,6 +49,9 @@ class RuleValidator {
             } else {
                 throw GKErrors._TOKEN_LOGIN_INVALID(`jwtoken无法识别：${JSON.stringify(err)}`)
             }
+        }
+        if (process.env.PRODUCTION_TYPE !== "production") {
+            console.log(`admin_rule_center.auth post result = ${JSON.stringify({err, result})}`);
         }
         //剔除密码
         let {password, ...restResult} = result || {};

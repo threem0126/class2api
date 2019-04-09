@@ -3,6 +3,7 @@ import RuleValidator from './adminRuleValidator';
 import getConfig from './loadConfig.js'
 import md5 from 'md5'
 import fetch from "isomorphic-fetch";
+import {keys} from 'lodash';
 
 let {name:sysName, admin_rule_center} = getConfig();
 
@@ -158,6 +159,22 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
  */
 export const parseAdminAccountFromJWToken = async ({jwtoken})=> {
     return await RuleValidator.parseAdminAccountFromJWToken({jwtoken})
+}
+
+/**
+ * 将易于书写结构中的value值转换为对象结构
+ * @param adminrules
+ * @returns {Promise<void>}
+ */
+export const convertRulesvalue2ParamsObject = async (adminrules)=> {
+    keys(adminrules).forEach(CategoryKey => {
+        let RuleItem = adminrules[CategoryKey];
+        keys(RuleItem).forEach(
+            key2 => RuleItem[key2] = {categoryName: CategoryKey, ruleName: key2, ruleDesc: RuleItem[key2]}
+        )
+        RuleItem.__ruleCategory = {name: CategoryKey, desc: ''}
+    });
+    return adminrules
 }
 
 export const uploadupdateCertList = async ({ruleCategory,ruleNameList, salt})=> {
