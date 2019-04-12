@@ -49,14 +49,13 @@ const doSend = async (data)=> {
                 .then((res) => {
                     if (res.status === 200) {
                         if (_debugTrace) {
-                            console.log(JSON.stringify(postData))
                             try {
                                 let {err, result} = res.body
                                 if (err) {
                                     console.error(`========Vlog res business error  ... ${err}..!`)
-                                    console.error(res.body)
+                                    console.error(JSON.stringify({err, result}))
                                 } else {
-                                    console.log('send ok!')
+                                    console.log('========Vlog send ok!')
                                 }
                             } catch (err) {
                                 console.error(`========Vlog res parse error  ... ${err}..!`)
@@ -81,7 +80,6 @@ const doSend = async (data)=> {
         } catch (ex) {
             if (_debugTrace) {
                 console.error(`TransferVLog中错误：`)
-                console.error(ex)
                 console.error(ex.stack)
             }
             //注意加入list的是data，而不是postData
