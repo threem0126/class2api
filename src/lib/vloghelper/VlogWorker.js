@@ -33,9 +33,9 @@ const _timer = setInterval(async()=> {
 
 const doSend = async (data)=> {
     setImmediate(async () => {
-        let {_debugTrace, _apiUrl, _secret,_resendTimes, ...postData} = data;
-        if(!postData.sign){
-            postData.sign = getSignParamsInMD5({param:postData,secret:_secret})
+        let {_debugTrace, _apiUrl, _secret, _resendTimes, ...postData} = data;
+        if (!postData.sign) {
+            postData.sign = getSignParamsInMD5({param: postData, secret: _secret})
         }
         try {
             //发送流水
@@ -53,25 +53,26 @@ const doSend = async (data)=> {
                             try {
                                 let {err, result} = res.body
                                 if (err) {
-                                    console.error(`res business error  ... ${err}..!`)
+                                    console.error(`========Vlog res business error  ... ${err}..!`)
                                     console.error(res.body)
-                                }else{
+                                } else {
                                     console.log('send ok!')
                                 }
-                            }catch (err) {
-                                console.error(`res parse error  ... ${err}..!`)
+                            } catch (err) {
+                                console.error(`========Vlog res parse error  ... ${err}..!`)
                                 console.error(res.body)
                             }
                         }
                     } else {
                         //注意加入list的是data，而不是postData
-                        console.error(`res net error  ... ${res.status}..!`+ postData)
+                        console.error(`========Vlog res net error  ... ${res.status}..!` + postData)
                         data._resendTimes++;
                         filelist.push(data);
                     }
                 }, (err) => {
                     if (_debugTrace) {
-                        console.error(`res error  ... ${err}..!` + postData)
+                        console.error(`========Vlog res error  ... ${err}..!` + postData)
+                        console.error(ex.stack)
                     }
                     //注意加入list的是data，而不是postData
                     data._resendTimes++;
@@ -81,6 +82,7 @@ const doSend = async (data)=> {
             if (_debugTrace) {
                 console.error(`TransferVLog中错误：`)
                 console.error(ex)
+                console.error(ex.stack)
             }
             //注意加入list的是data，而不是postData
             data._resendTimes++;

@@ -124,6 +124,7 @@ const _create_server = async (model, options)=> {
             let Origins = '*';
             if (cros_origin.length > 0) {
                 Origins = cros_origin.join(',')
+                res.header("cros_origin", 'from custom ' + Origins);
             } else {
                 //Access-Control-Allow-Origin值动态响应，不再笼统的输出"*"
                 //仅限，针对赶考网下的域名做跨域授权，避免'*'带来的安全隐患
@@ -140,6 +141,7 @@ const _create_server = async (model, options)=> {
                     // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com:80","port":"80","hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com:80/"}
                     // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com","port":null,"hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com/"}
                 }
+                res.header("cros_origin", 'from referer ' + referer);
             }
             res.header("Access-Control-Allow-Origin", Origins);
             res.header("Access-Control-Allow-Credentials", "true");
@@ -191,25 +193,30 @@ export const createServer = async (options)=> {
     return _server
 }
 
-const responsiveCrosOriginForGankaoDomainMiddleWareFun =()=>{
+// const responsiveCrosOriginForGankaoDomainMiddleWareFun =(cros_origin)=> {
+//     let _cros_origin = cros_origin
+//     return function (req, res, next) {
+//         return responsiveCrosOriginForGankaoDomainMiddleWare(req, res, next, _cros_origin)
+//     }
+// }
 
-}
 /**
  * class2api内部对Options跨域预请求的动态响应，独立版本
  * @param req
  * @param res
  * @param next
  */
-const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next) {
+const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next ) {
     //注意上面还有内置路由中的相同代码处理
-    let Origins = ''
+    let Origins = '*';
     //Access-Control-Allow-Origin值动态响应，不再笼统的输出"*"
     //仅限，针对赶考网下的域名做跨域授权，避免'*'带来的安全隐患
     //客户端，ApiProxy组件默认已配置跨域请求，用superagent和fetch的，需要单独配置withCredentials
     let referer = req.get('referer' || "")
     if (referer) {
         let urlObj = url.parse(referer);
-        if (urlObj.hostname.indexOf(".gankao.com")) {
+        //请求域名存在于trustCrosDomain白名单中
+        if (filter(trustCrosDomain, item => urlObj.hostname.indexOf(item) !== -1).length > 0) {
             Origins = urlObj.protocol + '//' + urlObj.hostname + ((urlObj.port) ? `:${urlObj.port}` : '')
         }
         // 'http://local.gankao.com:3000'
@@ -217,6 +224,7 @@ const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next) 
         // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com:80","port":"80","hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com:80/"}
         // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com","port":null,"hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com/"}
     }
+    res.header("cros_origin", 'from referer ' + referer);
     res.header("Access-Control-Allow-Origin", Origins);
     res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Methods", "HEAD,OPTIONS,POST");
