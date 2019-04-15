@@ -22,13 +22,21 @@ class RuleValidator {
             return jwtoken;
         }
     })
-    static async parseAdminAccountFromJWToken({jwtoken}) {
+    static async parseAdminAccountFromJWToken({jwtoken,req}) {
         if (!jwtoken)
             throw GKErrors._TOKEN_LOGIN_INVALID(`标记身份验证的jwtoken未提供`)
         if (process.env.PRODUCTION_TYPE !== "production") {
             console.log(`parseAdminAccountFromJWToken jwtoken = ${jwtoken}`);
         }
-
+        let frontReq ;
+        if(req) {
+            //收集请求发起端的信息
+            frontReq = {
+                ___ip: req.headers['x-forwarded-for'] || (req.connection && req.connection.remoteAddress) || (req.socket && req.socket.remoteAddress) || (req.connection.socket && req.connection.socket.remoteAddress) || '',
+                headers: req.headers,
+                cookies: req.cookies
+            }
+        }
         let res = await fetch(admin_rule_center.auth, {
             method: 'post',
             rejectUnauthorized: false,
@@ -39,7 +47,10 @@ class RuleValidator {
             },
             withCredentials: 'true',
             json: true,
-            body: JSON.stringify({nothing: 1})
+            body: JSON.stringify({
+                nothing: 1,
+                frontReq
+            })
         });
         let {err, result} = await res.json();
         if (err) {

@@ -82,16 +82,16 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
             //取值位置1：传统API方法的入参
             //取值位置2：graphQL版API方法的入参
             //两个位置同时取
-            let [apiParams0_Or_graphQLparent={}, graphQlparams, ctx={}, info_nouse] = arguments
+            let [apiParams0_Or_graphQLparent = {}, graphQlparams, ctx = {}, info_nouse] = arguments
             let {req} = apiParams0_Or_graphQLparent
             expressReq = req
-            if(!expressReq){
+            if (!expressReq) {
                 let {request} = ctx
                 expressReq = request
-                if(expressReq)
+                if (expressReq)
                     apiModel = 'graphQL'
             }
-            if(!expressReq)
+            if (!expressReq)
                 throw GKErrors._NOT_ACCESS_PERMISSION(`身份无法识别，在API对应的静态方法(${target.name}.${name})的入参中未读取到请求头对象的cookie.jwtoken或headers['jwtoken']，请咨询class2api的维护人员`)
 
             jwtoken = expressReq.cookies.jwtoken || expressReq.headers['jwtoken'] || ""
@@ -106,15 +106,15 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
                 headers,
                 cookies
             }
-            if(apiModel==="api"){
+            if (apiModel === "api") {
                 //剔除传统API请求参数中多余的（由框架注入的杂质信息），剩余属性为调用的真实入参
-                let {req:req_noused, res:res_noused, __cacheManage, ___frontpageURL:___frontpageURL_noused,..._apiInvokeParams} = apiParams0_Or_graphQLparent
-                try{
+                let {req: req_noused, res: res_noused, __cacheManage, ___frontpageURL: ___frontpageURL_noused, ..._apiInvokeParams} = apiParams0_Or_graphQLparent
+                try {
                     apiInvokeParams = JSON.stringify(_apiInvokeParams)
-                }catch (err) {
+                } catch (err) {
                     apiInvokeParams = 'call params stringify error'
                 }
-            }else {
+            } else {
                 try {
                     apiInvokeParams = JSON.stringify(graphQlparams)
                 } catch (err) {
@@ -122,7 +122,7 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
                 }
             }
             //长度过长，截取前505位
-            if(apiInvokeParams.length>505) {
+            if (apiInvokeParams.length > 505) {
                 apiInvokeParams = apiInvokeParams.substr(0, 500) + '[...]'
             }
 
@@ -136,7 +136,7 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
                 ruleDesc,
                 codePath: `${target.name}.${name}`,
                 apiInvokeParams,
-                frontReq
+                frontReq,
             });
             let {canAccess, resean} = result
             if (!canAccess) {
@@ -157,8 +157,8 @@ export const accessRule = ({ruleName, ruleDesc=''}) => {
  * @param jstoken
  * @returns {Promise.<*>}
  */
-export const parseAdminAccountFromJWToken = async ({jwtoken})=> {
-    return await RuleValidator.parseAdminAccountFromJWToken({jwtoken})
+export const parseAdminAccountFromJWToken = async ({jwtoken,req})=> {
+    return await RuleValidator.parseAdminAccountFromJWToken({jwtoken,req})
 }
 
 /**
