@@ -33,11 +33,11 @@ const _timer = setInterval(async()=> {
 
 const doSend = async (data)=> {
     setImmediate(async () => {
-        let {_debugTrace, _apiUrl, _secret, _resendTimes, ...postData} = data;
-        if (!postData.sign) {
-            postData.sign = getSignParamsInMD5({param: postData, secret: _secret})
-        }
         try {
+            let {_debugTrace, _apiUrl, _secret, _resendTimes = 0, ...postData} = data;
+            if (!postData.sign) {
+                postData.sign = getSignParamsInMD5({param: postData, secret: _secret})
+            }
             //发送流水
             request
                 .post(_apiUrl)
