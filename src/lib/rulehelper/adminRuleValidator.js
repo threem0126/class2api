@@ -23,11 +23,9 @@ class RuleValidator {
         }
     })
     static async parseAdminAccountFromJWToken({jwtoken,req}) {
+        jwtoken = jwtoken || req.header('jwtoken') || req.cookies.jwtoken ||  ''
         if (!jwtoken)
             throw GKErrors._TOKEN_LOGIN_INVALID(`标记身份验证的jwtoken未提供`)
-        if (process.env.PRODUCTION_TYPE !== "production") {
-            console.log(`parseAdminAccountFromJWToken jwtoken = ${jwtoken}`);
-        }
         let frontReq ;
         if(req) {
             //收集请求发起端的信息
