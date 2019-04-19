@@ -18,7 +18,8 @@ class RuleValidator {
      * @returns {Promise.<*>}
      */
     @cacheAble({
-        cacheKeyGene: ({jwtoken}) => {
+        cacheKeyGene: ({jwtoken,req}) => {
+            jwtoken = jwtoken || req.header('jwtoken') || req.cookies.jwtoken ||  ''
             return jwtoken;
         }
     })
