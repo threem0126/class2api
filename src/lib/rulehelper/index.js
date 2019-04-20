@@ -56,7 +56,11 @@ export const setting_CustomRuleValidator = async (ruleValidator)=>{
  * @param ruleDesc
  * @returns {Function}
  */
-export const accessRule = ({ruleName, ruleDesc=''}) => {
+export const accessRule = (options) => {
+    if (!options)
+        throw new Error(`accessRule的调用参数不能为空`)
+    let {ruleName, ruleDesc = ''} = options
+    //
     return function (target, name, descriptor) {
         if (!ruleName) {
             //修饰器的报错，级别更高，直接抛出终止程序
