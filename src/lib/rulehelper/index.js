@@ -166,16 +166,22 @@ export const parseAdminAccountFromJWToken = async ({jwtoken,req})=> {
  * @param adminrules
  * @returns {Promise<void>}
  */
-export const convertRulesvalue2ParamsObject = async (adminrules)=> {
+export const withConvertAdminrules2MachineVersion = (adminrules)=> {
+    if(typeof window ==="object"){
+        throw new Error(`大前端环境，请使用 nexweb组件中的withConvertAdminrules2MachineVersion函数`)
+    }
     keys(adminrules).forEach(CategoryKey => {
         let RuleItem = adminrules[CategoryKey];
+        const sysName = RuleItem.__sysName
         keys(RuleItem).forEach(
-            key2 => RuleItem[key2] = {categoryName: CategoryKey, ruleName: key2, ruleDesc: RuleItem[key2]}
+            key2 => RuleItem[key2] = {categoryName: CategoryKey, ruleName: key2, ruleDesc: RuleItem[key2], sysName}
         )
         RuleItem.__ruleCategory = {name: CategoryKey, desc: ''}
+        delete RuleItem.__sysName
     });
     return adminrules
 }
+
 
 export const uploadupdateCertList = async ({ruleCategory,ruleNameList, salt})=> {
     if (!ruleNameList) throw GKErrors._NOT_PARAMS(`ruleNameList`)
