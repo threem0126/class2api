@@ -162,7 +162,7 @@ export const parseAdminAccountFromJWToken = async ({jwtoken,req})=> {
 }
 
 /**
- * 将易于书写结构中的value值转换为对象结构
+ * 将易于书写结构中的rules value值转换为对象结构
  * @param adminrules
  * @returns {Promise<void>}
  */
