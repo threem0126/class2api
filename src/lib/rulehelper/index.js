@@ -182,7 +182,6 @@ export const withConvertAdminrules2MachineVersion = (adminrules)=> {
     return adminrules
 }
 
-
 export const uploadupdateCertList = async ({ruleCategory,ruleNameList, salt})=> {
     if (!ruleNameList) throw GKErrors._NOT_PARAMS(`ruleNameList`)
     if (!ruleCategory) throw GKErrors._NOT_PARAMS(`ruleCategory`)
