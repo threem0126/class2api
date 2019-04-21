@@ -68,10 +68,10 @@ const PrintCacheLog = (msg)=> {
  * @returns {Function}
  */
 export const cacheAble = function({cacheKeyGene,getExpireTimeSeconds}){
-    console.log( {cacheKeyGene,getExpireTimeSeconds} )
-    return function (target, name, descriptor) {
-        console.dir(target)
-        console.log( `cacheAble:`+ JSON.stringify(target)   )
+    console.log( `cacheAble:` )
+    console.log( {cacheKeyGene, getExpireTimeSeconds} )
+    return function(target, name, descriptor) {
+        console.log( `cacheAble function:`+ JSON.stringify(target)   )
         //兼容babel 7的变化
         name = name || target.key
         descriptor = descriptor || target.descriptor
@@ -151,9 +151,10 @@ export const cacheAble = function({cacheKeyGene,getExpireTimeSeconds}){
  * @returns {Function}
  */
 export const clearCache = function({cacheKeyGene}){
+    console.log( `clearCache:`   )
     console.log( `cacheKeyGene:`+ cacheKeyGene   )
     return function (target, name, descriptor) {
-        console.log( `cacheAble:`+ target   )
+        console.log( `clearCache function:`+ target   )
         //兼容babel 7的变化
         name = name || target.key
         descriptor = descriptor || target.descriptor
@@ -234,7 +235,7 @@ export const ipwhitelist = () => {
  */
 export const crashAfterMe = (hintMsg)=> {
     return function (target, name, descriptor) {
-        console.log(`cacheAble:` + target)
+        console.log(`crashAfterMe:` + target)
         if (!descriptor) {
             throw new Error('crashAfterMe只支持修饰类方法本身，不支持修饰类')
         }

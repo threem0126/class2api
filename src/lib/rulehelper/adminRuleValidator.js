@@ -68,12 +68,12 @@ class RuleValidator {
         return restResult
     }
 
-    @cacheAble({
-        cacheKeyGene: ({jwtoken = '', categoryName = '', ruleName = ''}) => {
-            //以jwtoken、功能组名称、权限名称来组合索引，混存上一次的判断结果
-            return jwtoken ? `_ruleValidator_inner-${hashcode(jwtoken)}-${hashcode(categoryName)}-${hashcode(ruleName)}` : '';
-        }
-    })
+    // @cacheAble({
+    //     cacheKeyGene: ({jwtoken = '', categoryName = '', ruleName = ''}) => {
+    //         //以jwtoken、功能组名称、权限名称来组合索引，混存上一次的判断结果
+    //         return jwtoken ? `_ruleValidator_inner-${hashcode(jwtoken)}-${hashcode(categoryName)}-${hashcode(ruleName)}` : '';
+    //     }
+    // })
     static async _ruleValidator_inner({sysName, jwtoken, categoryName, categoryDesc, ruleName, ruleDesc, codePath, apiInvokeParams = {}, frontReq}) {
         try {
             if (process.env.NODE_ENV !== "production") {
