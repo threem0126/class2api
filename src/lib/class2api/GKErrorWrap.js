@@ -12,7 +12,7 @@ let errCodes = {}
  */
 export const GKErrorWrap = (errCode, errMessage)=> {
     if (errCodes[errCode])
-        throw `错误码被重复定义(${errCode},${errCodes[errCode]})`
+        throw new Error(`错误码被重复定义(${errCode},${errCodes[errCode]})`)
     errCodes[errCode] = errMessage
     return (more) => {
         let moreStr = ''

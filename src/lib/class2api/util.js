@@ -46,7 +46,7 @@ export const sleep = (ms)=>{
  */
 export const crash = (title)=>{
     setTimeout(()=>{
-        throw title||'主动crash'
+        throw new Error(title||'主动crash')
     },20)
 }
 

@@ -46,7 +46,7 @@ export const tabelOption = {
  */
 export const extendDateTimeVirtualFields = (DataTypes,othersDateTimeFields)=> {
     if(!DataTypes){
-        throw 'extendDateTimeVirtualFields属性生成器的DataTypes参数没有定义'
+        throw new Error('extendDateTimeVirtualFields属性生成器的DataTypes参数没有定义')
     }
     let retValue = {
         created_at_display: {

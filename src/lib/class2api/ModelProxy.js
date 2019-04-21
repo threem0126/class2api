@@ -22,12 +22,12 @@ let router_listen_created = false
 const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage_default )=> {
     if (fn_beforeCall) {
         if (typeof fn_beforeCall !== 'function') {
-            throw 'fn_beforeCall必须是function类型的参数';
+            throw new Error('fn_beforeCall必须是function类型的参数');
         }
     }
     if (fn_afterCall) {
         if (typeof fn_afterCall !== 'function') {
-            throw '可选参数fn_afterCall必须是function类型的参数';
+            throw new Error('可选参数fn_afterCall必须是function类型的参数');
         }
     }
     let resWrap = async ({req, result}) => {
@@ -46,10 +46,10 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
             let pathItems = req.path.split("/");
             let methodName = pathItems[1] ? pathItems[1] : null;
             if (!_BusinessModel[methodName]) {
-                throw `api请求的地址(${req.originalUrl})中对应的类(${_BusinessModel.name})不存在${methodName}方法,请确认映射的类是否正确!`;
+                throw new Error(`api请求的地址(${req.originalUrl})中对应的类(${_BusinessModel.name})不存在${methodName}方法,请确认映射的类是否正确!`);
             }
             if (!req.body && !res.query) {
-                throw `api请求中的body和query都为空，没有提交内容传入!`;
+                throw new Error(`api请求中的body和query都为空，没有提交内容传入!`);
             }
             //queryObj是对早期传值方式的兼容（早期会将所有参数包裹在queryObj属性里）
             let source = req.method === 'POST' ? req.body : req.query
@@ -75,7 +75,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
 
             //如果是对象（非简单数据类型），则必须包含key／value结构
             if (typeof result !== "object" || keys(result).length === 0) {
-                throw `接口返回值必须包含key／value结构（因此也不能为null值），接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，请适配调整以符合规范!`;
+                throw new Error(`接口返回值必须包含key／value结构（因此也不能为null值），接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，请适配调整以符合规范!`);
             }
             //API方法内部做了重定向，或者自操作res输出
             let {__redirected, __customResp} = result
@@ -86,7 +86,7 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
                 let msg = `接口返回值必须包含key／value结构（因此也不能为null值），接口${req.originalUrl}类的${methodName}方法返回的数据结构不具有key/value结构，请适配调整以符合规范!`
                 console.error(msg)
                 if (process.env.NODE_ENV !== "production") {
-                    throw msg;
+                    throw new Error(msg);
                 }
             }
 
@@ -175,7 +175,7 @@ export const CreateListenRouter = async (options)=> {
                 router.use(`/${aPath}`, await _bindRouter(model, beforeCall, afterCall, frontpage_default));
                 console.log(`mapped class '${model.name}' to '${apiroot}${aPath}/*' ... OK!`)
             } else {
-                throw `modelClasses参数中${classObj}的对象不是有效的Class类或{model,as}结构定义`
+                throw new Error(`modelClasses参数中${classObj}的对象不是有效的Class类或{model,as}结构定义`)
             }
         }
     }

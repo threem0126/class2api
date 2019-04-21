@@ -99,7 +99,7 @@ export const getRedisClient = ()=> {
         return _redisClient;
 
     if (!_redisConfig) {
-        throw  `redis配置信息尚未设置（请调用setting_redisConfig）`
+        throw  new Error(`redis配置信息尚未设置（请调用setting_redisConfig）`)
     }
 
     (async () => {

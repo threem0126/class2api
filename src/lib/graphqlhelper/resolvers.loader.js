@@ -13,10 +13,10 @@ export const isMutation = function (target, name, descriptor) {
     descriptor = descriptor || target.descriptor
     //
     if (rootType.Mutation[name])
-        throw `${target.name}类中的${name}方法名称已被其他类方法抢注，导致命名冲突，请修改`
+        throw new Error(`${target.name}类中的${name}方法名称已被其他类方法抢注，导致命名冲突，请修改`)
     //
     if (!descriptor)
-        throw `isMutation不支持修饰类(${target} ${name})，或错误用法：'@isMutation()'`;
+        throw new Error(`isMutation不支持修饰类(${target} ${name})，或错误用法：'@isMutation()'`);
     let oldValue = descriptor.value;
     descriptor.value = async function () {
         console.log(`===========>===========> API invoke ${name}`)
@@ -45,10 +45,10 @@ export const isQuery = function (target, name, descriptor){
     name = name || target.key
     descriptor = descriptor || target.descriptor
     if(rootType.Query[name])
-        throw `${target.name}类中的${name}方法名称已被其他类方法抢注，导致命名冲突，请修改`
+        throw new Error(`${target.name}类中的${name}方法名称已被其他类方法抢注，导致命名冲突，请修改`)
     //
     if(!descriptor)
-        throw 'isQuery不支持修饰类'
+        throw new Error('isQuery不支持修饰类')
     let oldValue = descriptor.value;
     descriptor.value = async function () {
         console.log(`===========>===========> API invoke ${name} `)

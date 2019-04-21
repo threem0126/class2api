@@ -28,7 +28,7 @@ export const ApiDesc=(desc)=> {
 }
 export const WebInvokeHepler = (user,method) => {
     if (!user)
-        throw `WebInvokeHepler方法缺少参数user`
+        throw new Error(`WebInvokeHepler方法缺少参数user`)
     if (!method)
         method = 'post'
     let {token = '', jwtoken = '', otherheaders = {}} = user

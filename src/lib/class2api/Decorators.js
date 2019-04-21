@@ -7,7 +7,7 @@ let {cache_prefx:redis_cache_key_prefx="redis_cache_key_prefx_",defaultExpireSec
 export const modelSetting = (props) => {
     Object.keys(props).map((key,value)=>{
         if(key.indexOf("__")!==0) {
-            throw '动态添加的静态属性名不符合约定格式（__****）'
+            throw new Error('动态添加的静态属性名不符合约定格式（__****）')
         }
     });
     let _props = {...props}
@@ -67,15 +67,18 @@ const PrintCacheLog = (msg)=> {
  * @param getExpireTimeSeconds
  * @returns {Function}
  */
-export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
+export const cacheAble = function({cacheKeyGene,getExpireTimeSeconds}){
+    console.log( {cacheKeyGene,getExpireTimeSeconds} )
     return function (target, name, descriptor) {
+        console.dir(target)
+        console.log( `cacheAble:`+ JSON.stringify(target)   )
         //兼容babel 7的变化
         name = name || target.key
         descriptor = descriptor || target.descriptor
         //修饰器的报错，级别更高，直接抛出终止程序
         if (!cacheKeyGene) {
             setTimeout(() => {
-                throw `在类静态方法 ${target.name}.${name} 上调用cacheAble修饰器时未指定有效的cacheKeyGene参数`
+                throw new Error(`在类静态方法 ${target.name}.${name} 上调用cacheAble修饰器时未指定有效的cacheKeyGene参数`)
             })
         }
         let oldValue = descriptor.value;
@@ -96,7 +99,7 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
                 if (typeof key !== "string") {
                     //if (process.env.NODE_ENV !== 'production') {
                     setTimeout(() => {
-                        throw (`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)
+                        throw new Error(`[${target.name}.${name}] 缓存修饰器的cacheKeyGene函数必需返回字符串结果，目前是 ${key}...`)
                     })
                     //}
                 }
@@ -147,8 +150,10 @@ export const cacheAble = ({cacheKeyGene,getExpireTimeSeconds}) => {
  * @param cacheKeyGene
  * @returns {Function}
  */
-export const clearCache = ({cacheKeyGene}) => {
+export const clearCache = function({cacheKeyGene}){
+    console.log( `cacheKeyGene:`+ cacheKeyGene   )
     return function (target, name, descriptor) {
+        console.log( `cacheAble:`+ target   )
         //兼容babel 7的变化
         name = name || target.key
         descriptor = descriptor || target.descriptor
@@ -176,7 +181,7 @@ export const clearCache = ({cacheKeyGene}) => {
             } else {
                 //修饰器的报错，级别更高，直接抛出终止程序
                 setTimeout(() => {
-                    throw `在类静态方法 ${target.name}.${name} 上调用cacheAble修饰器时未指定有效的cacheKeyGene参数`
+                    throw new Error(`在类静态方法 ${target.name}.${name} 上调用cacheAble修饰器时未指定有效的cacheKeyGene参数`)
                 })
             }
             return await oldValue(...arguments);
@@ -192,8 +197,9 @@ export const clearCache = ({cacheKeyGene}) => {
  */
 export const ipwhitelist = () => {
     return function (target, name, descriptor) {
+        console.log( `cacheAble:`+ target   )
         if(!descriptor){
-            throw 'ipwhitelist不支持修饰类'
+            throw new Error('ipwhitelist不支持修饰类')
         }
         //兼容babel 7的变化
         name = name || target.key
@@ -205,13 +211,13 @@ export const ipwhitelist = () => {
             if (!req) {
                 //修饰器的报错，级别更高，直接抛出终止程序
                 setTimeout(()=>{
-                    throw `静态类方法 ${target.name}.${name} 中要求限定IP白名单，但是没有req请求参数传入，无法实施IP限制`
+                    throw new Error(`静态类方法 ${target.name}.${name} 中要求限定IP白名单，但是没有req请求参数传入，无法实施IP限制`)
                 })
             }
             if (whiteIPs.indexOf(getClientIp(req))===-1) {
                 //修饰器的报错，级别更高，直接抛出终止程序
                 setTimeout(()=>{
-                    throw `IP没有访问权限`
+                    throw new Error(`IP没有访问权限`)
                 })
             }
             return await oldValue(...arguments);
@@ -228,8 +234,9 @@ export const ipwhitelist = () => {
  */
 export const crashAfterMe = (hintMsg)=> {
     return function (target, name, descriptor) {
+        console.log(`cacheAble:` + target)
         if (!descriptor) {
-            throw 'crashAfterMe只支持修饰类方法本身，不支持修饰类'
+            throw new Error('crashAfterMe只支持修饰类方法本身，不支持修饰类')
         }
         //兼容babel 7的变化
         name = name || target.key
@@ -239,7 +246,7 @@ export const crashAfterMe = (hintMsg)=> {
             descriptor.value = async function () {
                 let ret = await oldValue(...arguments);
                 setTimeout(() => {
-                    throw `${hintMsg || '调试用的中断'} by  crashAfterMe decorator！ 非production环境（${process.env.NODE_ENV}）`
+                    throw new Error(`${hintMsg || '调试用的中断'} by  crashAfterMe decorator！ 非production环境（${process.env.NODE_ENV}）`)
                 }, 5)
                 return ret
             };

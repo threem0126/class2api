@@ -8,7 +8,7 @@ let {name:sysName, admin_rule_center} = getConfig();
 
 class RuleValidator {
     constructor() {
-        throw '静态业务功能类无法实例化'
+        throw new Error('静态业务功能类无法实例化')
     }
 
     /**
@@ -18,13 +18,13 @@ class RuleValidator {
      * @returns {Promise.<*>}
      */
     @cacheAble({
-        cacheKeyGene: ({jwtoken,req}) => {
-            jwtoken = jwtoken || req.header('jwtoken') || req.cookies.jwtoken ||  ''
+        cacheKeyGene: ({jwtoken, req}) => {
+            jwtoken = jwtoken || (req ? (req.header('jwtoken') || req.cookies.jwtoken) : '')
             return jwtoken;
         }
     })
     static async parseAdminAccountFromJWToken({jwtoken,req}) {
-        jwtoken = jwtoken || req.header('jwtoken') || req.cookies.jwtoken ||  ''
+        jwtoken = jwtoken || (req ? (req.header('jwtoken') || req.cookies.jwtoken) : '')
         if (!jwtoken)
             throw GKErrors._TOKEN_LOGIN_INVALID(`标记身份验证的jwtoken未提供`)
         let frontReq ;

@@ -162,9 +162,9 @@ const _inner_DBModelLoader = (option)=> {
         },
         INIT: async ({model, ass, defautError}) => {
             if (!model)
-                throw `DBModelLoader.INIT() 未提供model参数`
+                throw new Error(`DBModelLoader.INIT() 未提供model参数`)
             if (!ass)
-                throw `DBModelLoader.INIT() 未提供ass参数`
+                throw new Error(`DBModelLoader.INIT() 未提供ass参数`)
 
             _defaultError = defautError
             _model_objects = model

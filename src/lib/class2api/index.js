@@ -52,7 +52,7 @@ const _create_server = async (model, options)=> {
     }
     let _modelClasses = (typeof modelClasses === "function") ? modelClasses() : (modelClasses || [])
     if (!(_modelClasses instanceof Array)) {
-        throw `无法识别指定的类清单，因为modelClasses配置项格式有误，期望是Array列表`
+        throw new Error(`无法识别指定的类清单，因为modelClasses配置项格式有误，期望是Array列表`)
     }
     _router = await _create_router({
         apiroot,
