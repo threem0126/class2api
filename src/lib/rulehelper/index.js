@@ -56,16 +56,22 @@ export const setting_CustomRuleValidator = async (ruleValidator)=>{
 export const accessRule = (options) => {
     let {ruleName, ruleDesc = ''} = options
     return function (target, name, descriptor) {
-        console.log( `accessRule:`  )
-        console.log( console.dir(target)  )
-        console.log( console.dir(name)  )
-        console.log( console.dir(descriptor)  )
+
+        //兼容babel 7的变化
+        name = name || target.key
+        descriptor = descriptor || target.descriptor
+
+        // console.log( `accessRule:`  )
+        // console.log( console.dir(target)  )
+        // console.log( console.dir(name)  )
+        // console.log( console.dir(descriptor)  )
         if (!ruleName) {
             //修饰器的报错，级别更高，直接抛出终止程序
             setTimeout(() => {
                 throw new Error( `在类静态方法 ${target.name}.${name} 上权限控制器的ruleName参数未定义` )
             })
         }
+        console.log(`target.__modelSetting:`+ typeof target.__modelSetting)
         if (!target.__modelSetting) {
             //修饰器的报错，级别更高，直接抛出终止程序
             setTimeout(() => {
@@ -86,9 +92,6 @@ export const accessRule = (options) => {
         }
         console.log(`类静态方法 ${target.name}.${name}       上定义了权限点 =>      ${target.__modelSetting().__ruleCategory}.${ruleName} (${ruleDesc})`)
 
-        //兼容babel 7的变化
-        name = name || target.key
-        descriptor = descriptor || target.descriptor
 
         let oldValue = descriptor.value;
         descriptor.value = async function () {

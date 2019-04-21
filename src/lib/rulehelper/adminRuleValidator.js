@@ -17,12 +17,13 @@ class RuleValidator {
      * @param jstoken
      * @returns {Promise.<*>}
      */
-    @cacheAble({
-        cacheKeyGene: ({jwtoken, req}) => {
-            jwtoken = jwtoken || (req ? (req.header('jwtoken') || req.cookies.jwtoken) : '')
-            return jwtoken;
-        }
-    })
+    //这里打开后会导致宿主项目运行启动错误，无解，暂时注释
+    // @cacheAble({
+    //     cacheKeyGene: ({jwtoken, req}) => {
+    //         jwtoken = jwtoken || (req ? (req.header('jwtoken') || req.cookies.jwtoken) : '')
+    //         return jwtoken;
+    //     }
+    // })
     static async parseAdminAccountFromJWToken({jwtoken,req}) {
         jwtoken = jwtoken || (req ? (req.header('jwtoken') || req.cookies.jwtoken) : '')
         if (!jwtoken)
@@ -68,6 +69,7 @@ class RuleValidator {
         return restResult
     }
 
+    //这里打开后会导致宿主项目运行启动错误，无解，暂时注释
     // @cacheAble({
     //     cacheKeyGene: ({jwtoken = '', categoryName = '', ruleName = ''}) => {
     //         //以jwtoken、功能组名称、权限名称来组合索引，混存上一次的判断结果

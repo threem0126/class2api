@@ -2,17 +2,18 @@ import {getRedisClient,getting_redisConfig} from './redisClient';
 import {delayRun, getClientIp} from './util'
 
 let config = getting_redisConfig();
-let {cache_prefx:redis_cache_key_prefx="redis_cache_key_prefx_",defaultExpireSecond=10*60} = config
+let {cache_prefx:redis_cache_key_prefx="redis_cache_key_prefx_",defaultExpireSecond=10*60} = config;
 
-export const modelSetting = (props) => {
-    Object.keys(props).map((key,value)=>{
-        if(key.indexOf("__")!==0) {
+
+export const modelSetting = function(SettingOptions) {
+    Object.keys(SettingOptions).map((key, value) => {
+        if (key.indexOf("__") !== 0) {
             throw new Error('动态添加的静态属性名不符合约定格式（__****）')
         }
     });
-    let _props = {...props}
-    return function (target) {
-        target.__modelSetting = ()=>{
+    let _props = {...SettingOptions}
+    return function decorator(target) {
+        target.__modelSetting = function () {
             return _props
         }
     }
@@ -68,10 +69,10 @@ const PrintCacheLog = (msg)=> {
  * @returns {Function}
  */
 export const cacheAble = function({cacheKeyGene,getExpireTimeSeconds}){
-    console.log( `cacheAble:` )
-    console.log( {cacheKeyGene, getExpireTimeSeconds} )
+    // console.log( `cacheAble:` )
+    // console.log( {cacheKeyGene, getExpireTimeSeconds} )
     return function(target, name, descriptor) {
-        console.log( `cacheAble function:`+ JSON.stringify(target)   )
+        // console.log( `cacheAble function:`+ JSON.stringify(target)   )
         //兼容babel 7的变化
         name = name || target.key
         descriptor = descriptor || target.descriptor
@@ -151,10 +152,10 @@ export const cacheAble = function({cacheKeyGene,getExpireTimeSeconds}){
  * @returns {Function}
  */
 export const clearCache = function({cacheKeyGene}){
-    console.log( `clearCache:`   )
-    console.log( `cacheKeyGene:`+ cacheKeyGene   )
+    // console.log( `clearCache:`   )
+    // console.log( `cacheKeyGene:`+ cacheKeyGene   )
     return function (target, name, descriptor) {
-        console.log( `clearCache function:`+ target   )
+        // console.log( `clearCache function:`+ target   )
         //兼容babel 7的变化
         name = name || target.key
         descriptor = descriptor || target.descriptor
@@ -198,7 +199,7 @@ export const clearCache = function({cacheKeyGene}){
  */
 export const ipwhitelist = () => {
     return function (target, name, descriptor) {
-        console.log( `cacheAble:`+ target   )
+        // console.log( `cacheAble:`+ target   )
         if(!descriptor){
             throw new Error('ipwhitelist不支持修饰类')
         }
@@ -235,7 +236,7 @@ export const ipwhitelist = () => {
  */
 export const crashAfterMe = (hintMsg)=> {
     return function (target, name, descriptor) {
-        console.log(`crashAfterMe:` + target)
+        // console.log(`crashAfterMe:` + target)
         if (!descriptor) {
             throw new Error('crashAfterMe只支持修饰类方法本身，不支持修饰类')
         }
