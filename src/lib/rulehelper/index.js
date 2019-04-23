@@ -54,7 +54,7 @@ export const setting_CustomRuleValidator = async (ruleValidator)=>{
  * @returns {Function}
  */
 export const accessRule = (options) => {
-    let {ruleName, ruleDesc = ''} = options
+    let {categoryName, ruleName, ruleDesc = ''} = options
     return function (target, name, descriptor) {
 
         //兼容babel 7的变化
@@ -68,33 +68,34 @@ export const accessRule = (options) => {
         if (!ruleName) {
             //修饰器的报错，级别更高，直接抛出终止程序
             setTimeout(() => {
-                throw new Error( `在类静态方法 ${target.name}.${name} 上权限控制器的ruleName参数未定义` )
+                throw new Error(`在类静态方法 ${target.name}.${name} 上权限控制器的ruleName参数未定义`)
             })
         }
-        console.log(`target.__modelSetting:`+ typeof target.__modelSetting)
-        if (!target.__modelSetting) {
-            //修饰器的报错，级别更高，直接抛出终止程序
-            setTimeout(() => {
-                throw new Error(`需要方法级权限管控的后台业务类${target.name}，还没有添加modelSetting修饰器`)
-            })
-        }
-        if (typeof target.__modelSetting !== "function") {
-            //修饰器的报错，级别更高，直接抛出终止程序
-            setTimeout(() => {
-                throw new Error(`后台业务类${target.name}所添加的modelSetting修饰器不正确，请参考class2api文档`)
-            })
-        }
-        if (!(target.__modelSetting().__ruleCategory)) {
-            //修饰器的报错，级别更高，直接抛出终止程序
-            setTimeout(() => {
-                throw new Error(`类 ${target.name} 的modelSetting修饰器中没有指定__ruleCategory属性（权限组信息）`)
-            })
-        }
-        console.log(`类静态方法 ${target.name}.${name}       上定义了权限点 =>      ${target.__modelSetting().__ruleCategory}.${ruleName} (${ruleDesc})`)
-
+        // console.log(`类静态方法 ${target.name}.${name}       上定义了权限点 =>      ${categoryName}.${ruleName} (${ruleDesc})`)
 
         let oldValue = descriptor.value;
         descriptor.value = async function () {
+            if (!(target.__modelSetting)) {
+                //修饰器的报错，级别更高，直接抛出终止程序
+                setImmediate(() => {
+                    throw new Error(`需要方法级权限管控的后台业务类${target.name}，还没有添加modelSetting修饰器`)
+                })
+                throw new Error(`error in class2api`)
+            }
+            if (typeof target.__modelSetting !== "function") {
+                //修饰器的报错，级别更高，直接抛出终止程序
+                setImmediate(() => {
+                    throw new Error(`后台业务类${target.name}所添加的modelSetting修饰器不正确，请参考class2api文档`)
+                })
+                throw new Error(`error in class2api`)
+            }
+            if (! (target.__modelSetting().__ruleCategory) ) {
+                //修饰器的报错，级别更高，直接抛出终止程序
+                setImmediate(() => {
+                    throw new Error(`类 ${target.name} 的modelSetting修饰器中没有指定__ruleCategory属性（权限组信息）`)
+                })
+                throw new Error(`error in class2api`)
+            }
             let jwtoken;
             let expressReq;
             let apiModel = 'api'; //传统class2api，还是prisma-graphQL接口API

@@ -15,7 +15,7 @@ import {GKErrorWrap} from './GKErrorWrap'
 import {setting_CustomRuleValidator} from '../rulehelper/index'
 
 const logger = loggerCreator();
-let allow_Header = ['cros_origin_hint','Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'gkauthorization', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
+let allow_Header = ['cros_origin_hint','Origin', 'refererClientProvide', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'gkauthorization', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
 let _server;
 let _router;
 
@@ -184,7 +184,7 @@ const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next, 
         //Access-Control-Allow-Origin值动态响应，不再笼统的输出"*"
         //仅限，针对赶考网下的域名做跨域授权，避免'*'带来的安全隐患
         //客户端，ApiProxy组件默认已配置跨域请求，用superagent和fetch的，需要单独配置withCredentials
-        let referer = req.get('referer') || req.get('gkreferer') || ''
+        let referer = req.get('referer') || req.get('refererClientProvide') || ''
         if (referer) {
             let urlObj = url.parse(referer);
             //请求域名存在于defaultTrustDomains以及_cros_origin_setting.trustDomains白名单中
@@ -196,7 +196,7 @@ const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next, 
             // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com:80","port":"80","hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com:80/"}
             // {"protocol":"https:","slashes":true,"auth":null,"host":"local.gankao.com","port":null,"hostname":"local.gankao.com","hash":null,"search":null,"query":null,"pathname":"/","path":"/","href":"https://local.gankao.com/"}
         }
-        res.header("refererlog", 'from referer ' + referer);
+        res.header("refererlog", 'from referer or refererClientProvide:' + referer);
     }
     res.header("Access-Control-Allow-Origin", Origins);
     res.header("Access-Control-Allow-Credentials", "true");
