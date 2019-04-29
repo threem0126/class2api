@@ -96,6 +96,16 @@ export const accessRule = (options) => {
                 })
                 throw new Error(`error in class2api`)
             }
+            //优先取PRODUCTION_TYPE，其次取NODE_ENV
+            let Prod = process.env.PRODUCTION_TYPE || process.env.NODE_ENV
+            if( Prod !=="production" ) {
+                let hint = `非正式环境(PRODUCTION_TYPE=${process.env.PRODUCTION_TYPE}, NODE_ENV=${process.env.NODE_ENV}, nextJS项目识别PRODUCTION_TYPE，API项目识别NODE_ENV)，便于调试，授权放行...`
+                console.error(hint)
+                return {
+                    canAccess: true,
+                    resean: hint
+                }
+            }
             let jwtoken;
             let expressReq;
             let apiModel = 'api'; //传统class2api，还是prisma-graphQL接口API

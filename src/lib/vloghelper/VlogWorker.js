@@ -33,8 +33,12 @@ const _timer = setInterval(async()=> {
 
 const doSend = async (data)=> {
     setImmediate(async () => {
+        if(typeof data !=="object"){
+            console.error(`TransferVLog中错误1：传入的日志记录信息不是有效的Object类型`);
+            return ;
+        }
+        let {_debugTrace, _apiUrl, _secret, _resendTimes = 0, ...postData} = data || {};
         try {
-            let {_debugTrace, _apiUrl, _secret, _resendTimes = 0, ...postData} = data;
             if (!postData.sign) {
                 postData.sign = getSignParamsInMD5({param: postData, secret: _secret})
             }
