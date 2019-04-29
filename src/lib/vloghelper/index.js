@@ -53,25 +53,25 @@ const vlogSend = async ({isProduction=1, sysName, sourceHeaders, userIdentifier,
     if (!_sysName ) {
         throw new Error(`TransferVLog中的sysName尚未配置，请先调用vlog_setting设置`)
     }
-    if (!userIdentifier || typeof userIdentifier !== "string") {
+    if (typeof userIdentifier==="undefined" || typeof userIdentifier !== "string") {
         throw new Error(`TransferVLog的日志发送send调用，缺少 userIdentifier 参数 或参数不是字符串类型`)
     }
-    if (!action || typeof action !== "string") {
+    if (typeof action==="undefined" || typeof action !== "string") {
         throw new Error(`TransferVLog的日志发送send调用，缺少 action 参数 或参数不是字符串类型`)
     }
-    if (!targetType || typeof targetType !== "string") {
+    if (typeof targetType==="undefined"  || typeof targetType !== "string") {
         throw new Error(`TransferVLog的日志发送send调用，缺少 targetType 参数 或参数不是字符串类型`)
     }
-    if (!targetID || typeof targetID !== "string") {
+    if (typeof targetID==="undefined"  || typeof targetID !== "string") {
         throw new Error(`TransferVLog的日志发送send调用，缺少 targetID 参数 或参数不是字符串类型`)
     }
-    if (!time || typeof time !== "string") {
+    if (typeof time==="undefined" || typeof time !== "string") {
         throw new Error(`TransferVLog的日志发送send调用，缺少 time 参数 或参数不是字符串类型`)
     }
-    if (!sourceHeaders || typeof sourceHeaders !== "object") {
+    if (typeof sourceHeaders !== "object") {
         throw new Error(`TransferVLog的日志发送send调用，缺少 sourceHeaders 参数 或参数不是object类型`)
     }
-    if (!extraInfo || typeof extraInfo !== "object") {
+    if (typeof extraInfo !== "object") {
         throw new Error(`TransferVLog的日志发送send调用，缺少 sourceHeaders 参数 或参数不是object类型`)
     }
     if (_debugTrace) {
