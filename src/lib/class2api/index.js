@@ -22,7 +22,8 @@ let _router;
 let defaultTrustDomains = [
     '.gankao.com',
     '.gygaokao.com',
-    '.gankao100.com'
+    '.gankao100.com',
+    '.gankaodashi.com'
 ]
 
 const _create_server = async (model, options)=> {
