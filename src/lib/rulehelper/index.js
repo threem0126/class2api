@@ -101,10 +101,8 @@ export const accessRule = (options) => {
             if( Prod !=="production" ) {
                 let hint = `非正式环境(PRODUCTION_TYPE=${process.env.PRODUCTION_TYPE}, NODE_ENV=${process.env.NODE_ENV}, nextJS项目识别PRODUCTION_TYPE，API项目识别NODE_ENV)，便于调试，授权放行...`
                 console.error(hint)
-                return {
-                    canAccess: true,
-                    resean: hint
-                }
+                //直接放行调用
+                return await oldValue(...arguments);
             }
             let jwtoken;
             let expressReq;
