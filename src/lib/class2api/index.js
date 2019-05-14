@@ -162,8 +162,9 @@ export const createServer = async (options)=> {
     return _server
 }
 
-const responsiveCrosOriginForGankaoDomainMiddleWare_HOC =({cros_origin,cros_headers})=> {
-    let _cros_origin_setting = {cros_origin,cros_headers}
+const responsiveCrosOriginForGankaoDomainMiddleWare_HOC =(options)=> {
+    let {cros_origin = [], cros_headers = []} = options || {};
+    let _cros_origin_setting = {cros_origin, cros_headers}
     return function (req, res, next) {
         return responsiveCrosOriginForGankaoDomainMiddleWare(req, res, next, _cros_origin_setting)
     }
