@@ -121,7 +121,7 @@ const _create_server = async (model, options)=> {
         cros_origin = cros_origin.map(item => item.toLowerCase())
         cros_headers = cros_headers.map(item => item.toLowerCase())
         //注意下方还有一个独立Export的工具函数responsiveCrosOriginForGankaoDomain，维护时需同步修改
-        _server.use(responsiveCrosOriginForGankaoDomainMiddleWare_HOC(cros_origin));
+        _server.use(responsiveCrosOriginForGankaoDomainMiddleWare_HOC({cros_origin,cros_headers}));
     }
 
     if (typeof custom === "function") {
@@ -162,8 +162,8 @@ export const createServer = async (options)=> {
     return _server
 }
 
-const responsiveCrosOriginForGankaoDomainMiddleWare_HOC =(crosOriginSetting)=> {
-    let _cros_origin_setting = {...crosOriginSetting}
+const responsiveCrosOriginForGankaoDomainMiddleWare_HOC =({cros_origin,cros_headers})=> {
+    let _cros_origin_setting = {cros_origin,cros_headers}
     return function (req, res, next) {
         return responsiveCrosOriginForGankaoDomainMiddleWare(req, res, next, _cros_origin_setting)
     }
@@ -176,20 +176,19 @@ const responsiveCrosOriginForGankaoDomainMiddleWare_HOC =(crosOriginSetting)=> {
  * @param next
  * @param _cros_origin_setting
  */
-const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next, crosOriginSetting  ) {
-    let Origins = '*';
-    let {origin, trustDomains = []} = crosOriginSetting || {}
-    if (origin) {
-        Origins = origin;
+const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next, {cros_origin=[],cros_headers=[]}  ) {
+    let Origins = "*";
+    if (cros_origin.length > 0) {
+        Origins = cros_origin.join(",")
     } else {
         //Access-Control-Allow-Origin值动态响应，不再笼统的输出"*"
         //仅限，针对赶考网下的域名做跨域授权，避免'*'带来的安全隐患
         //客户端，ApiProxy组件默认已配置跨域请求，用superagent和fetch的，需要单独配置withCredentials
-        let referer = req.get('referer') || req.get('refererClientProvide') ||  ''
+        let referer = req.get('referer') || req.get('refererClientProvide') || ''
         if (referer) {
             let urlObj = url.parse(referer);
             //请求域名存在于defaultTrustDomains以及_cros_origin_setting.trustDomains白名单中
-            if (filter([...defaultTrustDomains, ...trustDomains], item => urlObj.hostname.indexOf(item) !== -1).length > 0) {
+            if (filter([...defaultTrustDomains, ...cros_origin], item => urlObj.hostname.indexOf(item) !== -1).length > 0) {
                 Origins = urlObj.protocol + '//' + urlObj.hostname + ((urlObj.port) ? `:${urlObj.port}` : '')
             }
             // 'http://local.gankao.com:3000'
@@ -202,7 +201,7 @@ const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next, 
     res.header("Access-Control-Allow-Origin", Origins);
     res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Methods", "HEAD,OPTIONS,POST");
-    res.header("Access-Control-Allow-Headers", " " + allow_Header.join(", "));
+    res.header("Access-Control-Allow-Headers", " " + [...allow_Header, ...cros_headers].join(", "));
     if ('OPTIONS' === req.method) {
         res.sendStatus(200);
     } else {
