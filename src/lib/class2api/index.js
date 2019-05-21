@@ -189,7 +189,7 @@ const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next, 
         if (referer) {
             let urlObj = url.parse(referer);
             //请求域名存在于defaultTrustDomains以及_cros_origin_setting.trustDomains白名单中
-            if (filter([...defaultTrustDomains, ...cros_origin], item => urlObj.hostname.indexOf(item) !== -1).length > 0) {
+            if (filter([...defaultTrustDomains, ...cros_origin], item => (urlObj.hostname||'').indexOf(item) !== -1).length > 0) {
                 Origins = urlObj.protocol + '//' + urlObj.hostname + ((urlObj.port) ? `:${urlObj.port}` : '')
             }
             // 'http://local.gankao.com:3000'
