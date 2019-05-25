@@ -129,7 +129,7 @@ const upload2CDN = async ({prodName, isTest, cdnPath, StaticType='app', buildID}
     console.log('' + fileNames.length + ' 个文件需上传完成！')
 }
 
-export const index = (nextConfig)=> {
+export const withGKNextConfig = (nextConfig)=> {
     if (nextConfig.upload2QiniuCDN) {
         nextConfig.distDir = distDir;
         nextConfig.generateBuildId = async () => {
@@ -142,7 +142,7 @@ export const index = (nextConfig)=> {
         nextConfig.lessLoaderOptions = {
             javascriptEnabled: true,
         };
-    console.log( nextConfig.upload2QiniuCDN?`已启用静态化资源CDN化，将上传静态资源至七牛`:`未启用静态化资源CDN化`);
+    console.log(nextConfig.upload2QiniuCDN ? `已启用静态化资源CDN化，将上传静态资源至七牛` : `未启用静态化资源CDN化`);
     let oldWebpack = nextConfig.oldWebpack;
     nextConfig.webpack = function (config, options) {
         if (oldWebpack)
@@ -190,7 +190,7 @@ export const index = (nextConfig)=> {
                     });
             }
         }
-        console.log( `编译${isServer?'Server端':'Client端'}脚本，已配置的babel插件：` + config.plugins.map(item=>item.constructor.name).join(","))
+        console.log(`编译${isServer ? 'Server端' : 'Client端'}脚本，已配置的babel插件：` + config.plugins.map(item => item.constructor.name).join(","))
         return config
     }
     return nextConfig;
