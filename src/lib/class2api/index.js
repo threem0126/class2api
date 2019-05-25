@@ -13,6 +13,7 @@ import {modelSetting, cacheAble, clearCache, crashAfterMe, getCacheManage}  from
 import {setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 import {GKErrorWrap} from './GKErrorWrap'
 import {setting_CustomRuleValidator} from '../rulehelper/index'
+import {withGKNextConfig} from './../babel/withGKNextConfig.js'
 
 const logger = loggerCreator();
 let allow_Header = ['cros_origin_hint','Origin', 'refererClientProvide', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'gkauthorization', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
@@ -299,5 +300,11 @@ export {
     /**
      * responsiveCrosOriginForGankaoDomainMiddleWare的高阶函数版本，可以接收扩充自定义的信任主域名
      */
-        responsiveCrosOriginForGankaoDomainMiddleWare_HOC
+        responsiveCrosOriginForGankaoDomainMiddleWare_HOC,
+
+    /**
+     * 用于在next.config.js环节对next配置结果做个性化增强
+     */
+        withGKNextConfig
+
 }
