@@ -27,6 +27,7 @@
     "testhelper.js",
     "rulehelper.js",
     "graphqlhelper.js",
+    "babelhelper.js",
     "dbhelper.js",
     "gkerrors.js",
     "util.js",

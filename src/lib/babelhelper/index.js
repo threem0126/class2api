@@ -1,4 +1,6 @@
 /* eslint-disable */
+//用于在next.config.js环节对next配置结果做个性化增强
+
 const path = require('path')
 const join = require('path').join
 const fs = require('fs')
@@ -127,7 +129,7 @@ const upload2CDN = async ({prodName, isTest, cdnPath, StaticType='app', buildID}
     console.log('' + fileNames.length + ' 个文件需上传完成！')
 }
 
-export const withGKNextConfig = (nextConfig)=> {
+export const index = (nextConfig)=> {
     if (nextConfig.upload2QiniuCDN) {
         nextConfig.distDir = distDir;
         nextConfig.generateBuildId = async () => {
