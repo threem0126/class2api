@@ -50,6 +50,11 @@ const _init_redisClient = ()=> {
             console.log(`测试，读取 redis key:${key},value:${avalue}`)
             let deleted = await _redisClient.delAsync(key)
             console.log(`测试，删除了redis key:${key},${deleted}`)
+            //
+            console.log(`测试，自增数字：${await _redisClient.incrAsync(`incr_test_1`)}`)
+            console.log(`测试，自增数字：${await _redisClient.incrAsync(`incr_test_1`)}`)
+            console.log(`测试，自增数字：${await _redisClient.incrAsync(`incr_test_1`)}`)
+
             //添加列表（列表不存在，则自动新建）
             await _redisClient.rpushAsync(key, JSON.stringify({send: moment().format(), time: 1}))
             //设置一定时间后过期失效

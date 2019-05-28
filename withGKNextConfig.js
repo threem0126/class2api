@@ -129,7 +129,7 @@ const upload2CDN = async ({prodName, isTest, cdnPath, StaticType='app', buildID}
     console.log('' + fileNames.length + ' 个文件需上传完成！')
 }
 
-export const withGKNextConfig = (nextConfig)=> {
+module.exports.withGKNextConfig = function(nextConfig){
     if (nextConfig.upload2QiniuCDN) {
         nextConfig.distDir = distDir;
         nextConfig.generateBuildId = async () => {
