@@ -69,7 +69,12 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
 
             //反转控制，如果返回的结果时函数，则取值后直接作为返回结构，这里主要是为了兼容一些特殊的返回数据结构
             if (typeof result === "function") {
-                res.json(await resWrap({req, res, result: result()}))
+                let inner_result = result();
+                if (typeof inner_result === "object") {
+                    res.json(await resWrap({req, res, result: inner_result}))
+                } else {
+                    res.end((inner_result || '').toString())
+                }
                 return
             }
 
