@@ -88,15 +88,11 @@ export const cacheAble = function({isGraphQL=false, cacheKeyGene,getExpireTimeSe
                 return await oldValue(...arguments);
             }
             if(isGraphQL && arguments.length<3){
-                setTimeout(() => {
-                    throw new Error(`在类静态方法 ${target.name}.${name} 上调用cacheAble修饰时指定了isGraphQL=true,但被修饰的方法看起来签名不像标准的prisma规范：（parent, params, ctx, info）,暂时跳过缓存，继续执行....`)
-                })
+                console.error(`在类静态方法 ${target.name}.${name} 上调用cacheAble修饰时指定了isGraphQL=true,但被修饰的方法看起来签名不像标准的prisma规范：（parent, params, ctx, info）,暂时跳过缓存，继续执行....`)
                 return await oldValue(...arguments);
             }
             if(!isGraphQL && arguments.length>2){
-                setTimeout(() => {
-                    throw new Error(`在类静态方法 ${target.name}.${name} 上调用cacheAble修饰时指定了isGraphQL=false,但被修饰的方法看起来签名却像标准的prisma规范（parent, params, ctx, info），请确认是否为graphQL/prisma的API方法,暂时跳过缓存，继续执行....`)
-                })
+                console.error(`在类静态方法 ${target.name}.${name} 上调用cacheAble修饰时指定了isGraphQL=false,但被修饰的方法看起来签名却像标准的prisma规范（parent, params, ctx, info），请确认是否为graphQL/prisma的API方法,暂时跳过缓存，继续执行....`)
                 return await oldValue(...arguments);
             }
             //注意，如果是graphQLServer，根据入参签名需取第三个参数：（parent, params, ctx, info）
