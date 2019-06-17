@@ -64,20 +64,19 @@ const PrintCacheLog = (msg)=> {
 /**
  * 在被修饰的方法运行前后执行，首先判断是否存在相同入参的调用缓存，如果没有则在运行结束后，将要运行结果缓存。缓存的key由默认参数属性cacheKeyGene的返回值决定。
  * 默认缓存时间60秒
+ * @param isGraphQL
  * @param cacheKeyGene
  * @param getExpireTimeSeconds
  * @returns {Function}
  */
-export const cacheAble = function({cacheKeyGene,getExpireTimeSeconds}){
-    // console.log( `cacheAble:` )
-    // console.log( {cacheKeyGene, getExpireTimeSeconds} )
-    return function(target, name, descriptor) {
-        // console.log( `cacheAble function:`+ JSON.stringify(target)   )
+export const cacheAble = function({isGraphQL=false, cacheKeyGene,getExpireTimeSeconds}) {
+    let _cacheKeyGene = cacheKeyGene
+    return function (target, name, descriptor) {
         //兼容babel 7的变化
         name = name || target.key
         descriptor = descriptor || target.descriptor
         //修饰器的报错，级别更高，直接抛出终止程序
-        if (!cacheKeyGene) {
+        if (!_cacheKeyGene) {
             setTimeout(() => {
                 throw new Error(`在类静态方法 ${target.name}.${name} 上调用cacheAble修饰器时未指定有效的cacheKeyGene参数`)
             })
@@ -88,15 +87,30 @@ export const cacheAble = function({cacheKeyGene,getExpireTimeSeconds}){
                 PrintCacheLog(`[${target.name}.${name}] force skip cache by process.env.NO_API_CACHE ...`)
                 return await oldValue(...arguments);
             }
-            let {__nocache} = arguments[0]||{}
+            if(isGraphQL && arguments.length<3){
+                setTimeout(() => {
+                    throw new Error(`在类静态方法 ${target.name}.${name} 上调用cacheAble修饰器时指定了isGraphQL=true,但被修饰的方法看起来签名不像标准的prisma规范：（parent, params, ctx, info）`)
+                })
+            }
+            if(!isGraphQL && arguments.length>2){
+                setTimeout(() => {
+                    throw new Error(`在类静态方法 ${target.name}.${name} 上调用cacheAble修饰器时指定了isGraphQL=false,但被修饰的方法看起来签名却像标准的prisma规范（parent, params, ctx, info），请确认是否为graphQL/prisma的API方法`)
+                })
+            }
+            //注意，如果是graphQLServer，根据入参签名需取第三个参数：（parent, params, ctx, info）
+            let {__nocache} = ((isGraphQL)?arguments[2]:arguments[0]) || {}
             if (__nocache) {
                 PrintCacheLog(`[${target.name}.${name}] force skip cache ........ ${target.name}.${name}`)
                 return await oldValue(...arguments);
             }
+            if(!____cache) {
+                console.error(`内置redis对象尚未初始化，请先调用setting_redisConfig(redis)、getRedisClient()！暂时跳过缓存，继续执行`)
+                return await oldValue(...arguments);
+            }
 
             let key = ''
-            if (cacheKeyGene) {
-                key = cacheKeyGene(...arguments)
+            if (_cacheKeyGene) {
+                key = await _cacheKeyGene.apply(this, arguments)
                 if (typeof key !== "string") {
                     //if (process.env.NODE_ENV !== 'production') {
                     setTimeout(() => {
@@ -107,12 +121,18 @@ export const cacheAble = function({cacheKeyGene,getExpireTimeSeconds}){
                 //返回空字符串时，忽略
                 if (key) {
                     let result = await ____cache.get(key)
+                    if (process.env.NODE_ENV !== 'production') {
+                        PrintCacheLog(`query cachekey [${key}]:${result}...`)
+                    }
                     if (result) {
                         let aSkip = false
                         if (typeof result === "string") {
                             try {
                                 result = JSON.parse(result)
                             } catch (e) {
+                                if (process.env.NODE_ENV !== 'production') {
+                                    console.error(`parse error the data from redis: ${result}`)
+                                }
                                 aSkip = true;
                             }
                         }
@@ -121,7 +141,13 @@ export const cacheAble = function({cacheKeyGene,getExpireTimeSeconds}){
                                 PrintCacheLog(`[${target.name}.${name}] hit cachekey .......${key}...`)
                             }
                             if (typeof result === "object") {
-                                result.__fromCache = true
+                                if (isGraphQL && arguments[2]) {
+                                    if (!arguments[2]._hitCaches)
+                                        arguments[2]._hitCaches = {}
+                                    arguments[2]._hitCaches[name] = true
+                                } else {
+                                    result.__fromCache = true
+                                }
                             }
                             return result
                         }
@@ -132,7 +158,7 @@ export const cacheAble = function({cacheKeyGene,getExpireTimeSeconds}){
             PrintCacheLog(`[${target.name}.${name}] miss cachekey .......${key}...`)
             //}
             let result = await oldValue(...arguments);
-            if (cacheKeyGene && key) {
+            if (_cacheKeyGene && key) {
                 let expireTimeSeconds = null
                 if (getExpireTimeSeconds && typeof getExpireTimeSeconds === "function")
                     expireTimeSeconds = getExpireTimeSeconds()

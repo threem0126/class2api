@@ -19,7 +19,7 @@ export const isMutation = function (target, name, descriptor) {
         throw new Error(`isMutation不支持修饰类(${target} ${name})，或错误用法：'@isMutation()'`);
     let oldValue = descriptor.value;
     descriptor.value = async function () {
-        console.log(`===========>===========> API invoke ${name}`)
+        console.log(`===========>===========> invoke API: ${target.name}.${name}() in @isMutation ....`)
         let [_, params, ctx, ___] = arguments || {}
         let {request} = ctx || {}
         if (__beforeGraphQLCall && typeof __beforeGraphQLCall === 'function') {//如果有要对传入参数做验证，则在fn_beforeCall中处理
@@ -51,7 +51,7 @@ export const isQuery = function (target, name, descriptor){
         throw new Error('isQuery不支持修饰类')
     let oldValue = descriptor.value;
     descriptor.value = async function () {
-        console.log(`===========>===========> API invoke ${name} `)
+        console.log(`===========>===========> invoke API: ${target.name}.${name}() in @isQuery ....`)
         let [_, params, ctx, ___] = arguments||{}
         let {request} = ctx||{}
         if (process.env.NODE_ENV !== "production") {
@@ -64,6 +64,10 @@ export const isQuery = function (target, name, descriptor){
         }
         //执行原API函数
         let result = await oldValue(...arguments,ctx);
+        //
+        if (process.env.NODE_ENV !== "production") {
+            console.log(`__beforeGraphQLCall:` + (typeof __afterGraphQLCall))
+        }
         //执行后的拦截
         if (__afterGraphQLCall && typeof __afterGraphQLCall === 'function') {//如果有要对传入参数做验证，则在fn_beforeCall中处理
             result = await __afterGraphQLCall({apipath:name, req:request, result, params, ctx});
