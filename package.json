@@ -1,6 +1,6 @@
 {
   "name": "class2api",
-  "version": "3.3.47-r5",
+  "version": "3.3.47-r6",
   "description": "the lib for mapping your javascript class to api service. support map Class's static methods merge into graphQL resolver",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
@@ -45,7 +45,6 @@
     "compression": "^1.6.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
-    "fetch": "^1.1.0",
     "fundebug-javascript": "^1.7.3",
     "hashcode": "^1.0.3",
     "helmet": "^3.6.0",

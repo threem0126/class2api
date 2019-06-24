@@ -2,7 +2,7 @@ console.dir("Nice to meet U, I will help You to map Class to API interface ...."
 import express from "express";
 import cookieParser from "cookie-parser";
 import url from 'url'
-import fetch from 'fetch'
+import fetch from 'isomorphic-fetch'
 import {filter} from 'lodash'
 import bodyParser from "body-parser";
 import compression from "compression";
@@ -165,7 +165,9 @@ export const createServer = async (options)=> {
 
 const responseWeixinSiteAuthFileMiddleWare = async (req, res, next) => {
     if (req.path.indexOf("/") !== -1 && req.path.endsWith(".txt")) {
-        let result = await fetch(`https://static.qiaoxuesi.com/${req.path}`);
+        let url = `https://static.qiaoxuesi.com/${req.path}`;
+        console.log(`转向请求微信探针内容：${url} `)
+        let result = await fetch(url);
         res.send(await result.text());
     } else {
         next()
