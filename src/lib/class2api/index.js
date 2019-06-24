@@ -168,7 +168,15 @@ const responseWeixinSiteAuthFileMiddleWare = async (req, res, next) => {
         let url = `https://static.qiaoxuesi.com/${req.path}`;
         console.log(`转向请求微信探针内容：${url} `)
         let result = await fetch(url);
-        res.send(await result.text());
+        let content = await result.text();
+        if (content.indexOf("Document not found") !== -1) {
+            console.log(`CDN微信探针文件(${url})不存在，继续往下路由...`)
+            //CDN文档不存在，则继续往下路由
+            next()
+        } else {
+            //输出
+            res.send(content);
+        }
     } else {
         next()
     }
