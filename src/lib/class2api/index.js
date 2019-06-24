@@ -165,7 +165,7 @@ export const createServer = async (options)=> {
 
 const responseWeixinSiteAuthFileMiddleWare = async (req, res, next) => {
     if (req.path.indexOf("/") !== -1 && req.path.endsWith(".txt")) {
-        let url = `https://static.qiaoxuesi.com/${req.path}`;
+        let url = `https://static.qiaoxuesi.com${req.path}`;
         console.log(`转向请求微信探针内容：${url} `)
         let result = await fetch(url);
         let content = await result.text();
