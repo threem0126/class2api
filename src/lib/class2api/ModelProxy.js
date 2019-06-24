@@ -125,10 +125,10 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
                 res.json(await resWrap({
                     req,
                     res,
-                    result: {err: {message: err.message, stack: err.stack}, result: null}
+                    result: {err: {...err, message: err.message, stack: err.stack}, result: null}
                 }));
             } else {
-                res.json(await resWrap({req, res, result: {err: {message: err.message}, result: null}}));
+                res.json(await resWrap({req, res, result: {err, result: null}}));
             }
         }
     });
