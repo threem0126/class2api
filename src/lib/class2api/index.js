@@ -163,13 +163,12 @@ export const createServer = async (options)=> {
     return _server
 }
 
-const responseWeixinSiteAuthFileMiddleWare = (cdnHost)=>{
-    return async (req, res, next) => {
-        if (req.path.indexOf("/") !== -1 && req.path.endsWith(".txt")) {
-            res.send(await (await fetch(`https://${cdnHost}/${req.path}`)).text());
-        } else {
-            next()
-        }
+const responseWeixinSiteAuthFileMiddleWare = async (req, res, next) => {
+    if (req.path.indexOf("/") !== -1 && req.path.endsWith(".txt")) {
+        let result = await fetch(`https://static.qiaoxuesi.com/${req.path}`);
+        res.send(await result.text());
+    } else {
+        next()
     }
 }
 
