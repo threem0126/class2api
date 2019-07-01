@@ -2,6 +2,7 @@ console.dir("Nice to meet U, I will help You to map Class to API interface ...."
 import express from "express";
 import cookieParser from "cookie-parser";
 import url from 'url'
+import fetch from 'isomorphic-fetch'
 import {filter} from 'lodash'
 import bodyParser from "body-parser";
 import compression from "compression";
@@ -162,6 +163,25 @@ export const createServer = async (options)=> {
     return _server
 }
 
+const responseWeixinSiteAuthFileMiddleWare = async (req, res, next) => {
+    if (req.path.indexOf("/") !== -1 && req.path.endsWith(".txt")) {
+        let url = `https://static.qiaoxuesi.com${req.path}`;
+        console.log(`转向请求微信探针内容：${url} `)
+        let result = await fetch(url);
+        let content = await result.text();
+        if (content.indexOf("Document not found") !== -1) {
+            console.log(`CDN微信探针文件(${url})不存在，继续往下路由...`)
+            //CDN文档不存在，则继续往下路由
+            next()
+        } else {
+            //输出
+            res.send(content);
+        }
+    } else {
+        next()
+    }
+}
+
 const responsiveCrosOriginForGankaoDomainMiddleWare_HOC =(options)=> {
     let {cros_origin = [], cros_headers = []} = options || {};
     let _cros_origin_setting = {cros_origin, cros_headers}
@@ -301,4 +321,8 @@ export {
      */
         responsiveCrosOriginForGankaoDomainMiddleWare_HOC,
 
+    /**
+     * 针对微信的站点验证的探针机制，做统一的路由识别处理，内部会实时抓取放在static.qiaoxuesi.com根目录下的探针文件内容
+     */
+    responseWeixinSiteAuthFileMiddleWare,
 }
