@@ -4,13 +4,44 @@ import md5 from 'md5'
  * 获得对象的MD5签名，按排序的key-value拼接字符串计算，value中的对象做JSON.stringify处理
  * @param param
  * @param secret
+ * @param whiteProps
+ * @param onlyAppendKeyValue
  * @returns {string}
  */
-export const getSignParamsInMD5 = ({param,secret})=> {
+export const getSignParamsInMD5 = ({param,secret,whiteProps=[],onlyAppendKeyValue=false})=> {
+    let whiteList = ['pfx', 'partner_key', '_sign', 'sign', 'key', ...whiteProps]
     const querystring = Object.keys(param).filter(function (key) {
-        return param[key] !== undefined && param[key] !== '' && ['pfx', 'partner_key', 'sign', 'key'].indexOf(key) < 0;
-    }).sort().map((key) => key + '=' + JSON.stringify(param[key])).join("&") + "&key=" + secret;
+        return param[key] !== undefined && param[key] !== '' && whiteList.indexOf(key) < 0;
+    }).sort().map((key) => key + '=' + JSON.stringify(param[key])).join("&") + (onlyAppendKeyValue ? "&key=" : '') + secret;
     return md5(querystring).toUpperCase();
+}
+
+/**
+ * 对参数对象进行签名，签名结果以_sign结果混合在params中输出
+ * @param param
+ * @param secret
+ * @returns {{_sign: string}}
+ */
+export const signParamsWithMD5 = ({param,secret})=> {
+    let _sign = getSignParamsInMD5({param,secret});
+    return {...param, _sign}
+}
+
+/**
+ * 对收到的参数对象进行md5签名验证，参数中需要求包含_sign属性
+ * @param paramsSigned
+ * @param secret
+ * @returns {{err: null, success: boolean}|{err: string, success: boolean}}
+ */
+export const varifyParamsWithMD5 = ({paramsSigned,secret})=> {
+    if(!paramsSigned._sign)
+        return {success:false, err:'NO_SIGN'}
+    if(!secret)
+        return {success:false, err:'NO_SECRET'}
+    let _signAgian = getSignParamsInMD5({param:paramsSigned,secret});
+    if(_signAgian !== paramsSigned._sign)
+        return {success:false, err:'SIGN_WRONG'}
+    return {success:true, err:null}
 }
 
 /**
