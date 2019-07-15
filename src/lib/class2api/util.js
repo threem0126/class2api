@@ -8,7 +8,7 @@ import md5 from 'md5'
  * @param onlyAppendKeyValue
  * @returns {string}
  */
-export const getSignParamsInMD5 = ({param,secret,whiteProps=[],onlyAppendKeyValue=false})=> {
+export const getSignParamsInMD5 = ({param={},secret='',whiteProps=[],onlyAppendKeyValue=false})=> {
     let whiteList = ['pfx', 'partner_key', '_sign', 'sign', 'key', ...whiteProps]
     const querystring = Object.keys(param).filter(function (key) {
         return param[key] !== undefined && param[key] !== '' && whiteList.indexOf(key) < 0;
@@ -24,7 +24,7 @@ export const getSignParamsInMD5 = ({param,secret,whiteProps=[],onlyAppendKeyValu
  */
 export const signParamsWithMD5 = ({param,secret})=> {
     let _sign = getSignParamsInMD5({param,secret});
-    return {...param, _sign}
+    return {...(param||{}), _sign}
 }
 
 /**
@@ -33,13 +33,13 @@ export const signParamsWithMD5 = ({param,secret})=> {
  * @param secret
  * @returns {{err: null, success: boolean}|{err: string, success: boolean}}
  */
-export const varifyParamsWithMD5 = ({paramsSigned,secret})=> {
-    if(!paramsSigned._sign)
+export const varifyParamsWithMD5 = ({paramSigned,secret})=> {
+    if(!paramSigned._sign)
         return {success:false, err:'NO_SIGN'}
     if(!secret)
         return {success:false, err:'NO_SECRET'}
-    let _signAgian = getSignParamsInMD5({param:paramsSigned,secret});
-    if(_signAgian !== paramsSigned._sign)
+    let _signAgian = getSignParamsInMD5({param:paramSigned,secret});
+    if(_signAgian !== paramSigned._sign)
         return {success:false, err:'SIGN_WRONG'}
     return {success:true, err:null}
 }

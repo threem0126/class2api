@@ -72,7 +72,7 @@ const vlogSend = async ({isProduction=1, sysName, sourceHeaders, userIdentifier,
         throw new Error(`TransferVLog的日志发送send调用，缺少 sourceHeaders 参数 或参数不是object类型`)
     }
     if (typeof extraInfo !== "object") {
-        throw new Error(`TransferVLog的日志发送send调用，缺少 sourceHeaders 参数 或参数不是object类型`)
+        throw new Error(`TransferVLog的日志发送send调用，缺少 extraInfo 参数 或参数不是object类型`)
     }
     if (_debugTrace) {
         console.log('vlogSend... ')
