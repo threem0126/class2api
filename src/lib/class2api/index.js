@@ -205,7 +205,7 @@ const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next, 
         //Access-Control-Allow-Origin值动态响应，不再笼统的输出"*"
         //仅限，针对赶考网下的域名做跨域授权，避免'*'带来的安全隐患
         //客户端，ApiProxy组件默认已配置跨域请求，用superagent和fetch的，需要单独配置withCredentials
-        let referer = req.get('referer') || req.get('refererClientProvide') || req.get('origin') || ''
+        let referer = req.get('referer') || req.get('refererclientprovide') || req.get('origin') || ''
         if (referer) {
             let urlObj = url.parse(referer);
             //请求域名存在于defaultTrustDomains以及_cros_origin_setting.trustDomains白名单中
