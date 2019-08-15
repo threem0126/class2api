@@ -208,6 +208,8 @@ const responsiveCrosOriginForGankaoDomainMiddleWare = function (req, res, next, 
         let referer = req.get('referer') || req.get('refererclientprovide') || req.get('origin') || ''
         if (referer) {
             let urlObj = url.parse(referer);
+            console.log('responsiveCrosOriginForGankaoDomainMiddleWare urlObj ...')
+            console.log(JSON.stringify(urlObj));
             //请求域名存在于defaultTrustDomains以及_cros_origin_setting.trustDomains白名单中
             if (filter([...defaultTrustDomains, ...cros_origin], item => (urlObj.hostname || '').indexOf(item) !== -1).length > 0) {
                 Origins = urlObj.protocol + '//' + urlObj.hostname + ((urlObj.port) ? `:${urlObj.port}` : '')
