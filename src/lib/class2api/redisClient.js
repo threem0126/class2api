@@ -71,11 +71,11 @@ const _init_redisClient = ()=> {
                 if(modelName.indexOf("Async")!==-1 && typeof _redisClient[modelName] ==="function" && _redisClient[modelName].length>0) {
                     _redisClient[`${modelName}Orig`] = _redisClient[modelName];
                     _redisClient[modelName] = async (...params) => {
-                        let _newModelName = `${modelName}Orig`
+                        let _OrigModelName = `${modelName}Orig`
                         if (typeof params[0] === "string") {
                             params[0] = redis_cache_key_prefx + params[0];
                         }
-                        return await _redisClient[_newModelName](...params)
+                        return await _redisClient[_OrigModelName](...params)
                     }
                 }
             });
