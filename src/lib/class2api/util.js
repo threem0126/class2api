@@ -17,6 +17,7 @@ export const getSignParamsInMD5 = ({param={},secret='',whiteProps=[],onlyAppendK
 }
 
 /**
+ * 早期API，请换用getSignParamsInMD5来调用
  * 对参数对象进行签名，签名结果以_sign结果混合在params中输出
  * @param param
  * @param secret
