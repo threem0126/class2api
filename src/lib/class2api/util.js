@@ -41,7 +41,7 @@ export const varifyParamsWithMD5 = ({paramSigned,secret})=> {
         return {success:false, err:'NO_SECRET'}
     let _signAgian = getSignParamsInMD5({param:paramSigned,secret});
     if(_signAgian !== paramSigned._sign)
-        return {success:false, err:'SIGN_WRONG'}
+        return {success:false, err:'SIGN_WRONG',_needSign:paramSigned._sign,_reSign:_signAgian}
     return {success:true, err:null}
 }
 

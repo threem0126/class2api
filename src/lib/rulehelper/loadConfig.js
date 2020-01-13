@@ -24,8 +24,8 @@ let class2api_config = {
      */
     admin_rule_center: {
         /**
-         * 用户身份验证接口
-         */
+            * 用户身份验证接口
+            */
         auth: validUrl + "/gkauth/authAdminAccount",
         /**
          * 权限验证接口
