@@ -23,9 +23,8 @@ const _inner_DBModelLoader = (option)=> {
 //region 初始化sequelize对象
     const _INIT = async ()=> {
         try {
-            let {database, user, password, host = 'localhost', port, timezone, dialect = 'mysql', encrypt, pool = {}, benchmark = (process.env.SQL_PRINT === '1'), logging, ...otherOptions} = _config_option
+            let {database, user, password, host = 'localhost', port, replication, timezone, dialect = 'mysql', encrypt, pool = {}, benchmark = (process.env.SQL_PRINT === '1'), logging, ...otherOptions} = _config_option
             sequelize = new Sequelize(database, user, password, {
-                host: host,
                 port: port || (
                     dialect === "mysql" ? 3306 :
                         dialect === 'mssql' ? 1433 :
@@ -38,6 +37,16 @@ const _inner_DBModelLoader = (option)=> {
                     idle: 10000,
                     ...pool //覆盖默认配置
                 },
+                ...(replication?
+                        {
+                            replication
+                        }:
+                        ({
+                                host: host
+                            }
+                        )
+                )
+                ,
                 retry  : {
                     match: [
                         /ETIMEDOUT/,

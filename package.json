@@ -1,6 +1,6 @@
 {
   "name": "class2api",
-  "version": "4.0.0",
+  "version": "4.0.2",
   "description": "the lib for mapping your javascript class to api service. support map Class's static methods merge into graphQL resolver",
   "main": "dist/lib/class2api/index.js",
   "scripts": {
