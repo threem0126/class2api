@@ -38,6 +38,26 @@ const _inner_DBModelLoader = (option)=> {
                     idle: 10000,
                     ...pool //覆盖默认配置
                 },
+                retry  : {
+                    match: [
+                        /ETIMEDOUT/,
+                        /EHOSTUNREACH/,
+                        /ECONNRESET/,
+                        /ECONNREFUSED/,
+                        /ETIMEDOUT/,
+                        /ESOCKETTIMEDOUT/,
+                        /EHOSTUNREACH/,
+                        /EPIPE/,
+                        /EAI_AGAIN/,
+                        /SequelizeConnectionError/,
+                        /SequelizeConnectionRefusedError/,
+                        /SequelizeHostNotFoundError/,
+                        /SequelizeHostNotReachableError/,
+                        /SequelizeInvalidConnectionError/,
+                        /SequelizeConnectionTimedOutError/
+                    ],
+                    max  : 5
+                },
                 dialect,
                 encrypt,
                 benchmark,
