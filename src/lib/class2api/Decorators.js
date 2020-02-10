@@ -284,3 +284,32 @@ export const crashAfterMe = (hintMsg)=> {
 export const getCacheManage =()=> {
     return ____cache;
 }
+
+/**
+ * 缓存包装函数
+ * @param cacheKey
+ * @param cacheDuration
+ * @param callback
+ * @returns
+ * @constructor
+ */
+export const GKCache_remember = async (cacheKey, cacheDuration, callback)=> {
+    let result = await ____cache.get(cacheKey);
+    if (result)
+        return result;
+    let newResult = await callback();
+    if (newResult == null)
+        return newResult;
+    try {
+        if (typeof newResult == "object") {
+            newResult = JSON.stringify(newResult)
+        }
+        await ____cache.set(cacheKey, newResult, Math.max(2, ~~cacheDuration))
+    } catch (e) {
+    }
+    return newResult
+}
+
+export const GKCache_remove = async (cacheKey)=> {
+    await ____cache.delete(cacheKey)
+}

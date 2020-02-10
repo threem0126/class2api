@@ -10,7 +10,7 @@ import {MultiProccessTaskThrottle} from './taskThrottle'
 import loggerCreator from "./logger.js";
 import log4js from 'log4js';
 import * as ModelProxy  from './ModelProxy';
-import {modelSetting, cacheAble, clearCache, crashAfterMe, getCacheManage}  from './Decorators';
+import {modelSetting, cacheAble, clearCache, crashAfterMe, getCacheManage, GKCache_remember, GKCache_remove}  from './Decorators';
 import {setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 import {GKErrorWrap} from './GKErrorWrap'
 import {setting_CustomRuleValidator} from '../rulehelper/index'
@@ -325,4 +325,8 @@ export {
      * 针对微信的站点验证的探针机制，做统一的路由识别处理，内部会实时抓取放在static.qiaoxuesi.com根目录下的探针文件内容
      */
     responseWeixinSiteAuthFileMiddleWare,
+
+    GKCache_remember,
+
+    GKCache_remove
 }
