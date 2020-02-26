@@ -114,6 +114,9 @@ const _inner_DBModelLoader = (option)=> {
             _model_objects.__col = col
             _model_objects.__literal = literal
             _model_objects.__where = where
+            _model_objects.__getSequelizeWithDangerous =()=> {
+                return sequelize;
+            }
         } catch (e) {
             if (process.env.NODE_ENV === "production" && _defaultError) {
                 throw _defaultError
@@ -199,9 +202,6 @@ const _inner_DBModelLoader = (option)=> {
             _model_objects = model
             _ass = ass
             await _INIT(option)
-        },
-        getSequelize:()=>{
-            return sequelize;
         },
         excuteSQL
     }
