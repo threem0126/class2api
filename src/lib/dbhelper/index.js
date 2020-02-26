@@ -200,6 +200,9 @@ const _inner_DBModelLoader = (option)=> {
             _ass = ass
             await _INIT(option)
         },
+        getSequelize:()=>{
+            return sequelize;
+        },
         excuteSQL
     }
 }
