@@ -77,6 +77,11 @@ const _init_redisClient = ()=> {
                         }
                         return await _redisClient[_OrigModelName](...params)
                     }
+                    let modelNameWithOutSpace = modelName.replace("Async", '') + 'WithOutSpaceAsync';
+                    _redisClient[modelNameWithOutSpace] = async (...params) => {
+                        let _OrigModelName = `${modelName}Orig`
+                        return await _redisClient[_OrigModelName](...params)
+                    }
                 }
             });
         } catch (err) {
