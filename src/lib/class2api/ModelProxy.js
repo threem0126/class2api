@@ -63,6 +63,10 @@ const _bindRouter = async (BusinessModel, fn_beforeCall, fn_afterCall, frontpage
                 let modelSetting = _BusinessModel.__modelSetting ? _BusinessModel.__modelSetting() : {};
                 let apipath = `${_BusinessModel.name}.${req.path}`
                 paramsMerged = await fn_beforeCall({apipath, req, res, params, modelSetting});
+                if(paramsMerged && typeof paramsMerged === 'function') {
+                    res.json(await paramsMerged())
+                    return
+                }
             }
             //合并入req对象
             result = await _BusinessModel[methodName]({...(paramsMerged || params), req, res});
