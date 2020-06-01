@@ -11,8 +11,11 @@ const load_package_name = ()=> {
         throw new Error(`业务系统名获取失败，权限管理认证将失效，请确认存在package.json且其中已配置name属性`)
     return applicationName
 }
+
 const env = (process.env.PRODUCTION_TYPE||process.env.NODE_ENV)
-const validUrl = (env=== 'production') ? 'https://rulecenter.api.gankao.com' : 'https://rulecenter-test.api.gankao.com'
+const prot = (typeof window==='object' ?'https:':'http:');
+const urlpath = `//rulecenter${ (env=== 'production') ?"":"-test:" }.api.gankao.com`;
+const validUrl = `${prot}${urlpath}`;
 
 let class2api_config = {
     /**
