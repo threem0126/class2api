@@ -52,7 +52,8 @@ export const varifyParamsWithMD5 = ({paramSigned,secret})=> {
  */
 export const getClientIp = (req) => {
     try {
-        return req.headers['x-forwarded-for'] ||
+        return req.headers['x-real-ip'] ||
+            req.headers['x-forwarded-for'] ||
             req.connection.remoteAddress ||
             req.socket.remoteAddress ||
             req.connection.socket.remoteAddress;
