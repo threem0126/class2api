@@ -14,7 +14,7 @@ const load_package_name = ()=> {
 
 const env = (process.env.PRODUCTION_TYPE||process.env.NODE_ENV)
 const prot = (typeof window==='object' ?'https:':'http:');
-const urlpath = `//rulecenter${ (env=== 'production') ?"":"-test:" }.api.gankao.com`;
+const urlpath = `//rulecenter${ (env=== 'production') ?"":"-test" }.api.gankao.com`;
 const validUrl = `${prot}${urlpath}`;
 
 let class2api_config = {
