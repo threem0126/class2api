@@ -34,7 +34,7 @@ const _create_server = async (model, options)=> {
         options = {modelClasses:[options]}
     }
 
-    let {config, custom, modelClasses, beforeCall, afterCall, method404} = options
+    let {config, custom, bodyParsers=[], modelClasses, beforeCall, afterCall, method404} = options
     // if (model==='server' && typeof config !== "function") {
     //     throw  `server模式下，配置参数中必需传入config[Function]属性`
     // }
@@ -75,9 +75,16 @@ const _create_server = async (model, options)=> {
     // Security
     _server = express();
     _server.disable("x-powered-by");
-    _server.use(bodyParser.json()); // for parsing application/json
-    _server.use(bodyParser.urlencoded({extended: true}));// for parsing application/x-www-form-urlencoded
-    _server.use(bodyParser.json({limit: "5000kb"}));
+    //外部是否有自定义bodyParser
+    if((bodyParsers||[]).length>0){
+        for(let parser of bodyParsers){
+            _server.use(parser);
+        }
+    } else {
+        _server.use(bodyParser.json()); // for parsing application/json
+        _server.use(bodyParser.urlencoded({extended: true}));// for parsing application/x-www-form-urlencoded
+        _server.use(bodyParser.json({limit: "5000kb"}));
+    }
     // _server.use(hpp());
     // _server.use(helmet.xssFilter());
     // _server.use(helmet.frameguard("deny"));
