@@ -32,8 +32,8 @@ const _inner_DBModelLoader = (option)=> {
                 ),
                 timezone: timezone || "+08:00",
                 pool: {
-                    max: 5,
-                    min: 0,
+                    max: 10,
+                    min: 1,
                     idle: 10000,
                     ...pool //覆盖默认配置
                 },
@@ -49,6 +49,7 @@ const _inner_DBModelLoader = (option)=> {
                 ,
                 retry  : {
                     match: [
+                        Sequelize.ConnectionTimedOutError,
                         /ETIMEDOUT/,
                         /EHOSTUNREACH/,
                         /ECONNRESET/,
@@ -56,6 +57,7 @@ const _inner_DBModelLoader = (option)=> {
                         /ETIMEDOUT/,
                         /ESOCKETTIMEDOUT/,
                         /EHOSTUNREACH/,
+                        /ER_LOCK_DEADLOCK/,
                         /EPIPE/,
                         /EAI_AGAIN/,
                         /SequelizeConnectionError/,
@@ -65,7 +67,7 @@ const _inner_DBModelLoader = (option)=> {
                         /SequelizeInvalidConnectionError/,
                         /SequelizeConnectionTimedOutError/
                     ],
-                    max  : 5
+                    max  : 50
                 },
                 dialect,
                 encrypt,
