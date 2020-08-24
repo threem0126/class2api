@@ -32,9 +32,10 @@ const _inner_DBModelLoader = (option)=> {
                 ),
                 timezone: timezone || "+08:00",
                 pool: {
-                    max: 10,
+                    max: 5,
                     min: 1,
-                    idle: 10000,
+                    idle: 60000,
+                    maxIdleTime:60000,
                     ...pool //覆盖默认配置
                 },
                 ...(replication?
@@ -50,6 +51,7 @@ const _inner_DBModelLoader = (option)=> {
                 retry  : {
                     match: [
                         Sequelize.ConnectionTimedOutError,
+                        /PROTOCOL_CONNECTION_LOST/,
                         /ETIMEDOUT/,
                         /EHOSTUNREACH/,
                         /ECONNRESET/,
