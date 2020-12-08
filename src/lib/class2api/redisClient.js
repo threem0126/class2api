@@ -95,7 +95,12 @@ const _init_redisClient = ()=> {
             //
             if (password) {
                 _redisClient.auth(password, async (err, result) => {
-                    await onAuthDone()
+                    if(err){
+                        console.error(`_redisClient.auth with password 时异常：${err}`)
+                        reject(err);
+                    }
+                    else
+                        await onAuthDone()
                 })
             } else {
                 await onAuthDone()

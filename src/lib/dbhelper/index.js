@@ -79,6 +79,7 @@ const _inner_DBModelLoader = (option)=> {
                 ...otherOptions
             });
 
+
             let hasScope = false
             //先初始化非Scope的Model
             Object.keys(_model_objects).forEach(function (modelName) {
