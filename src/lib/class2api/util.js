@@ -1,4 +1,6 @@
 import md5 from 'md5'
+import Promise from 'bluebird';
+import fetch from 'node-fetch';
 
 /**
  * 获得对象的MD5签名，按排序的key-value拼接字符串计算，value中的对象做JSON.stringify处理
@@ -119,3 +121,44 @@ export const hashcode = (str) => {
     }
     return hash;
 }
+
+
+const sleep = (ms) => {
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            return resolve(ms);
+        }, ms);
+    });
+};
+
+// let res_promise = parallelCallWithPromise({url:'.....'});
+// let value = await result;
+
+const parallelInvokeWithPromise = ({url, params={}, timeout = 3000})=> {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let options = {
+                method: "post",
+                rejectUnauthorized: false,
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                json: true,
+                body: JSON.stringify(params),
+                timeout
+            }
+            let res = await fetch(url, options);
+            let body = await res.json()
+            let {err, result} = body
+            if (err) {
+                reject({err: err.message, result: null})
+            } else {
+                resolve({err: null, result})
+            }
+        } catch (err) {
+            console.error(e.stack)
+            reject({err: err.message, result: null})
+        }
+    })
+};
