@@ -122,19 +122,10 @@ export const hashcode = (str) => {
     return hash;
 }
 
-
-const sleep = (ms) => {
-    return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-            return resolve(ms);
-        }, ms);
-    });
-};
-
 // let res_promise = parallelCallWithPromise({url:'.....'});
 // let value = await result;
 
-const parallelInvokeWithPromise = ({url, params={}, timeout = 3000})=> {
+export const parallelInvokeWithPromise = ({url, params={}, timeout = 3000})=> {
     return new Promise(async (resolve, reject) => {
         try {
             let options = {
@@ -157,7 +148,7 @@ const parallelInvokeWithPromise = ({url, params={}, timeout = 3000})=> {
                 resolve({err: null, result})
             }
         } catch (err) {
-            console.error(e.stack)
+            console.error(err.stack)
             reject({err: err.message, result: null})
         }
     })
