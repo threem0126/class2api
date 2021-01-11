@@ -189,6 +189,11 @@ export const CreateListenRouter = async (options)=> {
         }
     }
 
+    //API的存活探针
+    router.all('/helloworld',  (req, res, next) => {
+        res.end('hello');
+    });
+
     //拦截未匹配到的其他方法
     router.all('*', async (req, res, next) => {
         try {
