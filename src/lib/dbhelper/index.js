@@ -80,6 +80,7 @@ const _inner_DBModelLoader = (option)=> {
             });
 
 
+
             let hasScope = false
             //先初始化非Scope的Model
             Object.keys(_model_objects).forEach(function (modelName) {
@@ -119,6 +120,10 @@ const _inner_DBModelLoader = (option)=> {
             _model_objects.__col = col
             _model_objects.__literal = literal
             _model_objects.__where = where
+            _model_objects.__close = ()=>{
+                sequelize.close()
+            }
+
             _model_objects.__getSequelizeWithDangerous =()=> {
                 return sequelize;
             }
