@@ -1,3 +1,5 @@
+import {GKErrors} from "./GKErrors_Inner";
+
 console.dir("Nice to meet U, I will help You to map Class to API interface ....");
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -30,11 +32,11 @@ let defaultTrustDomains = [
 const _create_server = async (model, options)=> {
 
     //当options为class时，做转化封装
-    if(typeof options ==="function" &&  options instanceof Object){
-        options = {modelClasses:[options]}
+    if(typeof options ==="function" &&  options instanceof Object) {
+        options = {modelClasses: [options]}
     }
 
-    let {config, custom, bodyParsers=[], modelClasses, beforeCall, afterCall, method404} = options
+    let {config, onExpressInited, custom,  bodyParsers=[], modelClasses, beforeCall, afterCall, method404} = options
     // if (model==='server' && typeof config !== "function") {
     //     throw  `server模式下，配置参数中必需传入config[Function]属性`
     // }
@@ -74,6 +76,11 @@ const _create_server = async (model, options)=> {
 
     // Security
     _server = express();
+
+    //onExpressInited 在express实例化后马上回调，此时还未绑定cookieParse等基础中间件，仅适用于特殊的middle绑定，请谨慎使用
+    if (typeof onExpressInited === "function") {
+        await onExpressInited(_server)
+    }
     _server.disable("x-powered-by");
     //外部是否有自定义bodyParser
     if((bodyParsers||[]).length>0){
@@ -133,7 +140,7 @@ const _create_server = async (model, options)=> {
     }
 
     if (typeof custom === "function") {
-        _server = await custom(_server)
+        await custom(_server)
     }
 
     _server.use(apiroot, _router)
