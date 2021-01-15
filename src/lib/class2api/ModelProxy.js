@@ -191,6 +191,7 @@ export const CreateListenRouter = async (options)=> {
 
     //API的存活探针
     router.all('/helloworld',  (req, res, next) => {
+        console.log('hello ... ');
         res.end('hello');
     });
 
