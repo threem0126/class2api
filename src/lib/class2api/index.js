@@ -16,6 +16,7 @@ import {modelSetting, cacheAble, clearCache, crashAfterMe, getCacheManage, GKCac
 import {setting_redisConfig, getting_redisConfig, getRedisClient} from './redisClient';
 import {GKErrorWrap} from './GKErrorWrap'
 import {setting_CustomRuleValidator} from '../rulehelper/index'
+import {load_package_name} from './util'
 
 const logger = loggerCreator();
 let allow_Header = ['cros_origin_hint','Origin','gchannel', 'refererClientProvide', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'jwtoken', 'gkauthorization', 'token', 'frontpage', 'withCredentials', 'credentials'].map(item => item.toLowerCase())
@@ -271,6 +272,9 @@ export const GKSUCCESS = (ps) => {
     }
 }
 
+let appName = load_package_name();
+const GK = (p)=>`/${appName}${p}`;
+
 export {
     /**
      * 预设内置Redis对象的连接参数
@@ -338,9 +342,11 @@ export {
     /**
      * 针对微信的站点验证的探针机制，做统一的路由识别处理，内部会实时抓取放在static.qiaoxuesi.com根目录下的探针文件内容
      */
-    responseWeixinSiteAuthFileMiddleWare,
+        responseWeixinSiteAuthFileMiddleWare,
 
-    GKCache_remember,
+        GKCache_remember,
 
-    GKCache_remove
+        GKCache_remove,
+
+        GK
 }

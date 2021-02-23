@@ -1,6 +1,7 @@
 import md5 from 'md5'
 import Promise from 'bluebird';
 import fetch from 'node-fetch';
+import path from "path";
 
 /**
  * 获得对象的MD5签名，按排序的key-value拼接字符串计算，value中的对象做JSON.stringify处理
@@ -122,6 +123,17 @@ export const hashcode = (str) => {
     return hash;
 }
 
+/*
+获取package中的系统名
+*/
+export const  load_package_name = ()=> {
+    let {name = ''} = require(path.join(process.cwd(), 'package.json'));
+    let applicationName = name.split(".")[0]
+    if (!applicationName)
+        throw new Error(`业务系统名获取失败，权限管理认证将失效，请确认存在package.json且其中已配置name属性`)
+    return applicationName
+}
+
 // let res_promise = parallelCallWithPromise({url:'.....'});
 // let value = await result;
 
@@ -153,3 +165,5 @@ export const parallelInvokeWithPromise = ({url, params={}, timeout = 3000})=> {
         }
     })
 };
+
+
